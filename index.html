@@ -1,198 +1,338 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <title>KKGMI Surabaya 10 - Portal Perangkat Pembelajaran & Ujian Madrasah</title>
-    <meta name="description" content="Website Resmi KKGMI Surabaya 10. Pusat informasi Perangkat Pembelajaran, Test Kemampuan Akademik (TKA), Emis, Pdum, CBT, Soal AM, Soal UM untuk Madrasah Ibtidaiyah di Surabaya. Mewujudkan Madrasah Hebat Bermartabat.">
-    <meta name="keywords" content="KKG, Perangkat Pembelajaran, Madrasah hebat, TKA, Test Kemampuan Akademik, KKGMI, Surabaya, Kemenag, Emis, Pdum, CBT, Ujian Online, Soal AM, Soal UM">
-    <meta name="author" content="KKGMI Surabaya 10">
-    <meta name="robots" content="index, follow">
-    
-    <meta property="og:title" content="KKGMI Surabaya 10 - Madrasah Hebat Bermartabat">
-    <meta property="og:description" content="Pusat informasi Perangkat Pembelajaran, Emis, Pdum, dan CBT untuk Madrasah Ibtidaiyah Surabaya.">
-    <meta property="og:type" content="website">
+    <title>KKGMI Surabaya 10 | Pusat Perangkat & Info Akademik Madrasah</title>
+    <meta name="description" content="Website Resmi KKGMI Surabaya 10. Info terkait Perangkat Pembelajaran, TKA, CBT, Soal AM, Soal UM, EMIS, dan PDUM Kemenag.">
+    <meta name="keywords" content="KKGMI, Surabaya 10, Madrasah Hebat, Perangkat Pembelajaran, TKA, CBT, UM, AM, Emis, Kemenag">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        kemenagGreen: '#005C29',
-                        kemenagLightGreen: '#007A33',
-                        kemenagYellow: '#F3C300'
-                    },
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
-                }
-            }
+            theme: { extend: { colors: { kemenagGreen: '#005C29', kemenagYellow: '#F3C300' } } }
         }
     </script>
     <style>
-        .loader { border-top-color: #F3C300; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
+        .loader { border-top-color: #F3C300; -webkit-animation: spinner 1s linear infinite; animation: spinner 1s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hide { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body class="bg-slate-50 font-sans text-slate-800 flex flex-col min-h-screen">
 
-    <div id="loading" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
-        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-20 w-20 mb-4"></div>
-        <h2 class="text-xl font-semibold text-kemenagGreen">Memuat Data KKGMI...</h2>
+    <div id="loading" class="fixed inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hide">
+        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-16 w-16 mb-4"></div>
+        <p class="font-bold text-kemenagGreen" id="loading-text">Memuat Data...</p>
     </div>
 
-    <header class="bg-kemenagGreen text-white shadow-lg sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-12 bg-white rounded-full p-1">
-                <div>
-                    <h1 class="text-xl font-bold tracking-wide">KKGMI SURABAYA 10</h1>
-                    <p class="text-xs text-kemenagYellow font-semibold">Madrasah Hebat Bermartabat</p>
-                </div>
-            </div>
-            <nav class="hidden md:flex gap-6 font-semibold text-sm uppercase">
-                <a href="#beranda" class="hover:text-kemenagYellow transition">Beranda</a>
-                <a href="#perangkat" class="hover:text-kemenagYellow transition">Perangkat Pembelajaran</a>
-                <a href="#berita" class="hover:text-kemenagYellow transition">Informasi</a>
-                <a href="#pengurus" class="hover:text-kemenagYellow transition">Pengurus</a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="flex-grow">
-        <section id="beranda" class="relative bg-kemenagLightGreen text-white py-20">
-            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#F3C300 2px, transparent 2px); background-size: 30px 30px;"></div>
-            <div class="container mx-auto px-4 text-center relative z-10">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">Kelompok Kerja Guru Madrasah Ibtidaiyah<br><span class="text-kemenagYellow">Surabaya 10</span></h2>
-                <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">Wadah kolaborasi, inovasi, dan pengembangan profesionalisme pendidik. Pusat integrasi data EMIS, PDUM, CBT, serta bank soal TKA, AM, dan UM.</p>
-                <a href="#perangkat" class="bg-kemenagYellow text-kemenagGreen font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition transform hover:scale-105">
-                    <i class="fas fa-folder-open mr-2"></i> Akses Perangkat Pembelajaran
-                </a>
-            </div>
-        </section>
-
-        <section class="container mx-auto px-4 -mt-10 relative z-20">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
-                    <i class="fas fa-laptop-code text-4xl text-kemenagGreen mb-3"></i>
-                    <h3 class="font-bold text-gray-800">CBT & Ujian Online</h3>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
-                    <i class="fas fa-database text-4xl text-kemenagGreen mb-3"></i>
-                    <h3 class="font-bold text-gray-800">Portal EMIS & PDUM</h3>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
-                    <i class="fas fa-file-alt text-4xl text-kemenagGreen mb-3"></i>
-                    <h3 class="font-bold text-gray-800">Bank Soal AM & UM</h3>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
-                    <i class="fas fa-brain text-4xl text-kemenagGreen mb-3"></i>
-                    <h3 class="font-bold text-gray-800">Info TKA</h3>
-                </div>
-            </div>
-        </section>
-
-        <section id="perangkat" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-kemenagGreen text-center mb-2">Perangkat Pembelajaran & Berkas</h2>
-                <div class="w-16 h-1 bg-kemenagYellow mx-auto mb-10"></div>
-                <div id="perangkat-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+    <div id="view-public" class="flex-grow flex flex-col">
+        <header class="bg-kemenagGreen text-white shadow-lg sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-10 bg-white rounded-full p-1">
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold">KKGMI SURABAYA 10</h1>
+                        <p class="text-[10px] md:text-xs text-kemenagYellow font-semibold">Madrasah Maju, Bermutu, Mendunia</p>
                     </div>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="toggleView('login')" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition"><i class="fas fa-lock md:mr-1"></i><span class="hidden md:inline"> Admin</span></button>
+                </div>
+            </div>
+        </header>
+
+        <section class="bg-gradient-to-b from-kemenagGreen to-[#007A33] text-white py-16 md:py-24 text-center px-4">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">Portal Akademik KKGMI</h2>
+            <p class="md:text-lg max-w-2xl mx-auto text-slate-200">Pusat informasi penyusunan Perangkat Pembelajaran, jadwal TKA, simulasi CBT, hingga persiapan Asesmen Madrasah (AM) 2026/2027.</p>
+        </section>
+
+        <section class="container mx-auto px-4 -mt-10 relative z-10 mb-16">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border-t-4 border-kemenagYellow">
+                <div class="flex items-center justify-between mb-6 border-b pb-4">
+                    <h3 class="text-2xl font-bold text-kemenagGreen"><i class="fas fa-calendar-alt mr-2 text-kemenagYellow"></i> Agenda & Jadwal Ujian 26/27</h3>
+                    <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Proker RAKER</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600">
+                                <th class="p-3 font-bold border-b">Tanggal</th>
+                                <th class="p-3 font-bold border-b">Kategori</th>
+                                <th class="p-3 font-bold border-b">Kegiatan</th>
+                                <th class="p-3 font-bold border-b">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="public-agenda-body">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <section id="berita" class="py-16 bg-white">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-kemenagGreen text-center mb-2">Informasi & Kegiatan Terbaru</h2>
-                <div class="w-16 h-1 bg-kemenagYellow mx-auto mb-10"></div>
-                <div id="berita-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    </div>
-            </div>
-        </section>
-    </main>
+        <footer class="bg-slate-800 text-slate-300 py-8 text-center mt-auto">
+            <p class="text-sm">© 2026 KKGMI Surabaya 10. Powered by Google Workspace & GitHub.</p>
+        </footer>
+    </div>
 
-    <footer class="bg-kemenagGreen text-gray-200 py-10 border-t-4 border-kemenagYellow">
-        <div class="container mx-auto px-4 text-center">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-16 bg-white rounded-full p-2 mx-auto mb-4">
-            <h3 class="text-xl font-bold text-white mb-2">KKGMI SURABAYA 10</h3>
-            <p class="text-sm mb-6 max-w-xl mx-auto">Kementerian Agama Republik Indonesia.<br>Bersama mewujudkan pendidikan dasar Islam yang berkualitas melalui inovasi, digitalisasi, dan kolaborasi guru.</p>
-            <p class="text-sm text-gray-400">© 2026 KKGMI Surabaya 10. Powered by Google Apps Script & GitHub Pages.</p>
+    <div id="view-login" class="flex-grow flex items-center justify-center bg-slate-200 hide relative">
+        <div class="absolute inset-0 bg-kemenagGreen opacity-90"></div>
+        <div class="relative z-10 w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl mx-4">
+            <div class="text-center mb-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" class="h-16 mx-auto mb-3">
+                <h2 class="text-2xl font-bold text-slate-800">Admin KKGMI</h2>
+            </div>
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <input type="text" id="log-user" placeholder="Username" class="w-full mb-4 px-4 py-3 rounded-xl border bg-slate-50 focus:ring-2 focus:ring-kemenagGreen outline-none" required>
+                <input type="password" id="log-pass" placeholder="Password" class="w-full mb-6 px-4 py-3 rounded-xl border bg-slate-50 focus:ring-2 focus:ring-kemenagGreen outline-none" required>
+                <button type="submit" class="w-full bg-kemenagYellow hover:bg-yellow-500 text-kemenagGreen font-bold py-3 rounded-xl shadow-lg transition">LOGIN ADMIN</button>
+            </form>
+            <button onclick="toggleView('public')" class="w-full mt-4 text-sm text-slate-500 hover:text-kemenagGreen font-semibold">Kembali ke Web Publik</button>
         </div>
-    </footer>
+    </div>
+
+    <div id="view-admin" class="flex-grow flex h-screen hide overflow-hidden bg-slate-100">
+        <aside class="w-64 bg-[#002858] text-white flex flex-col hidden md:flex">
+            <div class="p-6 text-center border-b border-blue-800">
+                <h4 class="font-bold text-xl">Admin Panel</h4>
+            </div>
+            <div class="flex-1 overflow-y-auto py-4">
+                <p class="px-6 text-xs text-blue-300 mb-2 uppercase font-bold">Kelola Data Web</p>
+                <button onclick="loadAdminTable('Agenda')" class="w-full text-left px-6 py-3 hover:bg-white/10 border-l-4 border-transparent focus:border-kemenagYellow"><i class="fas fa-calendar-alt w-6"></i> Proker & Agenda</button>
+                <button onclick="loadAdminTable('Berita')" class="w-full text-left px-6 py-3 hover:bg-white/10 border-l-4 border-transparent focus:border-kemenagYellow"><i class="fas fa-newspaper w-6"></i> Berita KKG</button>
+            </div>
+            <div class="p-4 border-t border-blue-800">
+                <button onclick="handleLogout()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-sm font-bold"><i class="fas fa-sign-out-alt mr-2"></i> Keluar</button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full overflow-hidden">
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center md:hidden">
+                <h2 class="font-bold text-kemenagGreen">Admin Panel</h2>
+                <div class="flex gap-2">
+                    <button onclick="loadAdminTable('Agenda')" class="px-3 py-1 bg-slate-100 rounded text-sm"><i class="fas fa-calendar"></i></button>
+                    <button onclick="handleLogout()" class="px-3 py-1 bg-red-100 text-red-600 rounded text-sm"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </header>
+
+            <div class="flex-1 p-4 md:p-8 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="admin-table-title" class="text-2xl font-bold text-slate-800">Pilih Menu di Samping</h2>
+                    <button id="btn-add-new" onclick="openFormModal()" class="bg-kemenagGreen hover:bg-[#007A33] text-white px-4 py-2 rounded-lg font-bold shadow hide"><i class="fas fa-plus mr-2"></i>Tambah Data</button>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border overflow-x-auto hide" id="admin-table-container">
+                    <table class="w-full text-left border-collapse">
+                        <thead id="admin-thead" class="bg-slate-50 text-slate-600 border-b"></thead>
+                        <tbody id="admin-tbody" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="admin-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hide">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center">
+                <h3 class="font-bold text-lg" id="modal-title">Form Data</h3>
+                <button onclick="closeFormModal()" class="text-slate-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto flex-1">
+                <form id="admin-form" class="space-y-4"></form>
+            </div>
+            <div class="p-5 border-t bg-slate-50 rounded-b-2xl flex justify-end gap-3">
+                <button onclick="closeFormModal()" class="px-5 py-2 rounded-lg bg-slate-200 font-bold text-slate-700">Batal</button>
+                <button onclick="saveAdminData()" class="px-5 py-2 rounded-lg bg-kemenagGreen text-white font-bold shadow">Simpan</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvkGx432SiJJiQEMlOCYdP6NfGnntc1BiBkYZtxP9ecqmZ6RsDvUj60Feyyx8pEUPV/exec';
+        // MASUKKAN URL WEB APP ANDA DI SINI
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtKVs3k66Xu0PDS5UDZsluBtfKhLltke7ABNd9ZFlCsMEusuexKU_sgSqaultZQ5J/exec'; 
+        
+        let currentSheet = '';
+        let currentHeaders = [];
+        let editId = null;
 
-        async function fetchData() {
-            try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=getDashboard`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    renderBerita(result.berita);
-                    renderPerangkat(result.perangkat);
-                }
-                
-                // Hilangkan loading screen
-                document.getElementById('loading').style.display = 'none';
-            } catch (error) {
-                console.error("Error fetching data: ", error);
-                document.getElementById('loading').innerHTML = '<h2 class="text-red-500 font-bold">Gagal memuat data. Periksa koneksi internet atau konfigurasi URL Apps Script.</h2>';
-            }
+        // Routing SPA Sederhana
+        function toggleView(view) {
+            document.getElementById('view-public').classList.add('hide');
+            document.getElementById('view-login').classList.add('hide');
+            document.getElementById('view-admin').classList.add('hide');
+            document.getElementById(`view-${view}`).classList.remove('hide');
+            if(view === 'public') loadPublicData();
         }
 
-        function renderBerita(beritaArr) {
-            const container = document.getElementById('berita-container');
-            if(beritaArr.length === 0) {
-                container.innerHTML = '<p class="text-center col-span-3 text-gray-500">Belum ada informasi terbaru.</p>';
-                return;
-            }
+        function showLoading(text) {
+            document.getElementById('loading-text').innerText = text;
+            document.getElementById('loading').classList.remove('hide');
+        }
+        function hideLoading() { document.getElementById('loading').classList.add('hide'); }
+
+        // MENGAMBIL DATA PUBLIK
+        async function loadPublicData() {
+            showLoading('Mengambil Data Akademik...');
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST', body: JSON.stringify({ action: 'getPublicData' })
+                }).then(r => r.json());
+                
+                let agendaHtml = '';
+                if(res.agenda && res.agenda.length > 0) {
+                    res.agenda.forEach(a => {
+                        let color = a.kategori.includes('Ujian') ? 'text-red-600 bg-red-100' : 
+                                    a.kategori.includes('TKA') ? 'text-blue-600 bg-blue-100' : 'text-green-600 bg-green-100';
+                        agendaHtml += `
+                        <tr class="border-b hover:bg-slate-50 transition">
+                            <td class="p-3 font-semibold text-slate-700 whitespace-nowrap">${a.tanggal}</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded text-xs font-bold ${color}">${a.kategori}</span></td>
+                            <td class="p-3 font-bold text-kemenagGreen">${a.kegiatan}</td>
+                            <td class="p-3 text-sm text-slate-600">${a.keterangan}</td>
+                        </tr>`;
+                    });
+                } else {
+                    agendaHtml = '<tr><td colspan="4" class="p-4 text-center text-slate-500">Jadwal belum tersedia.</td></tr>';
+                }
+                document.getElementById('public-agenda-body').innerHTML = agendaHtml;
+                hideLoading();
+            } catch(e) { hideLoading(); console.log(e); }
+        }
+
+        // LOGIN ADMIN
+        async function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('log-user').value;
+            const p = document.getElementById('log-pass').value;
+            showLoading('Verifikasi Data...');
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST', body: JSON.stringify({ action: 'login', username: u, password: p })
+                }).then(r => r.json());
+                
+                hideLoading();
+                if(res.success) {
+                    sessionStorage.setItem('isAdmin', 'true');
+                    document.getElementById('log-user').value = '';
+                    document.getElementById('log-pass').value = '';
+                    toggleView('admin');
+                    loadAdminTable('Agenda'); // Load default
+                } else { Swal.fire('Gagal', res.message, 'error'); }
+            } catch(e) { hideLoading(); Swal.fire('Error', 'Koneksi gagal', 'error'); }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('isAdmin');
+            toggleView('public');
+        }
+
+        // FUNGSI ADMIN CRUD
+        async function loadAdminTable(sheetName) {
+            currentSheet = sheetName;
+            document.getElementById('admin-table-title').innerText = `Kelola Data ${sheetName}`;
+            document.getElementById('btn-add-new').classList.remove('hide');
+            document.getElementById('admin-table-container').classList.remove('hide');
+            
+            showLoading(`Memuat Data ${sheetName}...`);
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST', body: JSON.stringify({ action: 'getAllData', sheetName: sheetName })
+                }).then(r => r.json());
+                
+                hideLoading();
+                if(res.success) {
+                    currentHeaders = res.headers;
+                    let thead = '<tr>';
+                    currentHeaders.forEach(h => thead += `<th class="p-3 uppercase text-xs">${h}</th>`);
+                    thead += '<th class="p-3 text-center">Aksi</th></tr>';
+                    document.getElementById('admin-thead').innerHTML = thead;
+
+                    let tbody = '';
+                    res.data.forEach(row => {
+                        tbody += '<tr class="border-b hover:bg-slate-50">';
+                        row.forEach(cell => tbody += `<td class="p-3 truncate max-w-xs">${cell}</td>`);
+                        tbody += `<td class="p-3 text-center whitespace-nowrap">
+                            <button onclick='openFormModal(${JSON.stringify(row)})' class="bg-amber-100 text-amber-600 px-2 py-1 rounded mr-2"><i class="fas fa-edit"></i></button>
+                            <button onclick='deleteData("${row[0]}")' class="bg-red-100 text-red-600 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>
+                        </td></tr>`;
+                    });
+                    document.getElementById('admin-tbody').innerHTML = tbody;
+                }
+            } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal memuat data', 'error'); }
+        }
+
+        function openFormModal(rowData = null) {
+            editId = rowData ? rowData[0] : null;
+            document.getElementById('modal-title').innerText = rowData ? 'Edit Data' : 'Tambah Data';
             
             let html = '';
-            beritaArr.forEach(b => {
+            currentHeaders.forEach((h, i) => {
+                if(h.toLowerCase() === 'id') return; // Hide ID
+                let val = rowData ? rowData[i] : '';
+                let type = (h.toLowerCase().includes('tanggal')) ? 'date' : 'text';
+                
                 html += `
-                <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1">
-                    <img src="${b.gambar}" alt="${b.judul}" class="w-full h-48 object-cover">
-                    <div class="p-5">
-                        <span class="text-xs font-bold text-kemenagYellow bg-green-50 px-2 py-1 rounded"><i class="far fa-calendar-alt mr-1"></i> ${b.tanggal}</span>
-                        <h3 class="font-bold text-lg text-kemenagGreen mt-3 mb-2">${b.judul}</h3>
-                        <p class="text-sm text-gray-600 line-clamp-3">${b.isi.substring(0, 100)}...</p>
-                    </div>
+                <div>
+                    <label class="block font-bold text-sm text-slate-700 mb-1">${h}</label>
+                    <input type="${type}" id="input-${h}" value="${val}" class="w-full p-2 border rounded-lg bg-slate-50 focus:ring-2 focus:ring-kemenagGreen outline-none">
                 </div>`;
             });
-            container.innerHTML = html;
+            document.getElementById('admin-form').innerHTML = html;
+            document.getElementById('admin-modal').classList.remove('hide');
         }
 
-        function renderPerangkat(perangkatArr) {
-            const container = document.getElementById('perangkat-container');
-            if(perangkatArr.length === 0) {
-                container.innerHTML = '<p class="text-center col-span-2 text-gray-500">Belum ada file perangkat pembelajaran.</p>';
-                return;
-            }
-            
-            let html = '';
-            perangkatArr.forEach(p => {
-                html += `
-                <a href="${p.link_download}" target="_blank" class="flex items-center p-4 bg-white rounded-xl shadow border border-gray-200 hover:border-kemenagYellow transition group">
-                    <div class="w-12 h-12 rounded-full bg-green-100 text-kemenagGreen flex items-center justify-center text-xl group-hover:scale-110 transition">
-                        <i class="fas fa-file-pdf"></i>
-                    </div>
-                    <div class="ml-4 flex-1">
-                        <h4 class="font-bold text-gray-800">${p.judul}</h4>
-                        <span class="text-xs text-gray-500 uppercase tracking-wider">${p.kategori}</span>
-                    </div>
-                    <i class="fas fa-download text-gray-300 group-hover:text-kemenagYellow"></i>
-                </a>`;
+        function closeFormModal() { document.getElementById('admin-modal').classList.add('hide'); }
+
+        async function saveAdminData() {
+            let dataObj = {};
+            currentHeaders.forEach(h => {
+                if(h.toLowerCase() !== 'id') dataObj[h] = document.getElementById(`input-${h}`).value;
             });
-            container.innerHTML = html;
+            
+            closeFormModal();
+            showLoading('Menyimpan Data...');
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST', body: JSON.stringify({
+                        action: editId ? 'updateData' : 'insertData',
+                        sheetName: currentSheet,
+                        id: editId,
+                        dataObj: dataObj
+                    })
+                }).then(r => r.json());
+                
+                hideLoading();
+                if(res.success) { Swal.fire('Sukses', res.message, 'success'); loadAdminTable(currentSheet); }
+                else { Swal.fire('Error', res.message, 'error'); }
+            } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal menyimpan', 'error'); }
         }
 
-        // Jalankan fetch saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', fetchData);
+        async function deleteData(id) {
+            if(confirm('Yakin ingin menghapus data ini?')) {
+                showLoading('Menghapus...');
+                try {
+                    const res = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST', body: JSON.stringify({ action: 'deleteData', sheetName: currentSheet, id: id })
+                    }).then(r => r.json());
+                    hideLoading();
+                    if(res.success) loadAdminTable(currentSheet);
+                } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal menghapus', 'error'); }
+            }
+        }
+
+        // Inisiasi Aplikasi
+        document.addEventListener('DOMContentLoaded', () => {
+            if(sessionStorage.getItem('isAdmin') === 'true') {
+                toggleView('admin');
+                loadAdminTable('Agenda');
+            } else {
+                toggleView('public');
+            }
+        });
     </script>
 </body>
 </html>
