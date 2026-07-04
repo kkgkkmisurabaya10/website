@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>KKGMI Surabaya 10 - Portal Perangkat Pembelajaran & Ujian Madrasah</title>
+    <meta name="description" content="Website Resmi KKGMI Surabaya 10. Pusat informasi Perangkat Pembelajaran, Test Kemampuan Akademik (TKA), Emis, Pdum, CBT, Soal AM, Soal UM untuk Madrasah Ibtidaiyah di Surabaya. Mewujudkan Madrasah Hebat Bermartabat.">
+    <meta name="keywords" content="KKG, Perangkat Pembelajaran, Madrasah hebat, TKA, Test Kemampuan Akademik, KKGMI, Surabaya, Kemenag, Emis, Pdum, CBT, Ujian Online, Soal AM, Soal UM">
+    <meta name="author" content="KKGMI Surabaya 10">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="KKGMI Surabaya 10 - Madrasah Hebat Bermartabat">
+    <meta property="og:description" content="Pusat informasi Perangkat Pembelajaran, Emis, Pdum, dan CBT untuk Madrasah Ibtidaiyah Surabaya.">
+    <meta property="og:type" content="website">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kemenagGreen: '#005C29',
+                        kemenagLightGreen: '#007A33',
+                        kemenagYellow: '#F3C300'
+                    },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .loader { border-top-color: #F3C300; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <div id="loading" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-20 w-20 mb-4"></div>
+        <h2 class="text-xl font-semibold text-kemenagGreen">Memuat Data KKGMI...</h2>
+    </div>
+
+    <header class="bg-kemenagGreen text-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-12 bg-white rounded-full p-1">
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">KKGMI SURABAYA 10</h1>
+                    <p class="text-xs text-kemenagYellow font-semibold">Madrasah Hebat Bermartabat</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex gap-6 font-semibold text-sm uppercase">
+                <a href="#beranda" class="hover:text-kemenagYellow transition">Beranda</a>
+                <a href="#perangkat" class="hover:text-kemenagYellow transition">Perangkat Pembelajaran</a>
+                <a href="#berita" class="hover:text-kemenagYellow transition">Informasi</a>
+                <a href="#pengurus" class="hover:text-kemenagYellow transition">Pengurus</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section id="beranda" class="relative bg-kemenagLightGreen text-white py-20">
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#F3C300 2px, transparent 2px); background-size: 30px 30px;"></div>
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">Kelompok Kerja Guru Madrasah Ibtidaiyah<br><span class="text-kemenagYellow">Surabaya 10</span></h2>
+                <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">Wadah kolaborasi, inovasi, dan pengembangan profesionalisme pendidik. Pusat integrasi data EMIS, PDUM, CBT, serta bank soal TKA, AM, dan UM.</p>
+                <a href="#perangkat" class="bg-kemenagYellow text-kemenagGreen font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition transform hover:scale-105">
+                    <i class="fas fa-folder-open mr-2"></i> Akses Perangkat Pembelajaran
+                </a>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 -mt-10 relative z-20">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
+                    <i class="fas fa-laptop-code text-4xl text-kemenagGreen mb-3"></i>
+                    <h3 class="font-bold text-gray-800">CBT & Ujian Online</h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
+                    <i class="fas fa-database text-4xl text-kemenagGreen mb-3"></i>
+                    <h3 class="font-bold text-gray-800">Portal EMIS & PDUM</h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
+                    <i class="fas fa-file-alt text-4xl text-kemenagGreen mb-3"></i>
+                    <h3 class="font-bold text-gray-800">Bank Soal AM & UM</h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-kemenagYellow text-center">
+                    <i class="fas fa-brain text-4xl text-kemenagGreen mb-3"></i>
+                    <h3 class="font-bold text-gray-800">Info TKA</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="perangkat" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-kemenagGreen text-center mb-2">Perangkat Pembelajaran & Berkas</h2>
+                <div class="w-16 h-1 bg-kemenagYellow mx-auto mb-10"></div>
+                <div id="perangkat-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    </div>
+            </div>
+        </section>
+
+        <section id="berita" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-kemenagGreen text-center mb-2">Informasi & Kegiatan Terbaru</h2>
+                <div class="w-16 h-1 bg-kemenagYellow mx-auto mb-10"></div>
+                <div id="berita-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-kemenagGreen text-gray-200 py-10 border-t-4 border-kemenagYellow">
+        <div class="container mx-auto px-4 text-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-16 bg-white rounded-full p-2 mx-auto mb-4">
+            <h3 class="text-xl font-bold text-white mb-2">KKGMI SURABAYA 10</h3>
+            <p class="text-sm mb-6 max-w-xl mx-auto">Kementerian Agama Republik Indonesia.<br>Bersama mewujudkan pendidikan dasar Islam yang berkualitas melalui inovasi, digitalisasi, dan kolaborasi guru.</p>
+            <p class="text-sm text-gray-400">© 2026 KKGMI Surabaya 10. Powered by Google Apps Script & GitHub Pages.</p>
+        </div>
+    </footer>
+
+    <script>
+        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvkGx432SiJJiQEMlOCYdP6NfGnntc1BiBkYZtxP9ecqmZ6RsDvUj60Feyyx8pEUPV/exec';
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=getDashboard`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderBerita(result.berita);
+                    renderPerangkat(result.perangkat);
+                }
+                
+                // Hilangkan loading screen
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+                document.getElementById('loading').innerHTML = '<h2 class="text-red-500 font-bold">Gagal memuat data. Periksa koneksi internet atau konfigurasi URL Apps Script.</h2>';
+            }
+        }
+
+        function renderBerita(beritaArr) {
+            const container = document.getElementById('berita-container');
+            if(beritaArr.length === 0) {
+                container.innerHTML = '<p class="text-center col-span-3 text-gray-500">Belum ada informasi terbaru.</p>';
+                return;
+            }
+            
+            let html = '';
+            beritaArr.forEach(b => {
+                html += `
+                <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1">
+                    <img src="${b.gambar}" alt="${b.judul}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <span class="text-xs font-bold text-kemenagYellow bg-green-50 px-2 py-1 rounded"><i class="far fa-calendar-alt mr-1"></i> ${b.tanggal}</span>
+                        <h3 class="font-bold text-lg text-kemenagGreen mt-3 mb-2">${b.judul}</h3>
+                        <p class="text-sm text-gray-600 line-clamp-3">${b.isi.substring(0, 100)}...</p>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderPerangkat(perangkatArr) {
+            const container = document.getElementById('perangkat-container');
+            if(perangkatArr.length === 0) {
+                container.innerHTML = '<p class="text-center col-span-2 text-gray-500">Belum ada file perangkat pembelajaran.</p>';
+                return;
+            }
+            
+            let html = '';
+            perangkatArr.forEach(p => {
+                html += `
+                <a href="${p.link_download}" target="_blank" class="flex items-center p-4 bg-white rounded-xl shadow border border-gray-200 hover:border-kemenagYellow transition group">
+                    <div class="w-12 h-12 rounded-full bg-green-100 text-kemenagGreen flex items-center justify-center text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h4 class="font-bold text-gray-800">${p.judul}</h4>
+                        <span class="text-xs text-gray-500 uppercase tracking-wider">${p.kategori}</span>
+                    </div>
+                    <i class="fas fa-download text-gray-300 group-hover:text-kemenagYellow"></i>
+                </a>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Jalankan fetch saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>
