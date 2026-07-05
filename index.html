@@ -3,8 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- SEO OPTIMIZATION KKGMI -->
     <title>KKGMI Surabaya 10 | Madrasah Hebat Bermartabat</title>
     <meta name="description" content="Website Resmi KKGMI Surabaya 10. Pusat informasi Perangkat Pembelajaran, Madrasah hebat, TKA, Test Kemampuan Akademik, CBT, Ujian Online, Soal AM, dan Soal UM. Terintegrasi Emis dan Pdum Kemenag.">
     <meta name="keywords" content="KKG, Perangkat Pembelajaran, Madrasah hebat, TKA, Test Kemampuan Akademik, KKGMI, Surabaya, Kemenag, Emis, Pdum, CBT, Ujian Online, Soal AM, Soal UM">
@@ -19,26 +17,19 @@
     <style>
         body { font-family: 'Roboto', sans-serif; background-color: #f8f9fa; display: flex; flex-direction: column; min-height: 100vh; }
         h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
-        
-        /* Ciri Khas Kemenag: Emerald Green & Gold/Orange */
         .top-bar { background-color: #065f46; color: #e2e8f0; font-size: 13px; }
         .header-main { background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 50; }
-        
         .nav-menu ul { display: flex; list-style: none; margin: 0; padding: 0; gap: 24px; align-items: center; }
         .nav-menu a { color: #334155; font-weight: 600; font-size: 14px; text-transform: uppercase; text-decoration: none; transition: 0.3s; cursor: pointer; padding: 10px 0; }
         .nav-menu a:hover, .nav-menu a.active-link { color: #d97706; border-bottom: 2px solid #d97706; }
-        
         .quick-link-box { background: #ffffff; border-radius: 8px; border-top: 4px solid #059669; transition: transform 0.3s, box-shadow 0.3s; }
         .quick-link-box:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top-color: #d97706; }
-        
         .news-card { transition: transform 0.3s ease; border: 1px solid #e2e8f0; border-radius: 8px; }
         .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        
         main#site-content { flex: 1; }
         .site-section { display: none; animation: fadeIn 0.5s; }
         .site-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .mobile-menu-btn { display: none; font-size: 24px; color: #065f46; background: none; border: none; }
         @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
@@ -51,20 +42,17 @@
 </head>
 <body>
 
-    <!-- Konfigurasi API App Script -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbw9yMJsaLMY8MebDdU_bKxDD2LIMeK4Vk3xlFA3anBkRW0hEeCRucCQkRmmOB6WdGm2/exec"; // Masukkan URL Deploy Apps Script di sini
+        const API_URL = "https://script.google.com/macros/s/AKfycbyRkAVDv9bx49SIx6MQVzDYKruu2NZ_MdAqYo601h942gHcZOsfq-rys9JAeBx4bGNj/exec"; 
     </script>
 
     <div class="top-bar py-2 hidden md:block border-b border-green-800">
         <div class="container mx-auto flex justify-between items-center px-4">
             <div class="flex gap-4">
                 <span><i class="fas fa-envelope mr-2 text-amber-500"></i> kkgmisurabaya10@gmail.com</span>
-                <span><i class="fas fa-phone mr-2 text-amber-500"></i> 6285745686831</span>
+                <span><i class="fas fa-phone mr-2 text-amber-500"></i> 6285895283075</span>
             </div>
-            <div id="top-medsos" class="flex gap-4">
-                <!-- Medsos dimuat dari JS -->
-            </div>
+            <div id="top-medsos" class="flex gap-4"></div>
         </div>
     </div>
 
@@ -78,11 +66,9 @@
                 </div>
             </div>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-            
             <nav class="nav-menu md:block" id="navMenu">
                 <ul id="dynamic-menus">
                     <li><a onclick="nav('home', 'BERANDA')" id="link-home" class="active-link">BERANDA</a></li>
-                    <!-- Menu lain dimuat dari JS agar sesuai setting Admin -->
                 </ul>
             </nav>
         </div>
@@ -100,14 +86,13 @@
     </div>
 
     <main id="site-content">
-        <!-- BERANDA -->
         <section id="section-home" class="site-section active">
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner" id="carousel-container">
-                    <!-- Carousel dimuat dari JS -->
                     <div class='carousel-item active' style='height: 500px;'>
-                        <div class='absolute inset-0 bg-green-900 bg-opacity-70'></div>
-                        <div class='carousel-caption pb-20'><h2 class='text-4xl font-bold'>Memuat Halaman...</h2></div>
+                        <div class='absolute inset-0 bg-green-900 flex justify-center items-center'>
+                            <h2 class='text-4xl font-bold text-white'><i class="fas fa-spinner fa-spin mr-3"></i>Memuat Komponen...</h2>
+                        </div>
                     </div>
                 </div>
                 <button class="carousel-control-prev z-30 w-16" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
@@ -115,25 +100,21 @@
             </div>
 
             <div class="container mx-auto px-4 -mt-16 relative z-30 mb-16" data-aos="fade-up">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" id="quick-links-container">
-                    <!-- Quick links dimuat dari JS -->
-                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" id="quick-links-container"></div>
             </div>
 
             <div class="container mx-auto px-4 py-10" data-aos="fade-up">
                 <div class="flex flex-col md:flex-row gap-8 items-center bg-white p-8 md:p-10 rounded-xl shadow-sm border border-slate-200">
                     <div class="md:w-1/3 text-center">
-                        <img id="kepsek-foto" src="" class="rounded-xl w-full max-w-xs mx-auto shadow-md border-4 border-white" alt="Ketua KKGMI">
-                        <h4 id="kepsek-nama" class="mt-4 font-bold text-lg text-green-800">Ketua KKGMI</h4>
+                        <img id="kepsek-foto" src="https://via.placeholder.com/300" class="rounded-xl w-full max-w-xs mx-auto shadow-md border-4 border-white" alt="Ketua KKGMI">
+                        <h4 id="kepsek-nama" class="mt-4 font-bold text-lg text-green-800">Memuat...</h4>
                     </div>
                     <div class="md:w-2/3">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-12 h-1 bg-amber-500"></div>
                             <h2 class="text-2xl md:text-3xl font-bold text-green-800 uppercase m-0">Sambutan Ketua KKGMI</h2>
                         </div>
-                        <div id="kepsek-isi" class="text-slate-600 leading-relaxed text-justify mt-4">
-                            <!-- Sambutan dimuat dari JS -->
-                        </div>
+                        <div id="kepsek-isi" class="text-slate-600 leading-relaxed text-justify mt-4">Memuat sambutan...</div>
                     </div>
                 </div>
             </div>
@@ -156,9 +137,7 @@
                         <h2 class="text-3xl font-bold text-green-800 uppercase">Berita & Informasi KKG</h2>
                         <div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="berita-home-container">
-                        <!-- Berita dimuat dari JS -->
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="berita-home-container"></div>
                     <div class="text-center mt-10">
                         <button onclick="nav('berita', 'BERITA')" class="bg-green-700 hover:bg-green-800 text-white px-8 py-2.5 rounded text-sm font-bold shadow-md transition">LIHAT SEMUA BERITA</button>
                     </div>
@@ -166,19 +145,16 @@
             </div>
         </section>
 
-        <!-- MENU: PROFIL -->
         <section id="section-profil" class="site-section py-16 container mx-auto px-4">
             <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Profil KKGMI</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
             <div id="profil-container" class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-slate-600 leading-relaxed text-justify"></div>
         </section>
 
-        <!-- MENU: GURU & STAFF -->
         <section id="section-guru" class="site-section py-16 container mx-auto px-4">
             <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Pengurus & Anggota</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="guru-container"></div>
         </section>
 
-        <!-- MENU: BERITA -->
         <section id="section-berita" class="site-section py-16 container mx-auto px-4">
             <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Kumpulan Berita</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="berita-all-container"></div>
@@ -186,38 +162,21 @@
         
         <section id="section-baca" class="site-section py-12 container mx-auto px-4"></section>
         
-        <!-- MENU: GALERI -->
         <section id="section-galeri" class="site-section py-16 container mx-auto px-4">
              <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Galeri Kegiatan</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
              <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="galeri-container"></div>
         </section>
 
-        <!-- MENU: INFO KELULUSAN -->
-        <section id="section-infokelulusan" class="site-section py-16 container mx-auto px-4">
-            <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Informasi Kelulusan / Ujian</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
-            <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-slate-200 text-center animate__animated animate__fadeInUp">
-                <div class="w-20 h-20 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-green-800 mb-4">Pengumuman Kelulusan & TKA</h3>
-                <p class="text-slate-600 mb-8 leading-relaxed text-lg">Halaman ini diperuntukkan untuk mengakses informasi kelulusan dan hasil Try Out (TKA) siswa-siswi naungan KKGMI Surabaya 10.</p>
-                <a href="#" target="_blank" class="px-8 py-3 bg-green-700 text-white font-bold rounded shadow-md hover:bg-green-800 transition inline-block"><i class="fas fa-external-link-alt mr-2"></i> Buka Portal Pengumuman</a>
-            </div>
-        </section>
-        
-        <!-- MENU: INFO SPMB -->
         <section id="section-spmb" class="site-section py-16 container mx-auto px-4">
              <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Informasi Kegiatan KKG</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
              <div id="spmb-container" class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200"></div>
         </section>
 
-        <!-- MENU: LMS -->
         <section id="section-lms" class="site-section py-16 container mx-auto px-4">
             <div class="text-center mb-10"><h2 class="text-3xl font-bold text-green-800 uppercase">Portal E-Learning & CBT</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center" id="lms-container"></div>
         </section>
 
-        <!-- HALAMAN DINAMIS / PORTAL MENU BARU -->
         <section id="section-dynamic" class="site-section py-16 container mx-auto px-4">
             <div class="text-center mb-10"><h2 id="dyn-title-main" class="text-3xl font-bold text-green-800 uppercase">Portal Informasi</h2><div class="w-16 h-1 bg-amber-500 mx-auto mt-3"></div></div>
             <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-slate-200 text-center animate__animated animate__fadeInUp">
@@ -268,19 +227,14 @@
         </div>
     </footer>
 
-    <!-- SCRIPT SPA UTAMA -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ once: true, offset: 50 });
 
-        // Utility: Membuat Slug URL
-        function createSlug(str) {
-            return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-        }
+        function createSlug(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); }
 
-        // Fetch Data dari API Apps Script
         async function fetchSheet(sheetName) {
             try {
                 const res = await fetch(`${API_URL}?action=getAllData&sheet=${sheetName}`);
@@ -289,58 +243,149 @@
             } catch(e) { console.error("Error fetching " + sheetName); return []; }
         }
         
-        // Render Semua Komponen secara Dinamis (Menggantikan PHP Backend)
         async function initSPA() {
-            // Render Menus
-            const menus = await fetchSheet('menus');
-            let menuHtml = '<li><a onclick="nav(\'home\', \'BERANDA\')" id="link-home" class="active-link">BERANDA</a></li>';
-            menus.forEach(m => {
-                if(m[1] === 'BERANDA' || m[4] !== 'aktif') return; 
-                let label = m[1], linkVal = m[2];
-                if(linkVal.startsWith('http')) {
-                    menuHtml += `<li><a href="${linkVal}" target="_blank">${label}</a></li>`;
-                } else {
-                    menuHtml += `<li><a onclick="nav('${linkVal}', '${label}')" id="link-${linkVal}">${label}</a></li>`;
-                }
-            });
-            document.getElementById('dynamic-menus').innerHTML = menuHtml;
+            try {
+                // Menus
+                const menus = await fetchSheet('menus');
+                let menuHtml = '<li><a onclick="nav(\'home\', \'BERANDA\')" id="link-home" class="active-link">BERANDA</a></li>';
+                menus.forEach(m => {
+                    if(m.label === 'BERANDA' || m.status !== 'aktif') return; 
+                    if(m.link.startsWith('http')) menuHtml += `<li><a href="${m.link}" target="_blank">${m.label}</a></li>`;
+                    else menuHtml += `<li><a onclick="nav('${m.link}', '${m.label}')" id="link-${m.link}">${m.label}</a></li>`;
+                });
+                document.getElementById('dynamic-menus').innerHTML = menuHtml;
 
-            // Render Landing Page / Sambutan
-            const landing = await fetchSheet('LandingPage');
-            const kepsek = landing.find(l => l[1] === 'Kepala_Sekolah');
-            if(kepsek) {
-                document.getElementById('kepsek-nama').innerText = kepsek[2];
-                document.getElementById('kepsek-isi').innerHTML = kepsek[3];
-                if(kepsek[4]) document.getElementById('kepsek-foto').src = kepsek[4];
-            }
-
-            // Render Berita
-            const berita = await fetchSheet('Berita');
-            let bHtmlHome = '', bHtmlAll = '';
-            berita.reverse().forEach((b, index) => {
-                let id = b[0], judul = b[1], tgl = b[2], isi = b[3], img = b[4] || 'https://via.placeholder.com/500x300';
-                try { let p = JSON.parse(img); if(p.length) img = p[0]; } catch(e){}
-                let slug = createSlug(judul);
-                let cleanIsi = isi.replace(/<[^>]*>?/gm, '').substring(0, 90) + '...';
-                
-                let card = `
-                <div class="news-card bg-white overflow-hidden flex flex-col cursor-pointer" onclick="bukaBeritaSlug('${slug}')">
-                    <div class="h-48 overflow-hidden relative"><img src="${img}" class="w-full h-full object-cover transition duration-500 hover:scale-110"></div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="text-xs text-slate-500 mb-2 flex justify-between">
-                            <span><i class="far fa-calendar-alt text-amber-500 mr-1"></i> ${tgl}</span>
+                // Slider
+                const slider = await fetchSheet('Slider');
+                let sHtml = '';
+                slider.forEach((s, idx) => {
+                    let active = idx === 0 ? 'active' : '';
+                    let alpha1 = (s.kecerahan || 80) / 100;
+                    let bg = `linear-gradient(135deg, rgba(6, 78, 59, ${alpha1}) 0%, rgba(6, 95, 70, ${alpha1*0.5}) 100%)`;
+                    sHtml += `
+                    <div class='carousel-item ${active}' style='height: 550px;'>
+                        <div class='absolute inset-0 z-10' style='background: ${bg};'></div>
+                        <img src='${s.gambar}' class='d-block w-100 h-100 object-cover relative z-0'>
+                        <div class='carousel-caption d-none d-md-block pb-28 z-20 px-4'>
+                            <h2 class='text-4xl md:text-5xl font-bold text-white mb-4 animate__animated animate__fadeInDown'>${s.judul}</h2>
+                            <p class='text-xl text-green-100 animate__animated animate__fadeInUp'>${s.subjudul}</p>
                         </div>
-                        <h3 class="font-bold text-lg text-green-800 mb-3 leading-snug">${judul}</h3>
-                        <p class="text-sm text-slate-600 flex-1">${cleanIsi}</p>
-                        <div class="mt-4 text-amber-600 font-semibold text-sm group">Baca Selengkapnya <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition"></i></div>
-                    </div>
-                </div>`;
-                if(index < 3) bHtmlHome += card;
-                bHtmlAll += card;
-            });
-            document.getElementById('berita-home-container').innerHTML = bHtmlHome;
-            document.getElementById('berita-all-container').innerHTML = bHtmlAll;
-            window.beritaData = berita; // Cache untuk buka berita detail
+                    </div>`;
+                });
+                document.getElementById('carousel-container').innerHTML = sHtml || "<div class='carousel-item active' style='height: 500px;'><div class='absolute inset-0 bg-green-900 bg-opacity-70'></div></div>";
+
+                // QuickLinks
+                const qlinks = await fetchSheet('QuickLinks');
+                let qHtml = '';
+                qlinks.slice(0, 4).forEach(q => {
+                    qHtml += `
+                    <div class='quick-link-box p-6 text-center cursor-pointer shadow-lg' onclick="nav('${q.link_target}')">
+                        <div class='w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 text-green-700 text-2xl group-hover:scale-110 transition-transform'><i class='fas ${q.ikon}'></i></div>
+                        <h3 class='font-bold text-slate-700 text-sm md:text-base'>${q.judul}</h3>
+                    </div>`;
+                });
+                document.getElementById('quick-links-container').innerHTML = qHtml;
+
+                // LandingPage / Kepala Sekolah
+                const landing = await fetchSheet('LandingPage');
+                const kepsek = landing.find(l => l.kode === 'Kepala_Sekolah');
+                if(kepsek) {
+                    document.getElementById('kepsek-nama').innerText = kepsek.judul;
+                    document.getElementById('kepsek-isi').innerHTML = kepsek.isi;
+                    if(kepsek.foto) document.getElementById('kepsek-foto').src = kepsek.foto;
+                }
+
+                // Berita
+                const berita = await fetchSheet('Berita');
+                let bHtmlHome = '', bHtmlAll = '';
+                berita.reverse().forEach((b, index) => {
+                    let img = b.gambar || 'https://via.placeholder.com/500x300';
+                    try { let p = JSON.parse(img); if(p.length) img = p[0]; } catch(e){}
+                    let slug = createSlug(b.judul);
+                    let cleanIsi = (b.isi || "").replace(/<[^>]*>?/gm, '').substring(0, 90) + '...';
+                    
+                    let card = `
+                    <div class="news-card bg-white overflow-hidden flex flex-col cursor-pointer" onclick="bukaBeritaSlug('${slug}')">
+                        <div class="h-48 overflow-hidden relative"><img src="${img}" class="w-full h-full object-cover transition duration-500 hover:scale-110"></div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <div class="text-xs text-slate-500 mb-2 flex justify-between"><span><i class="far fa-calendar-alt text-amber-500 mr-1"></i> ${b.tanggal}</span></div>
+                            <h3 class="font-bold text-lg text-green-800 mb-3 leading-snug">${b.judul}</h3>
+                            <p class="text-sm text-slate-600 flex-1">${cleanIsi}</p>
+                            <div class="mt-4 text-amber-600 font-semibold text-sm group">Baca Selengkapnya <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition"></i></div>
+                        </div>
+                    </div>`;
+                    if(index < 3) bHtmlHome += card;
+                    bHtmlAll += card;
+                });
+                document.getElementById('berita-home-container').innerHTML = bHtmlHome || "<p class='col-span-3 text-center'>Belum ada berita.</p>";
+                document.getElementById('berita-all-container').innerHTML = bHtmlAll || "<p class='col-span-3 text-center'>Belum ada berita.</p>";
+                window.beritaData = berita; 
+
+                // Profil
+                const profil = await fetchSheet('Profil');
+                let pHtml = '';
+                profil.forEach(p => pHtml += `<h3 class='text-xl font-bold text-green-800 border-l-4 border-amber-500 pl-3 mb-4 mt-6'>${p.judul}</h3><div>${p.isi}</div>`);
+                document.getElementById('profil-container').innerHTML = pHtml;
+
+                // Guru
+                const guru = await fetchSheet('Guru');
+                let gHtml = '';
+                guru.forEach(g => {
+                    let img = g.foto || 'https://via.placeholder.com/150';
+                    gHtml += `<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:-translate-y-2 transition transform">
+                        <img src="${img}" class="w-32 h-32 object-cover rounded-full mx-auto border-4 border-green-50 mb-4 shadow">
+                        <h3 class="font-bold text-green-800 text-lg">${g.nama}</h3>
+                        <p class="text-xs font-semibold text-amber-600 bg-amber-50 py-1 px-3 rounded-full inline-block mt-2">${g.jabatan}</p>
+                    </div>`;
+                });
+                document.getElementById('guru-container').innerHTML = gHtml;
+
+                // Galeri
+                const galeri = await fetchSheet('Galeri');
+                let galHtml = '';
+                galeri.forEach(g => galHtml += `<div class="bg-white p-2 rounded shadow-sm border border-slate-200"><img src="${g.foto}" class="w-full h-56 object-cover rounded"><h3 class="font-bold text-center text-green-800 mt-3 text-sm">${g.judul}</h3></div>`);
+                document.getElementById('galeri-container').innerHTML = galHtml;
+
+                // InfoSPMB
+                const spmb = await fetchSheet('InfoSPMB');
+                let spmbHtml = '';
+                spmb.forEach(s => {
+                    if (s.kode === 'Header') {
+                        spmbHtml += `<h2 class='text-2xl font-bold text-green-800 mb-4'>${s.judul}</h2>
+                        <div class='text-slate-600 mb-6 leading-relaxed text-justify'>${s.isi}</div>
+                        ${s.media ? `<img src='${s.media}' class='w-full rounded-xl shadow-sm'>` : ''}`;
+                    }
+                });
+                document.getElementById('spmb-container').innerHTML = spmbHtml;
+
+                // LMS
+                const lms = await fetchSheet('LMS');
+                let lmsHtml = '';
+                lms.forEach(l => lmsHtml += `<div class="bg-white p-8 text-center rounded-xl shadow-md border-t-4 border-green-600"><i class="fas fa-laptop-code text-5xl text-green-600 mb-4"></i><h4 class="font-bold mb-4">${l.judul}</h4><a href="${l.link}" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded text-sm w-full block transition">Akses Portal</a></div>`);
+                document.getElementById('lms-container').innerHTML = lmsHtml;
+
+                // AsetGambar (Logo)
+                const aset = await fetchSheet('AsetGambar');
+                const logo = aset.find(a => a.kode === 'Logo_Header' || a.kode === 'Logo');
+                if (logo) document.getElementById('logo-header').src = logo.url;
+
+                // MediaSosial
+                const medsos = await fetchSheet('MediaSosial');
+                let mTop = '', mFoot = '';
+                medsos.forEach(m => {
+                    let plat = m.platform.toLowerCase();
+                    if(!plat.includes('map') && !plat.includes('whatsapp')) {
+                        let icon = m.icon.startsWith('fa-') ? m.icon : 'fa-' + m.icon;
+                        mTop += `<a href='${m.link}' target='_blank' class='text-green-200 hover:text-white transition'><i class='fab ${icon}'></i></a>`;
+                        mFoot += `<a href='${m.link}' target='_blank' class='w-8 h-8 rounded-full bg-green-800 flex items-center justify-center text-white hover:bg-amber-500 transition'><i class='fab ${icon}'></i></a>`;
+                    }
+                });
+                document.getElementById('top-medsos').innerHTML = mTop;
+                document.getElementById('footer-medsos').innerHTML = mFoot;
+
+            } catch (err) {
+                console.error("Initialization Failed:", err);
+            }
         }
 
         function toggleMobileMenu() { document.getElementById('navMenu').classList.toggle('active'); }
@@ -375,18 +420,18 @@
             nav('baca', 'BACA BERITA', false); 
             if (pushHistory) history.pushState({ section: 'baca', slug: slug }, '', '#' + slug);
             
-            const b = window.beritaData.find(item => createSlug(item[1]) === slug);
+            const b = window.beritaData.find(item => createSlug(item.judul) === slug);
             if(b) {
-                let img = b[4] || '';
+                let img = b.gambar || '';
                 try { let p = JSON.parse(img); if(p.length) img = p[0]; } catch(e){}
                 let imgHtml = img ? `<img src="${img}" class="w-full h-auto max-h-[400px] object-cover rounded-2xl shadow-sm mb-8">` : '';
                 $('#section-baca').html(`
                     <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200">
                         <button onclick="nav('berita')" class="mb-6 bg-slate-100 px-4 py-2 rounded text-sm font-bold text-slate-600 hover:bg-slate-200 transition"><i class="fas fa-arrow-left mr-2"></i> Kembali ke Berita</button>
-                        <h1 class="text-3xl md:text-4xl font-bold text-green-800 mb-4 leading-tight">${b[1]}</h1>
-                        <div class="text-sm text-slate-500 mb-6 flex gap-4"><span><i class="far fa-calendar-alt mr-2 text-amber-500"></i> ${b[2]}</span></div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-green-800 mb-4 leading-tight">${b.judul}</h1>
+                        <div class="text-sm text-slate-500 mb-6 flex gap-4"><span><i class="far fa-calendar-alt mr-2 text-amber-500"></i> ${b.tanggal}</span></div>
                         ${imgHtml}
-                        <div class="text-slate-700 leading-relaxed text-justify">${b[3]}</div>
+                        <div class="text-slate-700 leading-relaxed text-justify">${b.isi}</div>
                     </div>`);
             }
         }
@@ -406,7 +451,7 @@
                 setTimeout(() => {
                     if (document.getElementById('section-' + hash) || document.getElementById('link-' + hash)) nav(hash, '', false);
                     else bukaBeritaSlug(hash, false);
-                }, 500);
+                }, 1000);
             }
         });
     </script>
