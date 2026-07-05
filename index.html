@@ -1,338 +1,325 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <title>KKGMI Surabaya 10 | Pusat Perangkat & Info Akademik Madrasah</title>
-    <meta name="description" content="Website Resmi KKGMI Surabaya 10. Info terkait Perangkat Pembelajaran, TKA, CBT, Soal AM, Soal UM, EMIS, dan PDUM Kemenag.">
-    <meta name="keywords" content="KKGMI, Surabaya 10, Madrasah Hebat, Perangkat Pembelajaran, TKA, CBT, UM, AM, Emis, Kemenag">
+    <title>KKGMI Surabaya 10 - Portal Perangkat & Ujian Madrasah</title>
+    <meta name="description" content="Website Resmi KKGMI Surabaya 10. Pusat informasi Perangkat Pembelajaran, TKA, Emis, Pdum, CBT, Soal AM, Soal UM untuk Madrasah Ibtidaiyah di Surabaya.">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
         tailwind.config = {
-            theme: { extend: { colors: { kemenagGreen: '#005C29', kemenagYellow: '#F3C300' } } }
+            theme: {
+                extend: {
+                    colors: { kemenagGreen: '#005C29', kemenagLightGreen: '#007A33', kemenagYellow: '#F3C300' },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
+                }
+            }
         }
     </script>
     <style>
-        .loader { border-top-color: #F3C300; -webkit-animation: spinner 1s linear infinite; animation: spinner 1s linear infinite; }
+        html { scroll-behavior: smooth; }
+        .loader { border-top-color: #F3C300; animation: spinner 1.5s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .hide { display: none !important; }
+        /* Transisi Admin Panel */
+        #admin-panel { transition: transform 0.4s ease-in-out; transform: translateY(100%); }
+        #admin-panel.active { transform: translateY(0); }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 flex flex-col min-h-screen">
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
-    <div id="loading" class="fixed inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hide">
-        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-16 w-16 mb-4"></div>
-        <p class="font-bold text-kemenagGreen" id="loading-text">Memuat Data...</p>
+    <div id="loading" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+        <div class="loader rounded-full border-8 border-gray-200 h-20 w-20 mb-4"></div>
+        <h2 class="text-xl font-bold text-kemenagGreen tracking-widest animate-pulse">MEMUAT DATA...</h2>
     </div>
 
-    <div id="view-public" class="flex-grow flex flex-col">
-        <header class="bg-kemenagGreen text-white shadow-lg sticky top-0 z-40">
-            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-10 bg-white rounded-full p-1">
-                    <div>
-                        <h1 class="text-lg md:text-xl font-bold">KKGMI SURABAYA 10</h1>
-                        <p class="text-[10px] md:text-xs text-kemenagYellow font-semibold">Madrasah Maju, Bermutu, Mendunia</p>
+    <header class="bg-kemenagGreen text-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" alt="Logo Kemenag" class="h-10 md:h-12 bg-white rounded-full p-1">
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold tracking-wide">KKGMI SURABAYA 10</h1>
+                    <p class="text-[10px] md:text-xs text-kemenagYellow font-semibold">Madrasah Hebat Bermartabat</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex gap-5 font-semibold text-sm uppercase">
+                <a href="#beranda" class="hover:text-kemenagYellow transition">Beranda</a>
+                <a href="#proker" class="hover:text-kemenagYellow transition">Proker 26/27</a>
+                <a href="#perangkat" class="hover:text-kemenagYellow transition">Perangkat</a>
+            </nav>
+            <button class="md:hidden text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section id="beranda" class="relative bg-kemenagLightGreen text-white py-16 md:py-24 overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#F3C300 2px, transparent 2px); background-size: 30px 30px;"></div>
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-md leading-tight">Sistem Informasi Kolaborasi<br><span class="text-kemenagYellow">Guru Madrasah Ibtidaiyah</span></h2>
+                <p class="text-base md:text-lg mb-8 max-w-3xl mx-auto opacity-90">Pusat sinkronisasi EMIS, PDUM, CBT, serta Bank Soal TKA, AM, dan penyusunan Perangkat Pembelajaran KKGMI Surabaya 10 Tahun Ajaran 2026/2027.</p>
+                <a href="#proker" class="inline-block bg-kemenagYellow text-kemenagGreen font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition transform hover:-translate-y-1">
+                    <i class="fas fa-bullhorn mr-2"></i> Info Kegiatan Terbaru
+                </a>
+            </div>
+        </section>
+
+        <section id="proker" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl md:text-3xl font-bold text-kemenagGreen">Program Kerja & Informasi</h2>
+                    <div class="w-20 h-1 bg-kemenagYellow mx-auto mt-3 rounded"></div>
+                </div>
+                <div id="berita-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     </div>
-                </div>
-                <div class="flex gap-4">
-                    <button onclick="toggleView('login')" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition"><i class="fas fa-lock md:mr-1"></i><span class="hidden md:inline"> Admin</span></button>
-                </div>
-            </div>
-        </header>
-
-        <section class="bg-gradient-to-b from-kemenagGreen to-[#007A33] text-white py-16 md:py-24 text-center px-4">
-            <h2 class="text-3xl md:text-5xl font-bold mb-4">Portal Akademik KKGMI</h2>
-            <p class="md:text-lg max-w-2xl mx-auto text-slate-200">Pusat informasi penyusunan Perangkat Pembelajaran, jadwal TKA, simulasi CBT, hingga persiapan Asesmen Madrasah (AM) 2026/2027.</p>
-        </section>
-
-        <section class="container mx-auto px-4 -mt-10 relative z-10 mb-16">
-            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border-t-4 border-kemenagYellow">
-                <div class="flex items-center justify-between mb-6 border-b pb-4">
-                    <h3 class="text-2xl font-bold text-kemenagGreen"><i class="fas fa-calendar-alt mr-2 text-kemenagYellow"></i> Agenda & Jadwal Ujian 26/27</h3>
-                    <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Proker RAKER</span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-600">
-                                <th class="p-3 font-bold border-b">Tanggal</th>
-                                <th class="p-3 font-bold border-b">Kategori</th>
-                                <th class="p-3 font-bold border-b">Kegiatan</th>
-                                <th class="p-3 font-bold border-b">Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="public-agenda-body">
-                            </tbody>
-                    </table>
-                </div>
             </div>
         </section>
 
-        <footer class="bg-slate-800 text-slate-300 py-8 text-center mt-auto">
-            <p class="text-sm">© 2026 KKGMI Surabaya 10. Powered by Google Workspace & GitHub.</p>
-        </footer>
-    </div>
-
-    <div id="view-login" class="flex-grow flex items-center justify-center bg-slate-200 hide relative">
-        <div class="absolute inset-0 bg-kemenagGreen opacity-90"></div>
-        <div class="relative z-10 w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl mx-4">
-            <div class="text-center mb-8">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_Kemenag.png" class="h-16 mx-auto mb-3">
-                <h2 class="text-2xl font-bold text-slate-800">Admin KKGMI</h2>
+        <section id="perangkat" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl md:text-3xl font-bold text-kemenagGreen">Perangkat Pembelajaran & SOP</h2>
+                    <div class="w-20 h-1 bg-kemenagYellow mx-auto mt-3 rounded"></div>
+                </div>
+                <div id="perangkat-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                    </div>
             </div>
-            <form id="form-login" onsubmit="handleLogin(event)">
-                <input type="text" id="log-user" placeholder="Username" class="w-full mb-4 px-4 py-3 rounded-xl border bg-slate-50 focus:ring-2 focus:ring-kemenagGreen outline-none" required>
-                <input type="password" id="log-pass" placeholder="Password" class="w-full mb-6 px-4 py-3 rounded-xl border bg-slate-50 focus:ring-2 focus:ring-kemenagGreen outline-none" required>
-                <button type="submit" class="w-full bg-kemenagYellow hover:bg-yellow-500 text-kemenagGreen font-bold py-3 rounded-xl shadow-lg transition">LOGIN ADMIN</button>
-            </form>
-            <button onclick="toggleView('public')" class="w-full mt-4 text-sm text-slate-500 hover:text-kemenagGreen font-semibold">Kembali ke Web Publik</button>
+        </section>
+    </main>
+
+    <footer class="bg-kemenagGreen text-gray-200 py-8 border-t-4 border-kemenagYellow">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-lg font-bold text-white mb-2">KKGMI SURABAYA 10</h3>
+            <p class="text-xs md:text-sm mb-4 max-w-lg mx-auto opacity-80">Mewujudkan pendidikan dasar Islam yang berkualitas melalui kolaborasi guru. Evaluasi Proker 2025/2026 dan Pelaksanaan 2026/2027.</p>
+            <div class="pt-4 border-t border-green-800 flex flex-col md:flex-row justify-center items-center gap-4 text-xs">
+                <span>© 2026 KKGMI Surabaya 10.</span>
+                <button onclick="openLoginModal()" class="text-kemenagYellow hover:text-white transition font-semibold"><i class="fas fa-lock mr-1"></i> Admin Login</button>
+            </div>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-kemenagGreen p-5 text-center">
+                <h3 class="text-xl font-bold text-white">Login Pengurus KKGMI</h3>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Username</label>
+                    <input type="text" id="admin-user" class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-kemenagGreen focus:ring-1 focus:ring-kemenagGreen" placeholder="Masukkan username">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                    <input type="password" id="admin-pass" class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-kemenagGreen focus:ring-1 focus:ring-kemenagGreen" placeholder="Masukkan password">
+                </div>
+                <button onclick="verifyLogin()" id="btn-login" class="w-full bg-kemenagYellow hover:bg-yellow-500 text-kemenagGreen font-bold py-3 rounded-lg shadow transition">
+                    MASUK KE PANEL ADMIN
+                </button>
+                <button onclick="closeLoginModal()" class="w-full mt-3 text-sm text-gray-500 hover:text-gray-800 transition">Batal</button>
+            </div>
         </div>
     </div>
 
-    <div id="view-admin" class="flex-grow flex h-screen hide overflow-hidden bg-slate-100">
-        <aside class="w-64 bg-[#002858] text-white flex flex-col hidden md:flex">
-            <div class="p-6 text-center border-b border-blue-800">
-                <h4 class="font-bold text-xl">Admin Panel</h4>
+    <div id="admin-panel" class="fixed inset-0 bg-gray-100 z-[60] flex flex-col md:flex-row h-screen">
+        <aside class="w-full md:w-64 bg-gray-900 text-white flex flex-col shadow-xl">
+            <div class="p-5 border-b border-gray-800 text-center">
+                <h4 class="font-bold text-lg tracking-wider text-kemenagYellow">KKGMI ADMIN</h4>
+                <p class="text-xs text-gray-400 mt-1">Content Management</p>
             </div>
-            <div class="flex-1 overflow-y-auto py-4">
-                <p class="px-6 text-xs text-blue-300 mb-2 uppercase font-bold">Kelola Data Web</p>
-                <button onclick="loadAdminTable('Agenda')" class="w-full text-left px-6 py-3 hover:bg-white/10 border-l-4 border-transparent focus:border-kemenagYellow"><i class="fas fa-calendar-alt w-6"></i> Proker & Agenda</button>
-                <button onclick="loadAdminTable('Berita')" class="w-full text-left px-6 py-3 hover:bg-white/10 border-l-4 border-transparent focus:border-kemenagYellow"><i class="fas fa-newspaper w-6"></i> Berita KKG</button>
+            <div class="p-4 flex-1">
+                <button class="w-full text-left bg-gray-800 text-white px-4 py-3 rounded-lg font-semibold mb-2"><i class="fas fa-newspaper mr-2"></i> Kelola Berita / Proker</button>
+                <a href="https://docs.google.com/spreadsheets/d/MASUKKAN_ID_SPREADSHEET_ANDA_DI_SINI/edit" target="_blank" class="block w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white px-4 py-3 rounded-lg font-semibold transition">
+                    <i class="fas fa-database mr-2"></i> Buka Database Sheets
+                </a>
             </div>
-            <div class="p-4 border-t border-blue-800">
-                <button onclick="handleLogout()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-sm font-bold"><i class="fas fa-sign-out-alt mr-2"></i> Keluar</button>
+            <div class="p-4 border-t border-gray-800">
+                <button onclick="logoutAdmin()" class="w-full text-left text-red-400 hover:bg-red-900 hover:bg-opacity-30 px-4 py-2 rounded-lg transition"><i class="fas fa-sign-out-alt mr-2"></i> Keluar</button>
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col h-full overflow-hidden">
-            <header class="bg-white shadow-sm p-4 flex justify-between items-center md:hidden">
-                <h2 class="font-bold text-kemenagGreen">Admin Panel</h2>
-                <div class="flex gap-2">
-                    <button onclick="loadAdminTable('Agenda')" class="px-3 py-1 bg-slate-100 rounded text-sm"><i class="fas fa-calendar"></i></button>
-                    <button onclick="handleLogout()" class="px-3 py-1 bg-red-100 text-red-600 rounded text-sm"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
-            </header>
-
-            <div class="flex-1 p-4 md:p-8 overflow-y-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 id="admin-table-title" class="text-2xl font-bold text-slate-800">Pilih Menu di Samping</h2>
-                    <button id="btn-add-new" onclick="openFormModal()" class="bg-kemenagGreen hover:bg-[#007A33] text-white px-4 py-2 rounded-lg font-bold shadow hide"><i class="fas fa-plus mr-2"></i>Tambah Data</button>
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Tambah Berita / Info Proker</h2>
+                        <p class="text-sm text-gray-500">Posting informasi kegiatan KKGMI ke halaman utama.</p>
+                    </div>
                 </div>
                 
-                <div class="bg-white rounded-xl shadow-sm border overflow-x-auto hide" id="admin-table-container">
-                    <table class="w-full text-left border-collapse">
-                        <thead id="admin-thead" class="bg-slate-50 text-slate-600 border-b"></thead>
-                        <tbody id="admin-tbody" class="text-sm"></tbody>
-                    </table>
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-200">
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Judul Kegiatan</label>
+                        <input type="text" id="input-judul" class="w-full border border-gray-300 px-4 py-2 rounded-lg" placeholder="Contoh: Rapat Evaluasi STS">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Tanggal</label>
+                            <input type="date" id="input-tanggal" class="w-full border border-gray-300 px-4 py-2 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Link Gambar (URL)</label>
+                            <input type="text" id="input-gambar" class="w-full border border-gray-300 px-4 py-2 rounded-lg" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Isi Berita / Rincian Acara</label>
+                        <textarea id="input-isi" rows="5" class="w-full border border-gray-300 px-4 py-2 rounded-lg" placeholder="Ketik rincian acara di sini..."></textarea>
+                    </div>
+                    <button onclick="simpanBerita()" id="btn-simpan" class="bg-kemenagGreen hover:bg-green-800 text-white font-bold py-3 px-8 rounded-lg shadow-md transition w-full md:w-auto">
+                        <i class="fas fa-save mr-2"></i> Terbitkan ke Website
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="admin-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hide">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="p-5 border-b flex justify-between items-center">
-                <h3 class="font-bold text-lg" id="modal-title">Form Data</h3>
-                <button onclick="closeFormModal()" class="text-slate-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div class="p-5 overflow-y-auto flex-1">
-                <form id="admin-form" class="space-y-4"></form>
-            </div>
-            <div class="p-5 border-t bg-slate-50 rounded-b-2xl flex justify-end gap-3">
-                <button onclick="closeFormModal()" class="px-5 py-2 rounded-lg bg-slate-200 font-bold text-slate-700">Batal</button>
-                <button onclick="saveAdminData()" class="px-5 py-2 rounded-lg bg-kemenagGreen text-white font-bold shadow">Simpan</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // MASUKKAN URL WEB APP ANDA DI SINI
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtKVs3k66Xu0PDS5UDZsluBtfKhLltke7ABNd9ZFlCsMEusuexKU_sgSqaultZQ5J/exec'; 
-        
-        let currentSheet = '';
-        let currentHeaders = [];
-        let editId = null;
+        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcMKt9eVU_vXyGrYEh0nzUtPxZVhqPVKeROuAduSWbvZW-bmjykIemkhZHXi_gbZy6/exec';
 
-        // Routing SPA Sederhana
-        function toggleView(view) {
-            document.getElementById('view-public').classList.add('hide');
-            document.getElementById('view-login').classList.add('hide');
-            document.getElementById('view-admin').classList.add('hide');
-            document.getElementById(`view-${view}`).classList.remove('hide');
-            if(view === 'public') loadPublicData();
-        }
-
-        function showLoading(text) {
-            document.getElementById('loading-text').innerText = text;
-            document.getElementById('loading').classList.remove('hide');
-        }
-        function hideLoading() { document.getElementById('loading').classList.add('hide'); }
-
-        // MENGAMBIL DATA PUBLIK
-        async function loadPublicData() {
-            showLoading('Mengambil Data Akademik...');
+        // 1. Fetch Data untuk Halaman Publik
+        async function fetchPublicData() {
             try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST', body: JSON.stringify({ action: 'getPublicData' })
-                }).then(r => r.json());
+                const response = await fetch(APPS_SCRIPT_URL);
+                const result = await response.json();
                 
-                let agendaHtml = '';
-                if(res.agenda && res.agenda.length > 0) {
-                    res.agenda.forEach(a => {
-                        let color = a.kategori.includes('Ujian') ? 'text-red-600 bg-red-100' : 
-                                    a.kategori.includes('TKA') ? 'text-blue-600 bg-blue-100' : 'text-green-600 bg-green-100';
-                        agendaHtml += `
-                        <tr class="border-b hover:bg-slate-50 transition">
-                            <td class="p-3 font-semibold text-slate-700 whitespace-nowrap">${a.tanggal}</td>
-                            <td class="p-3"><span class="px-2 py-1 rounded text-xs font-bold ${color}">${a.kategori}</span></td>
-                            <td class="p-3 font-bold text-kemenagGreen">${a.kegiatan}</td>
-                            <td class="p-3 text-sm text-slate-600">${a.keterangan}</td>
-                        </tr>`;
-                    });
-                } else {
-                    agendaHtml = '<tr><td colspan="4" class="p-4 text-center text-slate-500">Jadwal belum tersedia.</td></tr>';
+                if (result.success) {
+                    renderBerita(result.berita);
+                    renderPerangkat(result.perangkat);
                 }
-                document.getElementById('public-agenda-body').innerHTML = agendaHtml;
-                hideLoading();
-            } catch(e) { hideLoading(); console.log(e); }
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('loading').innerHTML = '<h2 class="text-red-600 font-bold bg-white p-4 rounded">Gagal memuat data. Periksa URL Apps Script.</h2>';
+            }
         }
 
-        // LOGIN ADMIN
-        async function handleLogin(e) {
-            e.preventDefault();
-            const u = document.getElementById('log-user').value;
-            const p = document.getElementById('log-pass').value;
-            showLoading('Verifikasi Data...');
-            try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST', body: JSON.stringify({ action: 'login', username: u, password: p })
-                }).then(r => r.json());
-                
-                hideLoading();
-                if(res.success) {
-                    sessionStorage.setItem('isAdmin', 'true');
-                    document.getElementById('log-user').value = '';
-                    document.getElementById('log-pass').value = '';
-                    toggleView('admin');
-                    loadAdminTable('Agenda'); // Load default
-                } else { Swal.fire('Gagal', res.message, 'error'); }
-            } catch(e) { hideLoading(); Swal.fire('Error', 'Koneksi gagal', 'error'); }
-        }
-
-        function handleLogout() {
-            sessionStorage.removeItem('isAdmin');
-            toggleView('public');
-        }
-
-        // FUNGSI ADMIN CRUD
-        async function loadAdminTable(sheetName) {
-            currentSheet = sheetName;
-            document.getElementById('admin-table-title').innerText = `Kelola Data ${sheetName}`;
-            document.getElementById('btn-add-new').classList.remove('hide');
-            document.getElementById('admin-table-container').classList.remove('hide');
-            
-            showLoading(`Memuat Data ${sheetName}...`);
-            try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST', body: JSON.stringify({ action: 'getAllData', sheetName: sheetName })
-                }).then(r => r.json());
-                
-                hideLoading();
-                if(res.success) {
-                    currentHeaders = res.headers;
-                    let thead = '<tr>';
-                    currentHeaders.forEach(h => thead += `<th class="p-3 uppercase text-xs">${h}</th>`);
-                    thead += '<th class="p-3 text-center">Aksi</th></tr>';
-                    document.getElementById('admin-thead').innerHTML = thead;
-
-                    let tbody = '';
-                    res.data.forEach(row => {
-                        tbody += '<tr class="border-b hover:bg-slate-50">';
-                        row.forEach(cell => tbody += `<td class="p-3 truncate max-w-xs">${cell}</td>`);
-                        tbody += `<td class="p-3 text-center whitespace-nowrap">
-                            <button onclick='openFormModal(${JSON.stringify(row)})' class="bg-amber-100 text-amber-600 px-2 py-1 rounded mr-2"><i class="fas fa-edit"></i></button>
-                            <button onclick='deleteData("${row[0]}")' class="bg-red-100 text-red-600 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>
-                        </td></tr>`;
-                    });
-                    document.getElementById('admin-tbody').innerHTML = tbody;
-                }
-            } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal memuat data', 'error'); }
-        }
-
-        function openFormModal(rowData = null) {
-            editId = rowData ? rowData[0] : null;
-            document.getElementById('modal-title').innerText = rowData ? 'Edit Data' : 'Tambah Data';
+        function renderBerita(data) {
+            const container = document.getElementById('berita-container');
+            if(!data || data.length === 0) return container.innerHTML = '<p class="col-span-3 text-center text-gray-500">Belum ada kegiatan.</p>';
             
             let html = '';
-            currentHeaders.forEach((h, i) => {
-                if(h.toLowerCase() === 'id') return; // Hide ID
-                let val = rowData ? rowData[i] : '';
-                let type = (h.toLowerCase().includes('tanggal')) ? 'date' : 'text';
-                
+            data.forEach(b => {
                 html += `
-                <div>
-                    <label class="block font-bold text-sm text-slate-700 mb-1">${h}</label>
-                    <input type="${type}" id="input-${h}" value="${val}" class="w-full p-2 border rounded-lg bg-slate-50 focus:ring-2 focus:ring-kemenagGreen outline-none">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition flex flex-col h-full">
+                    <img src="${b.gambar || 'https://via.placeholder.com/600x400'}" alt="Thumb" class="w-full h-48 object-cover">
+                    <div class="p-5 flex-1 flex flex-col">
+                        <span class="inline-block text-xs font-bold text-kemenagLightGreen bg-green-50 px-3 py-1 rounded-full mb-3 self-start"><i class="far fa-calendar-alt mr-1"></i> ${b.tanggal}</span>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2 leading-tight">${b.judul}</h3>
+                        <p class="text-sm text-gray-600 mb-4 flex-1">${b.isi.substring(0, 150)}...</p>
+                        <button class="text-sm text-kemenagGreen font-bold text-left hover:text-kemenagYellow transition">Selengkapnya <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
                 </div>`;
             });
-            document.getElementById('admin-form').innerHTML = html;
-            document.getElementById('admin-modal').classList.remove('hide');
+            container.innerHTML = html;
         }
 
-        function closeFormModal() { document.getElementById('admin-modal').classList.add('hide'); }
-
-        async function saveAdminData() {
-            let dataObj = {};
-            currentHeaders.forEach(h => {
-                if(h.toLowerCase() !== 'id') dataObj[h] = document.getElementById(`input-${h}`).value;
-            });
+        function renderPerangkat(data) {
+            const container = document.getElementById('perangkat-container');
+            if(!data || data.length === 0) return container.innerHTML = '<p class="col-span-2 text-center text-gray-500">Belum ada perangkat.</p>';
             
-            closeFormModal();
-            showLoading('Menyimpan Data...');
+            let html = '';
+            data.forEach(p => {
+                html += `
+                <a href="${p.link_download}" target="_blank" class="flex items-center p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:border-kemenagGreen transition group">
+                    <div class="w-12 h-12 rounded-full bg-green-50 text-kemenagGreen flex items-center justify-center text-xl group-hover:bg-kemenagGreen group-hover:text-white transition">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h4 class="font-bold text-gray-800">${p.judul}</h4>
+                        <span class="text-xs text-gray-500 uppercase font-semibold">${p.kategori}</span>
+                    </div>
+                    <i class="fas fa-download text-gray-300 group-hover:text-kemenagGreen"></i>
+                </a>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // 2. Fungsi Login Admin (POST)
+        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        
+        async function verifyLogin() {
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
+            const btn = document.getElementById('btn-login');
+            
+            if(!user || !pass) return Swal.fire('Peringatan', 'Username & Password wajib diisi', 'warning');
+            
+            btn.innerText = 'MEMVERIFIKASI...'; btn.disabled = true;
             try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST', body: JSON.stringify({
-                        action: editId ? 'updateData' : 'insertData',
-                        sheetName: currentSheet,
-                        id: editId,
-                        dataObj: dataObj
-                    })
-                }).then(r => r.json());
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', username: user, password: pass })
+                });
+                const res = await response.json();
                 
-                hideLoading();
-                if(res.success) { Swal.fire('Sukses', res.message, 'success'); loadAdminTable(currentSheet); }
-                else { Swal.fire('Error', res.message, 'error'); }
-            } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal menyimpan', 'error'); }
+                if (res.success) {
+                    closeLoginModal();
+                    document.getElementById('admin-panel').classList.add('active');
+                    Swal.fire({ icon: 'success', title: 'Login Berhasil', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
+                } else {
+                    Swal.fire('Gagal', res.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Error', 'Gagal menghubungi server.', 'error');
+            }
+            btn.innerText = 'MASUK KE PANEL ADMIN'; btn.disabled = false;
         }
 
-        async function deleteData(id) {
-            if(confirm('Yakin ingin menghapus data ini?')) {
-                showLoading('Menghapus...');
-                try {
-                    const res = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST', body: JSON.stringify({ action: 'deleteData', sheetName: currentSheet, id: id })
-                    }).then(r => r.json());
-                    hideLoading();
-                    if(res.success) loadAdminTable(currentSheet);
-                } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal menghapus', 'error'); }
-            }
+        function logoutAdmin() {
+            Swal.fire({
+                title: 'Keluar Sistem?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Keluar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('admin-panel').classList.remove('active');
+                    document.getElementById('admin-user').value = '';
+                    document.getElementById('admin-pass').value = '';
+                }
+            });
         }
 
-        // Inisiasi Aplikasi
-        document.addEventListener('DOMContentLoaded', () => {
-            if(sessionStorage.getItem('isAdmin') === 'true') {
-                toggleView('admin');
-                loadAdminTable('Agenda');
-            } else {
-                toggleView('public');
+        // 3. Fungsi Tambah Berita dari Admin Panel (POST)
+        async function simpanBerita() {
+            const judul = document.getElementById('input-judul').value;
+            const tgl = document.getElementById('input-tanggal').value;
+            const gbr = document.getElementById('input-gambar').value;
+            const isi = document.getElementById('input-isi').value;
+            const btn = document.getElementById('btn-simpan');
+
+            if(!judul || !isi) return Swal.fire('Perhatian', 'Judul dan Isi Berita harus diisi!', 'warning');
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...'; btn.disabled = true;
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'addBerita', judul: judul, tanggal: tgl, gambar: gbr, isi: isi })
+                });
+                const res = await response.json();
+                
+                if(res.success) {
+                    Swal.fire('Sukses', res.message, 'success');
+                    // Bersihkan form
+                    document.getElementById('input-judul').value = '';
+                    document.getElementById('input-tanggal').value = '';
+                    document.getElementById('input-gambar').value = '';
+                    document.getElementById('input-isi').value = '';
+                    // Reload data publik di background
+                    fetchPublicData();
+                } else {
+                    Swal.fire('Gagal', res.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Error', 'Gagal menyimpan ke database.', 'error');
             }
-        });
+            btn.innerHTML = '<i class="fas fa-save mr-2"></i> Terbitkan ke Website'; btn.disabled = false;
+        }
+
+        // Jalankan saat pertama dibuka
+        document.addEventListener('DOMContentLoaded', fetchPublicData);
     </script>
 </body>
 </html>
