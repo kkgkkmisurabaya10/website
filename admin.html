@@ -18,7 +18,6 @@
         #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.4s; }
         .view-section { display: none; opacity: 0; transition: opacity 0.4s; flex: 1; }
         .view-section.active { display: flex; opacity: 1; }
-        /* Warna Sidebar Disesuaikan ke Emerald Green Kemenag */
         .sidebar { width: 260px; background: #064e3b; color: white; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 4px 0 10px rgba(0,0,0,0.05); }
         .sidebar::-webkit-scrollbar { width: 5px; }
         .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px; }
@@ -32,7 +31,7 @@
 <body>
     
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbw9yMJsaLMY8MebDdU_bKxDD2LIMeK4Vk3xlFA3anBkRW0hEeCRucCQkRmmOB6WdGm2/exec"; // Masukkan URL Deploy Apps Script Anda di sini
+        const API_URL = "https://script.google.com/macros/s/AKfycbyRkAVDv9bx49SIx6MQVzDYKruu2NZ_MdAqYo601h942gHcZOsfq-rys9JAeBx4bGNj/exec"; 
     </script>
 
     <div id="loading-screen" style="display: none;">
@@ -40,7 +39,6 @@
         <p class="mt-4 text-secondary fw-bold" id="loading-text">Memproses Data...</p>
     </div>
 
-    <!-- TAMPILAN LOGIN -->
     <div id="view-login" class="view-section relative bg-slate-100 justify-center align-items-center h-full">
         <div class="absolute inset-0 bg-green-900 opacity-90"></div>
         <div class="relative z-10 w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl animate__animated animate__zoomIn">
@@ -71,7 +69,6 @@
         </div>
     </div>
 
-    <!-- TAMPILAN DASHBOARD ADMIN -->
     <div id="view-admin" class="view-section h-full">
         <aside class="sidebar" id="sidebar-admin">
             <div class="p-6 text-center border-b border-green-800 mb-4">
@@ -79,7 +76,6 @@
                 <p class="text-xs text-green-300 mt-1">Content Management System</p>
             </div>
             <div class="flex-1">
-                <!-- SEMUA MENU DIPERTAHANKAN SESUAI FILE ASLI -->
                 <a onclick="loadAdminDashboard()" class="admin-nav" id="nav-Dashboard"><i class="fas fa-tachometer-alt w-5 mr-2"></i> Dashboard</a>
                 
                 <p class="px-6 text-xs font-bold text-slate-400 mt-6 mb-2 uppercase">Tampilan Depan</p>
@@ -108,7 +104,6 @@
         </aside>
 
         <main class="main-content" id="main-admin">
-            <!-- Sisanya menggunakan persis struktur dari File Admin Asli milik Anda -->
             <div id="admin-dashboard-view" class="hidden animate__animated animate__fadeIn">
                 <h2 class="text-3xl font-bold text-slate-800 mb-2" style="font-family: 'Quicksand';">Monitoring Viewers</h2>
                 <p class="text-slate-500 mb-8">Statistik kinerja konten pada website KKGMI Surabaya 10</p>
@@ -119,12 +114,11 @@
                 <div class="flex justify-between items-center mb-8 bg-white p-6 rounded-2xl shadow-sm">
                     <div>
                         <h2 id="admin-title" class="text-2xl font-bold text-slate-800" style="font-family: 'Quicksand';">Kelola Data</h2>
-                        <p class="text-sm text-slate-500 mt-1">Tambah, edit, atau hapus entri data (tersambung ke Spreadsheet)</p>
+                        <p class="text-sm text-slate-500 mt-1">Tambah, edit, atau hapus entri data</p>
                     </div>
-                    <!-- Untuk SPA Client Side, aksi tambah/edit dikelola lewat Spreadsheet langsung atau via endpoint insert Google Script. Di UI ini bersifat indikatif -->
-                    <a href="https://docs.google.com/spreadsheets/" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md transition-all flex items-center">
-                        <i class="fas fa-table mr-2"></i> Buka Google Sheets
-                    </a>
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md transition-all flex items-center" onclick="openAdminModal('add')">
+                        <i class="fas fa-plus mr-2"></i> Tambah Baru
+                    </button>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm overflow-x-auto border border-slate-100">
                     <table class="w-full text-left border-collapse">
@@ -136,12 +130,34 @@
         </main>
     </div>
 
-    <!-- Integrasi JS (Adaptasi SPA Fetch) -->
+    <div class="modal fade" id="adminModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-2xl rounded-3xl">
+                <div class="modal-header bg-slate-50 border-b px-6 py-4 rounded-t-3xl">
+                    <h5 class="modal-title font-bold text-xl text-slate-800" id="modal-title">Form Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-6 py-5">
+                    <form id="adminForm" class="row g-4"></form>
+                </div>
+                <div class="modal-footer border-t bg-slate-50 px-6 py-4 rounded-b-3xl">
+                    <button type="button" class="btn btn-light px-5 py-2.5 font-bold rounded-xl" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" id="btnSave" class="btn btn-success px-5 py-2.5 font-bold rounded-xl shadow-md" onclick="saveAdminData()">Simpan Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
+        let currentAdminSheet = '';
+        let currentAdminHeaders = [];
+        let currentEditId = null;
+
         document.addEventListener("DOMContentLoaded", function() {
             if (sessionStorage.getItem('IS_ADMIN') === 'true') {
                 document.getElementById('view-login').style.display = 'none';
@@ -152,31 +168,35 @@
             }
         });
 
+        function showLoading(msg = "Memproses...") {
+            document.getElementById('loading-text').innerText = msg;
+            document.getElementById('loading-screen').style.display = 'flex';
+            document.getElementById('loading-screen').style.opacity = '1';
+        }
+
+        function hideLoading() {
+            const loader = document.getElementById('loading-screen');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 400);
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
-            // Implementasi verifikasi Apps Script Login
             const u = document.getElementById('login-user').value;
             const p = document.getElementById('login-pass').value;
-            document.getElementById('loading-screen').style.display = 'flex';
-            
+            showLoading("Memverifikasi Data...");
             try {
                 const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({action: 'login', username: u, password: p})
+                    method: 'POST', body: JSON.stringify({action: 'login', username: u, password: p})
                 });
                 const res = await response.json();
-                
                 if (res.success) {
                     sessionStorage.setItem('IS_ADMIN', 'true');
                     window.location.reload();
                 } else {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    Swal.fire('Gagal', res.message, 'error');
+                    hideLoading(); Swal.fire('Gagal', res.message, 'error');
                 }
-            } catch (err) {
-                document.getElementById('loading-screen').style.display = 'none';
-                Swal.fire('Error', 'Periksa URL Apps Script Anda.', 'error');
-            }
+            } catch (err) { hideLoading(); Swal.fire('Error', 'Koneksi ke server gagal.', 'error'); }
         }
 
         function handleLogout() {
@@ -187,57 +207,241 @@
         async function loadAdminDashboard() {
             document.getElementById('admin-table-view').classList.add('hidden');
             document.getElementById('admin-dashboard-view').classList.remove('hidden');
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('dashboard-stats-container').innerHTML = `
-                <div class="col-md-12">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 border-green-500 text-center">
-                        <h3 class="text-slate-500 text-lg font-bold mb-1">Selamat Datang di Panel KKGMI Surabaya 10</h3>
-                        <p class="text-slate-800">Pilih menu navigasi di sebelah kiri untuk mengelola data operasional sistem.</p>
+            document.querySelectorAll('.admin-nav').forEach(n => n.classList.remove('active'));
+            document.getElementById('nav-Dashboard').classList.add('active');
+            showLoading("Memuat Dashboard...");
+            try {
+                const response = await fetch(`${API_URL}?action=getDetailedStats`);
+                const detail = await response.json();
+                let topBeritaHtml = '';
+                if(detail.topBerita && detail.topBerita.length > 0){
+                    topBeritaHtml = detail.topBerita.map(b => `
+                        <div class="flex justify-between items-center py-3 border-b border-slate-100 last:border-0">
+                            <span class="text-slate-700 font-semibold">${b.judul.substring(0, 50)}...</span>
+                            <span class="bg-green-100 text-green-700 py-1 px-3 rounded-full text-xs font-bold"><i class="fas fa-eye mr-1"></i> ${b.views} x dilihat</span>
+                        </div>`).join('');
+                } else {
+                    topBeritaHtml = '<p class="text-slate-400 italic">Belum ada data berita atau views.</p>';
+                }
+                document.getElementById('dashboard-stats-container').innerHTML = `
+                    <div class="col-md-4">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 border-green-500 h-100 flex flex-col justify-center items-center text-center">
+                            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-2xl mb-4"><i class="fas fa-chart-line"></i></div>
+                            <h3 class="text-slate-500 text-sm font-bold uppercase mb-1">Total Viewers Website</h3>
+                            <p class="text-5xl font-extrabold text-slate-800">${detail.totalViews || 0}</p>
+                        </div>
                     </div>
-                </div>
-            `;
+                    <div class="col-md-8">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm h-100 border border-slate-100">
+                            <h5 class="font-bold text-slate-800 mb-4 border-b pb-3"><i class="fas fa-trophy text-amber-500 mr-2"></i> Top 5 Berita Terpopuler</h5>
+                            ${topBeritaHtml}
+                        </div>
+                    </div>`;
+                hideLoading();
+            } catch(e) { hideLoading(); document.getElementById('dashboard-stats-container').innerHTML = '<div class="col-12"><div class="alert alert-danger">Gagal memuat statistik.</div></div>'; }
         }
 
         async function loadAdminModule(sheet) {
+            currentAdminSheet = sheet;
             document.getElementById('admin-dashboard-view').classList.add('hidden');
             document.getElementById('admin-table-view').classList.remove('hidden');
             document.getElementById('admin-title').innerText = 'Data ' + sheet;
             document.querySelectorAll('.admin-nav').forEach(n => n.classList.remove('active'));
-            document.getElementById('nav-' + sheet).classList.add('active');
+            const activeNav = document.getElementById('nav-' + sheet);
+            if(activeNav) activeNav.classList.add('active');
             
-            document.getElementById('loading-screen').style.display = 'flex';
+            showLoading(`Memuat Data ${sheet}...`);
             try {
                 const response = await fetch(`${API_URL}?action=getAllData&sheet=${sheet}`);
                 const res = await response.json();
-                
-                let headHtml = '<tr>';
-                if(res.data && res.data.length > 0) {
-                    Object.keys(res.data[0]).forEach(h => {
-                        headHtml += `<th class="p-4 font-bold uppercase text-xs">${h}</th>`;
+                if(res.error) { hideLoading(); Swal.fire('Perhatian', res.message, 'warning'); return; }
+                currentAdminHeaders = res.headers;
+                renderAdminTable(res.data);
+                hideLoading();
+            } catch (e) { hideLoading(); Swal.fire('Error', 'Gagal memuat data tabel. Periksa koneksi API.', 'error'); }
+        }
+
+        function renderAdminTable(data) {
+            let head = '<tr>';
+            currentAdminHeaders.forEach((h, i) => {
+                if(i === 0) head += `<th class="p-4 font-bold w-16">ID</th>`;
+                else head += `<th class="p-4 font-bold">${h}</th>`;
+            });
+            head += '<th class="p-4 font-bold text-center w-32">Aksi</th></tr>';
+            document.getElementById('admin-table-head').innerHTML = head;
+            
+            let body = '';
+            if(!data || data.length === 0) {
+                body = `<tr><td colspan="${currentAdminHeaders.length + 1}" class="text-center p-6 text-slate-500">Belum ada data di menu ini.</td></tr>`;
+            } else {
+                data.forEach(rowObj => {
+                    let rowId = rowObj[currentAdminHeaders[0].toLowerCase()] || rowObj[currentAdminHeaders[0]];
+                    body += '<tr class="border-b border-slate-100 hover:bg-slate-50 transition">';
+                    
+                    currentAdminHeaders.forEach(h => {
+                        let cell = rowObj[h];
+                        let url = cell;
+                        if(typeof cell === 'string' && (cell.startsWith('http') || cell.startsWith('['))) {
+                            try { let parsed = JSON.parse(cell); if(Array.isArray(parsed) && parsed.length > 0) url = parsed[0]; } catch(e) {}
+                        }
+                        if(typeof url === 'string' && url.startsWith('http')) {
+                            body += `<td class="p-4"><img src="${url}" class="w-12 h-12 object-cover rounded-lg shadow-sm"></td>`;
+                        } else {
+                            let cleanText = typeof cell === 'string' ? cell.replace(/<[^>]*>?/gm, '').substring(0, 60) : cell;
+                            body += `<td class="p-4 text-sm align-middle">${cleanText || ''}</td>`;
+                        }
                     });
-                }
-                headHtml += '</tr>';
-                document.getElementById('admin-table-head').innerHTML = headHtml;
-                
-                let bodyHtml = '';
-                if(res.data && res.data.length > 0) {
-                    res.data.forEach(row => {
-                        bodyHtml += '<tr class="border-b hover:bg-slate-50">';
-                        Object.values(row).forEach(cell => {
-                            let cleanText = String(cell).substring(0, 50);
-                            bodyHtml += `<td class="p-4 text-sm align-middle">${cleanText}</td>`;
-                        });
-                        bodyHtml += '</tr>';
-                    });
-                } else {
-                    bodyHtml = `<tr><td colspan="10" class="text-center p-6 text-slate-500">Data belum tersedia di Spreadsheet.</td></tr>`;
-                }
-                document.getElementById('admin-table-body').innerHTML = bodyHtml;
-                document.getElementById('loading-screen').style.display = 'none';
-            } catch (e) { 
-                document.getElementById('loading-screen').style.display = 'none';
-                Swal.fire('Informasi', 'Konfigurasi Google Apps Script Endpoint belum terpasang dengan benar.', 'info');
+
+                    // TOMBOL EDIT DAN HAPUS
+                    body += `<td class="p-4 text-center align-middle whitespace-nowrap">
+                        <button class="bg-amber-100 text-amber-600 hover:bg-amber-200 p-2 rounded-lg mr-2 transition" onclick="openAdminModal('edit', '${rowId}')" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="bg-red-100 text-red-600 hover:bg-red-200 p-2 rounded-lg transition" onclick="deleteAdminData('${rowId}')" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                    </td></tr>`;
+                });
             }
+            document.getElementById('admin-table-body').innerHTML = body;
+        }
+
+        async function openAdminModal(mode, id = null) {
+            currentEditId = id;
+            document.getElementById('modal-title').innerText = mode === 'add' ? 'Tambah Data Baru' : 'Edit Data';
+            if (mode === 'edit') {
+                showLoading("Mengambil Data...");
+                try {
+                    const response = await fetch(`${API_URL}?action=getById&sheet=${currentAdminSheet}&id=${id}`);
+                    const res = await response.json();
+                    hideLoading();
+                    if(res.success) renderAdminForm(res.data);
+                    else { Swal.fire('Error', 'Data tidak ditemukan', 'error'); return; }
+                } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal membuka form', 'error'); return; }
+            } else {
+                renderAdminForm(null);
+            }
+            new bootstrap.Modal(document.getElementById('adminModal')).show();
+        }
+
+        const getBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
+        });
+
+        function renderAdminForm(dataRow) {
+            let html = '';
+            currentAdminHeaders.forEach((h, i) => {
+                if (h.toLowerCase() === 'id') return;
+                
+                // Jika dari Google Sheets, array balikan getById() berbasis index, jika object sesuaikan
+                let val = '';
+                if(dataRow) {
+                    val = Array.isArray(dataRow) ? dataRow[i] : (dataRow[h] || '');
+                }
+
+                const hLower = h.toLowerCase();
+                const isMedia = (hLower.includes('gambar') || hLower.includes('foto') || hLower.includes('media') || hLower.includes('url'));
+                const isRichText = (hLower.includes('isi') || hLower.includes('deskripsi') || hLower.includes('konten'));
+
+                if (hLower === 'views') {
+                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100" data-header="${h}" value="${val || 0}" readonly></div>`;
+                } else if (isMedia) {
+                    let preview = '';
+                    try { 
+                        let arr = JSON.parse(val); 
+                        if(arr.length) preview = `<img src="${arr[0]}" class="h-20 rounded mt-2">`;
+                    } catch(e) { if(val && val.startsWith('http')) preview = `<img src="${val}" class="h-20 rounded mt-2">`; }
+                    
+                    html += `<div class="col-md-6 mb-3">
+                        <label class="form-label font-bold text-slate-700">${h} (Pilih File / Isi URL Link)</label>
+                        <input type="file" class="form-control admin-file py-2 rounded-xl border-slate-300 mb-2" data-header="${h}" accept="image/*">
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300 text-xs" data-header="${h}" value='${val}' placeholder="Atau paste link gambar disini">
+                        ${preview}
+                    </div>`;
+                } else if (isRichText) {
+                    html += `<div class="col-12 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><textarea class="form-control admin-input rich-text" data-header="${h}">${val}</textarea></div>`;
+                } else if (hLower.includes('tanggal')) {
+                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><input type="date" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
+                } else {
+                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
+                }
+            });
+            document.getElementById('adminForm').innerHTML = html;
+            
+            $('.rich-text').each(function() {
+                $(this).summernote({ height: 250, toolbar: [ ['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'picture']], ['view', ['fullscreen', 'codeview']] ]});
+            });
+        }
+
+        async function saveAdminData() {
+            let obj = {}; 
+            document.querySelectorAll('.admin-input').forEach(input => {
+                if(input.classList.contains('rich-text')) {
+                    let sVal = $(input).summernote('code');
+                    if(sVal === '<p><br></p>') sVal = '';
+                    obj[input.dataset.header] = sVal;
+                } else {
+                    obj[input.dataset.header] = input.value;
+                }
+            });
+
+            document.getElementById('btnSave').innerText = "Menyimpan...";
+            document.getElementById('btnSave').disabled = true;
+
+            // Proses File Upload via Base64 to Google Drive
+            const fileInputs = document.querySelectorAll('.admin-file');
+            for (let fileInput of fileInputs) {
+                const header = fileInput.dataset.header;
+                if (fileInput.files && fileInput.files.length > 0) {
+                    showLoading("Mengunggah File ke Google Drive...");
+                    try {
+                        let base64Str = await getBase64(fileInput.files[0]);
+                        const fileName = new Date().getTime() + "_" + fileInput.files[0].name;
+                        const response = await fetch(API_URL, {
+                            method: 'POST', body: JSON.stringify({ action: 'uploadMedia', base64Data: base64Str, fileName: fileName })
+                        });
+                        const uploadRes = await response.json();
+                        if (uploadRes.success) {
+                            obj[header] = uploadRes.url; // Timpa input teks manual jika ada file yg diupload
+                        } else { 
+                            Swal.fire('Gagal Upload', uploadRes.message, 'error'); hideLoading(); resetBtn(); return; 
+                        }
+                    } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error'); hideLoading(); resetBtn(); return; }
+                }
+            }
+
+            showLoading("Memperbarui Database...");
+            try {
+                const payload = { action: currentEditId ? 'updateData' : 'insertData', sheetName: currentAdminSheet, dataObj: obj };
+                if (currentEditId) payload.id = currentEditId;
+                
+                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const res = await response.json();
+                
+                hideLoading(); resetBtn();
+                if(res.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('adminModal')).hide();
+                    Swal.fire('Sukses', res.message, 'success');
+                    loadAdminModule(currentAdminSheet);
+                } else { Swal.fire('Error', res.message, 'error'); }
+            } catch (e) { hideLoading(); resetBtn(); Swal.fire('Error', 'Gagal menyimpan data.', 'error'); }
+        }
+
+        function resetBtn() { document.getElementById('btnSave').innerText = "Simpan Data"; document.getElementById('btnSave').disabled = false; }
+
+        function deleteAdminData(id) {
+            Swal.fire({ title: 'Yakin hapus data?', text: "Data di spreadsheet akan dihapus permanen!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Hapus!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    showLoading("Menghapus...");
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: 'POST', body: JSON.stringify({ action: 'deleteData', sheetName: currentAdminSheet, id: id })
+                        });
+                        const res = await response.json();
+                        hideLoading();
+                        if(res.success) { Swal.fire('Terhapus!', '', 'success'); loadAdminModule(currentAdminSheet); }
+                        else Swal.fire('Error', res.message, 'error');
+                    } catch(e) { hideLoading(); Swal.fire('Error', 'Gagal menghapus.', 'error'); }
+                }
+            });
         }
     </script>
 </body>
