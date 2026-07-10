@@ -31,6 +31,7 @@
 <body>
     
     <script>
+        // MASUKKAN LINK DEPLOY GOOGLE APPS SCRIPT ANDA DI SINI
         const API_URL = "https://script.google.com/macros/s/AKfycbyRkAVDv9bx49SIx6MQVzDYKruu2NZ_MdAqYo601h942gHcZOsfq-rys9JAeBx4bGNj/exec"; 
     </script>
 
@@ -285,14 +286,14 @@
                             try { let parsed = JSON.parse(cell); if(Array.isArray(parsed) && parsed.length > 0) url = parsed[0]; } catch(e) {}
                         }
                         if(typeof url === 'string' && url.startsWith('http')) {
-                            body += `<td class="p-4"><img src="${url}" class="w-12 h-12 object-cover rounded-lg shadow-sm"></td>`;
+                            if(url.match(/\.(mp4|webm|ogg)$/i)) body += `<td class="p-4"><div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-white"><i class="fas fa-film"></i></div></td>`;
+                            else body += `<td class="p-4"><img src="${url}" class="w-12 h-12 object-cover rounded-lg shadow-sm"></td>`;
                         } else {
                             let cleanText = typeof cell === 'string' ? cell.replace(/<[^>]*>?/gm, '').substring(0, 60) : cell;
                             body += `<td class="p-4 text-sm align-middle">${cleanText || ''}</td>`;
                         }
                     });
 
-                    // TOMBOL EDIT DAN HAPUS
                     body += `<td class="p-4 text-center align-middle whitespace-nowrap">
                         <button class="bg-amber-100 text-amber-600 hover:bg-amber-200 p-2 rounded-lg mr-2 transition" onclick="openAdminModal('edit', '${rowId}')" title="Edit"><i class="fas fa-edit"></i></button>
                         <button class="bg-red-100 text-red-600 hover:bg-red-200 p-2 rounded-lg transition" onclick="deleteAdminData('${rowId}')" title="Hapus"><i class="fas fa-trash-alt"></i></button>
@@ -330,7 +331,6 @@
             currentAdminHeaders.forEach((h, i) => {
                 if (h.toLowerCase() === 'id') return;
                 
-                // Jika dari Google Sheets, array balikan getById() berbasis index, jika object sesuaikan
                 let val = '';
                 if(dataRow) {
                     val = Array.isArray(dataRow) ? dataRow[i] : (dataRow[h] || '');
@@ -340,20 +340,50 @@
                 const isMedia = (hLower.includes('gambar') || hLower.includes('foto') || hLower.includes('media') || hLower.includes('url'));
                 const isRichText = (hLower.includes('isi') || hLower.includes('deskripsi') || hLower.includes('konten'));
 
-                if (hLower === 'views') {
-                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100" data-header="${h}" value="${val || 0}" readonly></div>`;
+                if (hLower === 'status') {
+                    html += `
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-bold text-slate-700">${h}</label>
+                        <select class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}">
+                            <option value="aktif" ${val === 'aktif' ? 'selected' : ''}>Aktif</option>
+                            <option value="nonaktif" ${val === 'nonaktif' ? 'selected' : ''}>Nonaktif</option>
+                        </select>
+                    </div>`;
+                } else if (hLower === 'induk' || hLower === 'parent') {
+                    html += `
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-bold text-slate-700">Induk Menu (Parent)</label>
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Kosongkan jika ini menu utama">
+                        <small class="text-slate-500">Tulis Label menu utamanya persis (misal: PROGRAM KERJA) jika ingin menu ini menjadi sub-menu.</small>
+                    </div>`;
+                } else if (hLower === 'views') {
+                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100 py-2.5" data-header="${h}" value="${val || 0}" readonly></div>`;
+                } else if (hLower === 'kecerahan') {
+                    html += `
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-bold text-slate-700">${h} (Opacity Latar Slider)</label>
+                        <input type="range" class="form-range admin-input" data-header="${h}" min="0" max="100" value="${val || 80}">
+                    </div>`;
                 } else if (isMedia) {
                     let preview = '';
-                    try { 
-                        let arr = JSON.parse(val); 
-                        if(arr.length) preview = `<img src="${arr[0]}" class="h-20 rounded mt-2">`;
-                    } catch(e) { if(val && val.startsWith('http')) preview = `<img src="${val}" class="h-20 rounded mt-2">`; }
+                    let mediaArr = [];
+                    try { mediaArr = JSON.parse(val); } catch(e) { if(val) mediaArr = [val]; }
+
+                    if (mediaArr.length > 0) {
+                        preview = '<div class="mt-3 grid grid-cols-3 gap-2">';
+                        mediaArr.forEach(url => {
+                            if(url.match(/\.(mp4|webm|ogg)$/i)) preview += `<video src="${url}" class="h-20 w-full object-cover rounded shadow-sm" controls></video>`;
+                            else preview += `<img src="${url}" class="h-20 w-full object-cover rounded shadow-sm">`;
+                        });
+                        preview += '</div>';
+                    }
                     
                     html += `<div class="col-md-6 mb-3">
-                        <label class="form-label font-bold text-slate-700">${h} (Pilih File / Isi URL Link)</label>
-                        <input type="file" class="form-control admin-file py-2 rounded-xl border-slate-300 mb-2" data-header="${h}" accept="image/*">
-                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300 text-xs" data-header="${h}" value='${val}' placeholder="Atau paste link gambar disini">
+                        <label class="form-label font-bold text-slate-700">${h} (Pilih Banyak File / Isi Teks URL)</label>
+                        <input type="file" class="form-control admin-file py-2 rounded-xl border-slate-300 mb-2" data-header="${h}" accept="image/*,video/*" multiple>
+                        <input type="hidden" class="admin-input" data-header="${h}" value='${val}'>
                         ${preview}
+                        <small class="text-slate-500 block mt-1">CTRL (Windows) / Command (Mac) untuk pilih banyak.</small>
                     </div>`;
                 } else if (isRichText) {
                     html += `<div class="col-12 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><textarea class="form-control admin-input rich-text" data-header="${h}">${val}</textarea></div>`;
@@ -385,25 +415,28 @@
             document.getElementById('btnSave').innerText = "Menyimpan...";
             document.getElementById('btnSave').disabled = true;
 
-            // Proses File Upload via Base64 to Google Drive
             const fileInputs = document.querySelectorAll('.admin-file');
             for (let fileInput of fileInputs) {
                 const header = fileInput.dataset.header;
                 if (fileInput.files && fileInput.files.length > 0) {
                     showLoading("Mengunggah File ke Google Drive...");
-                    try {
-                        let base64Str = await getBase64(fileInput.files[0]);
-                        const fileName = new Date().getTime() + "_" + fileInput.files[0].name;
-                        const response = await fetch(API_URL, {
-                            method: 'POST', body: JSON.stringify({ action: 'uploadMedia', base64Data: base64Str, fileName: fileName })
-                        });
-                        const uploadRes = await response.json();
-                        if (uploadRes.success) {
-                            obj[header] = uploadRes.url; // Timpa input teks manual jika ada file yg diupload
-                        } else { 
-                            Swal.fire('Gagal Upload', uploadRes.message, 'error'); hideLoading(); resetBtn(); return; 
-                        }
-                    } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error'); hideLoading(); resetBtn(); return; }
+                    let uploadedUrls = [];
+                    for(let i=0; i<fileInput.files.length; i++) {
+                        try {
+                            let base64Str = await getBase64(fileInput.files[i]);
+                            const fileName = new Date().getTime() + "_" + fileInput.files[i].name;
+                            const response = await fetch(API_URL, {
+                                method: 'POST', body: JSON.stringify({ action: 'uploadMedia', base64Data: base64Str, fileName: fileName })
+                            });
+                            const uploadRes = await response.json();
+                            if (uploadRes.success) {
+                                uploadedUrls.push(uploadRes.url);
+                            } else { 
+                                Swal.fire('Gagal Upload', uploadRes.message, 'error'); hideLoading(); resetBtn(); return; 
+                            }
+                        } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error'); hideLoading(); resetBtn(); return; }
+                    }
+                    obj[header] = JSON.stringify(uploadedUrls);
                 }
             }
 
