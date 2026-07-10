@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi KKG-KKMI Surabaya 10</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Animasi Transisi SPA */
+        .page-view { display: none; }
+        .active-view { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-teal-50 to-emerald-100 min-h-screen text-gray-800">
+
+    <nav class="bg-emerald-700 text-white shadow-lg p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider">SI-ABSENSI</h1>
+            <div>
+                <button onclick="switchView('form-view')" class="px-3 py-1 hover:bg-emerald-600 rounded">Isi Absen</button>
+                <button onclick="checkAdmin()" class="px-3 py-1 hover:bg-emerald-600 rounded">Admin</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 mt-6 max-w-4xl">
+
+        <div id="form-view" class="page-view active-view bg-white p-8 rounded-xl shadow-2xl border-t-4 border-emerald-600">
+            <div class="text-center mb-8">
+                <h2 id="judul-acara" class="text-2xl font-bold text-emerald-800 uppercase">Memuat Acara...</h2>
+                <p class="text-gray-500 mt-2">Sabtu, 18 Juli 2026 | MI Muhammadiyah 5 Surabaya</p>
+            </div>
+
+            <form id="formAbsensi" onsubmit="submitData(event)">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap & Gelar</label>
+                    <input type="text" id="nama" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all" placeholder="Contoh: Ahmad, S.Pd.">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Asal Madrasah (MI)</label>
+                    <input type="text" id="madrasah" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all" placeholder="Contoh: MI Muhammadiyah 5">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Absensi</label>
+                    <select id="jenis" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="Datang">Absen Datang</option>
+                        <option value="Pulang">Absen Pulang</option>
+                    </select>
+                </div>
+                <button type="submit" id="btnSubmit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all">
+                    Kirim Absensi
+                </button>
+            </form>
+        </div>
+
+        <div id="admin-view" class="page-view bg-white p-8 rounded-xl shadow-2xl border-t-4 border-blue-600">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-blue-800">Dashboard Admin</h2>
+                <button onclick="loadAdminData()" class="bg-blue-100 text-blue-700 px-4 py-2 rounded shadow hover:bg-blue-200">🔄 Refresh Data</button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border-b p-3">Waktu</th>
+                            <th class="border-b p-3">Nama Lengkap</th>
+                            <th class="border-b p-3">Asal MI</th>
+                            <th class="border-b p-3">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center mt-10 text-sm text-gray-500">
+            <p>Sistem Absensi Terintegrasi &copy; 2026</p>
+            <p class="font-semibold mt-1">Developed by Belajar Inovasi</p>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyghwFD1ZZ3sICD8TA4cMHt0VkxA7jHt7YsUag9KzSd0jv1tqC0B5qP3SZfYbOYzNRA/exec";
+
+        // Inisialisasi Pengaturan Saat Halaman Dimuat
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchSettings();
+        });
+
+        // Pindah Halaman SPA
+        function switchView(viewId) {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active-view'));
+            document.getElementById(viewId).classList.add('active-view');
+        }
+
+        // Keamanan Sederhana untuk Masuk Admin
+        function checkAdmin() {
+            Swal.fire({
+                title: 'Akses Admin',
+                input: 'password',
+                inputPlaceholder: 'Masukkan PIN Admin',
+                showCancelButton: true,
+                confirmButtonColor: '#047857'
+            }).then((result) => {
+                if (result.value === '1234') { // Ubah PIN sesuai kebutuhan
+                    switchView('admin-view');
+                    loadAdminData();
+                    Swal.fire('Berhasil', 'Selamat datang di Dashboard Admin', 'success');
+                } else if (result.value) {
+                    Swal.fire('Gagal', 'PIN salah!', 'error');
+                }
+            });
+        }
+
+        // Ambil Pengaturan (Nama Acara dll) dari Sheet
+        async function fetchSettings() {
+            try {
+                const response = await fetch(`${GAS_URL}?action=getSettings`);
+                const data = await response.json();
+                document.getElementById('judul-acara').innerText = data.Nama_Acara || "Kegiatan KKMI Surabaya 10";
+                
+                if(data.Status_Form === "TUTUP") {
+                    document.getElementById('btnSubmit').disabled = true;
+                    document.getElementById('btnSubmit').innerText = "Form Absensi Ditutup";
+                    document.getElementById('btnSubmit').classList.replace('bg-emerald-600', 'bg-gray-500');
+                }
+            } catch (error) {
+                console.error("Gagal memuat pengaturan", error);
+            }
+        }
+
+        // Kirim Data Absensi
+        async function submitData(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.innerHTML = 'Sedang Mengirim... <span class="animate-pulse">⏳</span>';
+
+            const formData = new URLSearchParams();
+            formData.append('action', 'insert');
+            formData.append('nama', document.getElementById('nama').value);
+            formData.append('madrasah', document.getElementById('madrasah').value);
+            formData.append('jenis', document.getElementById('jenis').value);
+
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: result.message,
+                        icon: 'success',
+                        confirmButtonColor: '#047857'
+                    });
+                    document.getElementById('formAbsensi').reset();
+                } else {
+                    Swal.fire('Error', result.message, 'error');
+                }
+            } catch (error) {
+                Swal.fire('Koneksi Gagal', 'Pastikan koneksi internet stabil.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Kirim Absensi';
+            }
+        }
+
+        // Ambil Data untuk Dashboard Admin
+        async function loadAdminData() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center p-4">Memuat data...</td></tr>';
+            
+            try {
+                const response = await fetch(`${GAS_URL}?action=getData`);
+                const data = await response.json();
+                
+                tbody.innerHTML = '';
+                data.forEach(row => {
+                    const date = new Date(row[0]).toLocaleString('id-ID');
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 border-b">
+                            <td class="p-3 text-sm">${date}</td>
+                            <td class="p-3 font-semibold">${row[1]}</td>
+                            <td class="p-3">${row[2]}</td>
+                            <td class="p-3"><span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">${row[3]}</span></td>
+                        </tr>
+                    `;
+                });
+                if(data.length === 0) tbody.innerHTML = '<tr><td colspan="4" class="text-center p-4">Belum ada data absensi.</td></tr>';
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-red-500 p-4">Gagal memuat data.</td></tr>';
+            }
+        }
+    </script>
+</body>
+</html>
