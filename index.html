@@ -19,9 +19,21 @@
         h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
         .top-bar { background-color: #065f46; color: #e2e8f0; font-size: 13px; }
         .header-main { background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 50; }
+        
         .nav-menu ul { display: flex; list-style: none; margin: 0; padding: 0; gap: 24px; align-items: center; }
         .nav-menu a { color: #334155; font-weight: 600; font-size: 14px; text-transform: uppercase; text-decoration: none; transition: 0.3s; cursor: pointer; padding: 10px 0; }
         .nav-menu a:hover, .nav-menu a.active-link { color: #d97706; border-bottom: 2px solid #d97706; }
+        
+        /* Dropdown Styles */
+        .dropdown { position: relative; }
+        .dropdown-menu-custom { display: none; position: absolute; top: 100%; left: 0; background: #ffffff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 3px solid #059669; min-width: 220px; z-index: 100; flex-direction: column; padding: 0; border-radius: 0 0 8px 8px; overflow: hidden; }
+        .dropdown:hover .dropdown-menu-custom { display: flex; animation: fadeInDown 0.3s ease; }
+        .dropdown-menu-custom li { width: 100%; }
+        .dropdown-menu-custom a { padding: 12px 20px; color: #334155; font-size: 13px; text-transform: capitalize; border-bottom: 1px solid #f1f5f9; display: block; transition: 0.3s; border-left: 3px solid transparent; }
+        .dropdown-menu-custom a:hover { background: #f8fafc; color: #d97706; padding-left: 25px; border-left-color: #d97706; border-bottom: 1px solid #f1f5f9; }
+        
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
         .quick-link-box { background: #ffffff; border-radius: 8px; border-top: 4px solid #059669; transition: transform 0.3s, box-shadow 0.3s; }
         .quick-link-box:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top-color: #d97706; }
         .news-card { transition: transform 0.3s ease; border: 1px solid #e2e8f0; border-radius: 8px; }
@@ -31,18 +43,22 @@
         .site-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .mobile-menu-btn { display: none; font-size: 24px; color: #065f46; background: none; border: none; }
+        
         @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
-            .nav-menu { position: absolute; top: 100%; left: 0; width: 100%; background: #ffffff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none; flex-direction: column; border-top: 2px solid #d97706; }
+            .nav-menu { position: absolute; top: 100%; left: 0; width: 100%; background: #ffffff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none; flex-direction: column; border-top: 2px solid #d97706; max-height: 70vh; overflow-y: auto; }
             .nav-menu.active { display: flex; }
-            .nav-menu ul { flex-direction: column; width: 100%; padding: 15px 25px; gap: 0; }
+            .nav-menu ul { flex-direction: column; width: 100%; padding: 15px 25px; gap: 0; align-items: flex-start; }
             .nav-menu a { display: block; width: 100%; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+            .dropdown-menu-custom { position: static; box-shadow: none; border-top: none; padding-left: 15px; display: none; width: 100%; border-radius: 0; }
+            .dropdown.active-mobile .dropdown-menu-custom { display: flex; }
         }
     </style>
 </head>
 <body>
 
     <script>
+        // MASUKKAN LINK DEPLOY GOOGLE APPS SCRIPT ANDA DI SINI
         const API_URL = "https://script.google.com/macros/s/AKfycbyRkAVDv9bx49SIx6MQVzDYKruu2NZ_MdAqYo601h942gHcZOsfq-rys9JAeBx4bGNj/exec"; 
     </script>
 
@@ -215,7 +231,7 @@
             <div class="md:col-span-1">
                 <h3 class="text-white text-xl font-bold mb-4">Integrasi Sistem</h3>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://emis.kemenag.go.ind" target="_blank" class="hover:text-amber-400"><i class="fas fa-link mr-2"></i> EMIS Kemenag</a></li>
+                    <li><a href="https://emis.kemenag.go.id" target="_blank" class="hover:text-amber-400"><i class="fas fa-link mr-2"></i> EMIS Kemenag</a></li>
                     <li><a href="https://pdum.kemenag.go.id" target="_blank" class="hover:text-amber-400"><i class="fas fa-link mr-2"></i> PDUM Kemenag</a></li>
                     <li><a href="admin.html" target="_blank" class="hover:text-amber-400 text-amber-200 mt-4 block"><i class="fas fa-lock mr-2"></i> Login Admin Panel</a></li>
                 </ul>
@@ -230,6 +246,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
         AOS.init({ once: true, offset: 50 });
 
@@ -242,16 +259,55 @@
                 return json.data || [];
             } catch(e) { console.error("Error fetching " + sheetName); return []; }
         }
+
+        // FUNGSI HIT TOTAL WEBSITE VIEWS
+        async function logGlobalView() {
+            try {
+                if(!sessionStorage.getItem('view_logged')) {
+                    await fetch(`${API_URL}?action=logView`);
+                    sessionStorage.setItem('view_logged', 'true');
+                }
+            } catch(e) { console.error("Gagal log views"); }
+        }
         
         async function initSPA() {
             try {
-                // Menus
+                // Log Website Views
+                logGlobalView();
+
+                // PENGOLAHAN MENU (MENDUKUNG DROPDOWN)
                 const menus = await fetchSheet('menus');
                 let menuHtml = '<li><a onclick="nav(\'home\', \'BERANDA\')" id="link-home" class="active-link">BERANDA</a></li>';
-                menus.forEach(m => {
-                    if(m.label === 'BERANDA' || m.status !== 'aktif') return; 
-                    if(m.link.startsWith('http')) menuHtml += `<li><a href="${m.link}" target="_blank">${m.label}</a></li>`;
-                    else menuHtml += `<li><a onclick="nav('${m.link}', '${m.label}')" id="link-${m.link}">${m.label}</a></li>`;
+                
+                // Pisahkan menu utama dan sub-menu berdasarkan kolom 'induk'
+                let mainMenus = menus.filter(m => m.status === 'aktif' && (!m.induk || m.induk === '-' || m.induk.trim() === ''));
+                let subMenus = menus.filter(m => m.status === 'aktif' && m.induk && m.induk !== '-' && m.induk.trim() !== '');
+
+                mainMenus.forEach(m => {
+                    if(m.label === 'BERANDA') return; 
+                    
+                    // Cek apakah menu utama ini punya anak
+                    let children = subMenus.filter(sub => sub.induk.toLowerCase() === m.label.toLowerCase());
+
+                    if (children.length > 0) {
+                        menuHtml += `<li class="dropdown" onclick="toggleMobileDropdown(this)">
+                            <a style="cursor:pointer" id="link-${m.link}">${m.label} <i class="fas fa-chevron-down text-xs ml-1"></i></a>
+                            <ul class="dropdown-menu-custom">`;
+                        children.forEach(c => {
+                            if(c.link.startsWith('http')) {
+                                menuHtml += `<li><a href="${c.link}" target="_blank">${c.label}</a></li>`;
+                            } else {
+                                menuHtml += `<li><a onclick="event.stopPropagation(); nav('${c.link}', '${c.label}')" id="link-${c.link}">${c.label}</a></li>`;
+                            }
+                        });
+                        menuHtml += `</ul></li>`;
+                    } else {
+                        if(m.link.startsWith('http')) {
+                            menuHtml += `<li><a href="${m.link}" target="_blank">${m.label}</a></li>`;
+                        } else {
+                            menuHtml += `<li><a onclick="nav('${m.link}', '${m.label}')" id="link-${m.link}">${m.label}</a></li>`;
+                        }
+                    }
                 });
                 document.getElementById('dynamic-menus').innerHTML = menuHtml;
 
@@ -303,12 +359,16 @@
                     try { let p = JSON.parse(img); if(p.length) img = p[0]; } catch(e){}
                     let slug = createSlug(b.judul);
                     let cleanIsi = (b.isi || "").replace(/<[^>]*>?/gm, '').substring(0, 90) + '...';
+                    let views = b.views || 0;
                     
                     let card = `
                     <div class="news-card bg-white overflow-hidden flex flex-col cursor-pointer" onclick="bukaBeritaSlug('${slug}')">
                         <div class="h-48 overflow-hidden relative"><img src="${img}" class="w-full h-full object-cover transition duration-500 hover:scale-110"></div>
                         <div class="p-6 flex-1 flex flex-col">
-                            <div class="text-xs text-slate-500 mb-2 flex justify-between"><span><i class="far fa-calendar-alt text-amber-500 mr-1"></i> ${b.tanggal}</span></div>
+                            <div class="text-xs text-slate-500 mb-2 flex justify-between">
+                                <span><i class="far fa-calendar-alt text-amber-500 mr-1"></i> ${b.tanggal}</span>
+                                <span><i class="fas fa-eye text-green-500 mr-1"></i> ${views} x</span>
+                            </div>
                             <h3 class="font-bold text-lg text-green-800 mb-3 leading-snug">${b.judul}</h3>
                             <p class="text-sm text-slate-600 flex-1">${cleanIsi}</p>
                             <div class="mt-4 text-amber-600 font-semibold text-sm group">Baca Selengkapnya <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition"></i></div>
@@ -389,6 +449,12 @@
         }
 
         function toggleMobileMenu() { document.getElementById('navMenu').classList.toggle('active'); }
+        
+        function toggleMobileDropdown(element) {
+            if(window.innerWidth <= 768) {
+                element.classList.toggle('active-mobile');
+            }
+        }
 
         function nav(section, label = '', pushHistory = true) {
             if(section.startsWith('http')) return;
@@ -416,23 +482,55 @@
             if (pushHistory) history.pushState({ section: section }, '', '#' + section);
         }
 
-        function bukaBeritaSlug(slug, pushHistory = true) {
+        async function bukaBeritaSlug(slug, pushHistory = true) {
+            $('#section-baca').html('<div class="text-center py-20"><div class="spinner-border text-success"></div></div>');
             nav('baca', 'BACA BERITA', false); 
             if (pushHistory) history.pushState({ section: 'baca', slug: slug }, '', '#' + slug);
             
-            const b = window.beritaData.find(item => createSlug(item.judul) === slug);
-            if(b) {
-                let img = b.gambar || '';
-                try { let p = JSON.parse(img); if(p.length) img = p[0]; } catch(e){}
-                let imgHtml = img ? `<img src="${img}" class="w-full h-auto max-h-[400px] object-cover rounded-2xl shadow-sm mb-8">` : '';
-                $('#section-baca').html(`
-                    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                        <button onclick="nav('berita')" class="mb-6 bg-slate-100 px-4 py-2 rounded text-sm font-bold text-slate-600 hover:bg-slate-200 transition"><i class="fas fa-arrow-left mr-2"></i> Kembali ke Berita</button>
-                        <h1 class="text-3xl md:text-4xl font-bold text-green-800 mb-4 leading-tight">${b.judul}</h1>
-                        <div class="text-sm text-slate-500 mb-6 flex gap-4"><span><i class="far fa-calendar-alt mr-2 text-amber-500"></i> ${b.tanggal}</span></div>
-                        ${imgHtml}
-                        <div class="text-slate-700 leading-relaxed text-justify">${b.isi}</div>
-                    </div>`);
+            try {
+                // Menarik data langsung dari server agar views bertambah
+                const response = await fetch(`${API_URL}?action=getBeritaBySlug&slug=${slug}`);
+                const res = await response.json();
+
+                if (res.success) {
+                    let d = res.data;
+                    let imgRaw = d.gambar || '';
+                    let mediaList = [];
+                    if (imgRaw) {
+                        try { mediaList = JSON.parse(imgRaw); } 
+                        catch(e) { mediaList = [imgRaw]; }
+                    }
+                    
+                    let imgHtml = '';
+                    if (mediaList.length > 0) {
+                        if (mediaList.length === 1) {
+                            let url = mediaList[0];
+                            if (url.match(/\.(mp4|webm|ogg)$/i)) imgHtml = `<div class="mb-8"><video src="${url}" class="w-full h-auto max-h-[500px] object-cover rounded-2xl" controls></video></div>`;
+                            else imgHtml = `<div class="mb-8"><img src="${url}" class="w-full h-auto max-h-[500px] object-cover rounded-2xl shadow-sm"></div>`;
+                        } else {
+                            imgHtml = '<div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">';
+                            mediaList.forEach(url => {
+                                if (url.match(/\.(mp4|webm|ogg)$/i)) imgHtml += `<video src="${url}" class="w-full h-auto max-h-[400px] object-cover rounded-2xl shadow-sm" controls></video>`;
+                                else imgHtml += `<img src="${url}" class="w-full h-auto max-h-[400px] object-cover rounded-2xl shadow-sm hover:scale-105 transition-transform">`;
+                            });
+                            imgHtml += '</div>';
+                        }
+                    }
+
+                    $('#section-baca').html(`
+                        <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                            <button onclick="nav('berita')" class="mb-6 bg-slate-100 px-4 py-2 rounded text-sm font-bold text-slate-600 hover:bg-slate-200 transition"><i class="fas fa-arrow-left mr-2"></i> Kembali ke Berita</button>
+                            <h1 class="text-3xl md:text-4xl font-bold text-green-800 mb-4 leading-tight">${d.judul}</h1>
+                            <div class="text-sm text-slate-500 mb-6 flex gap-4">
+                                <span><i class="far fa-calendar-alt mr-2 text-amber-500"></i> ${d.tanggal}</span>
+                                <span><i class="fas fa-eye mr-2 text-green-500"></i> Dilihat ${d.views || 0} Kali</span>
+                            </div>
+                            ${imgHtml}
+                            <div class="text-slate-700 leading-relaxed text-justify">${d.isi}</div>
+                        </div>`);
+                }
+            } catch (err) {
+                $('#section-baca').html(`<div class="text-center text-red-500 py-20">Gagal memuat berita dari server.</div>`);
             }
         }
 
