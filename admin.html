@@ -436,7 +436,10 @@
                             }
                         } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error'); hideLoading(); resetBtn(); return; }
                     }
-                    obj[header] = JSON.stringify(uploadedUrls);
+                    
+                    // PERBAIKAN: Jika hanya ada 1 gambar, simpan sebagai teks URL biasa, BUKAN ["URL"]. 
+                    // Jika lebih dari 1 (misal berita dengan beberapa gambar), baru simpan array-nya.
+                    obj[header] = uploadedUrls.length === 1 ? uploadedUrls[0] : JSON.stringify(uploadedUrls);
                 }
             }
 
