@@ -107,7 +107,7 @@
                 <div class="carousel-inner" id="carousel-container">
                     <div class='carousel-item active' style='height: 500px;'>
                         <div class='absolute inset-0 bg-green-900 flex justify-center items-center'>
-                            <h2 class='text-4xl font-bold text-white'><i class="fas fa-spinner fa-spin mr-3"></i>Memuat Komponen...</h2>
+                            <h2 class='text-4xl font-bold text-white'><i class="fas fa-spinner fa-spin mr-3"></i>Memuat Data KKG...</h2>
                         </div>
                     </div>
                 </div>
@@ -252,19 +252,20 @@
 
         function createSlug(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); }
 
-        async function fetchSheet(sheetName) {
+        // FUNGSI UTAMA UNTUK MENGUBAH STRING JSON ARRAY (["https..."]) MENJADI LINK BIASA
+        function parseImage(imgStr, fallback) {
+            if (!imgStr) return fallback;
             try {
-                const res = await fetch(`${API_URL}?action=getAllData&sheet=${sheetName}`);
-                const json = await res.json();
-                return json.data || [];
-            } catch(e) { console.error("Error fetching " + sheetName); return []; }
+                let parsed = JSON.parse(imgStr);
+                if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
+            } catch(e) {}
+            return imgStr; 
         }
 
-        // FUNGSI HIT TOTAL WEBSITE VIEWS
         async function logGlobalView() {
             try {
                 if(!sessionStorage.getItem('view_logged')) {
-                    await fetch(`${API_URL}?action=logView`);
+                    fetch(`${API_URL}?action=logView`); // Biarkan jalan di background
                     sessionStorage.setItem('view_logged', 'true');
                 }
             } catch(e) { console.error("Gagal log views"); }
@@ -272,21 +273,26 @@
         
         async function initSPA() {
             try {
-                // Log Website Views
                 logGlobalView();
 
-                // PENGOLAHAN MENU (MENDUKUNG DROPDOWN)
-                const menus = await fetchSheet('menus');
+                // 1 KALI PEMANGGILAN UNTUK SEMUA DATA (SANGAT CEPAT)
+                const res = await fetch(`${API_URL}?action=getInitData`);
+                const jsonRes = await res.json();
+                if(!jsonRes.success) {
+                    console.error("Gagal memuat data dari API");
+                    return;
+                }
+                const dataSheets = jsonRes.data;
+
+                // PENGOLAHAN MENU
+                const menus = dataSheets['menus'] || [];
                 let menuHtml = '<li><a onclick="nav(\'home\', \'BERANDA\')" id="link-home" class="active-link">BERANDA</a></li>';
                 
-                // Pisahkan menu utama dan sub-menu berdasarkan kolom 'induk'
                 let mainMenus = menus.filter(m => m.status === 'aktif' && (!m.induk || m.induk === '-' || m.induk.trim() === ''));
                 let subMenus = menus.filter(m => m.status === 'aktif' && m.induk && m.induk !== '-' && m.induk.trim() !== '');
 
                 mainMenus.forEach(m => {
                     if(m.label === 'BERANDA') return; 
-                    
-                    // Cek apakah menu utama ini punya anak
                     let children = subMenus.filter(sub => sub.induk.toLowerCase() === m.label.toLowerCase());
 
                     if (children.length > 0) {
@@ -312,16 +318,17 @@
                 document.getElementById('dynamic-menus').innerHTML = menuHtml;
 
                 // Slider
-                const slider = await fetchSheet('Slider');
+                const slider = dataSheets['Slider'] || [];
                 let sHtml = '';
                 slider.forEach((s, idx) => {
                     let active = idx === 0 ? 'active' : '';
                     let alpha1 = (s.kecerahan || 80) / 100;
                     let bg = `linear-gradient(135deg, rgba(6, 78, 59, ${alpha1}) 0%, rgba(6, 95, 70, ${alpha1*0.5}) 100%)`;
+                    let imgSrc = parseImage(s.gambar, 'https://via.placeholder.com/1200x500');
                     sHtml += `
                     <div class='carousel-item ${active}' style='height: 550px;'>
                         <div class='absolute inset-0 z-10' style='background: ${bg};'></div>
-                        <img src='${s.gambar}' class='d-block w-100 h-100 object-cover relative z-0'>
+                        <img src='${imgSrc}' class='d-block w-100 h-100 object-cover relative z-0'>
                         <div class='carousel-caption d-none d-md-block pb-28 z-20 px-4'>
                             <h2 class='text-4xl md:text-5xl font-bold text-white mb-4 animate__animated animate__fadeInDown'>${s.judul}</h2>
                             <p class='text-xl text-green-100 animate__animated animate__fadeInUp'>${s.subjudul}</p>
@@ -331,7 +338,7 @@
                 document.getElementById('carousel-container').innerHTML = sHtml || "<div class='carousel-item active' style='height: 500px;'><div class='absolute inset-0 bg-green-900 bg-opacity-70'></div></div>";
 
                 // QuickLinks
-                const qlinks = await fetchSheet('QuickLinks');
+                const qlinks = dataSheets['QuickLinks'] || [];
                 let qHtml = '';
                 qlinks.slice(0, 4).forEach(q => {
                     qHtml += `
@@ -342,21 +349,20 @@
                 });
                 document.getElementById('quick-links-container').innerHTML = qHtml;
 
-                // LandingPage / Kepala Sekolah
-                const landing = await fetchSheet('LandingPage');
+                // LandingPage
+                const landing = dataSheets['LandingPage'] || [];
                 const kepsek = landing.find(l => l.kode === 'Kepala_Sekolah');
                 if(kepsek) {
                     document.getElementById('kepsek-nama').innerText = kepsek.judul;
                     document.getElementById('kepsek-isi').innerHTML = kepsek.isi;
-                    if(kepsek.foto) document.getElementById('kepsek-foto').src = kepsek.foto;
+                    if(kepsek.foto) document.getElementById('kepsek-foto').src = parseImage(kepsek.foto, 'https://via.placeholder.com/300');
                 }
 
                 // Berita
-                const berita = await fetchSheet('Berita');
+                const berita = dataSheets['Berita'] || [];
                 let bHtmlHome = '', bHtmlAll = '';
-                berita.reverse().forEach((b, index) => {
-                    let img = b.gambar || 'https://via.placeholder.com/500x300';
-                    try { let p = JSON.parse(img); if(p.length) img = p[0]; } catch(e){}
+                [...berita].reverse().forEach((b, index) => {
+                    let img = parseImage(b.gambar, 'https://via.placeholder.com/500x300');
                     let slug = createSlug(b.judul);
                     let cleanIsi = (b.isi || "").replace(/<[^>]*>?/gm, '').substring(0, 90) + '...';
                     let views = b.views || 0;
@@ -379,19 +385,18 @@
                 });
                 document.getElementById('berita-home-container').innerHTML = bHtmlHome || "<p class='col-span-3 text-center'>Belum ada berita.</p>";
                 document.getElementById('berita-all-container').innerHTML = bHtmlAll || "<p class='col-span-3 text-center'>Belum ada berita.</p>";
-                window.beritaData = berita; 
 
                 // Profil
-                const profil = await fetchSheet('Profil');
+                const profil = dataSheets['Profil'] || [];
                 let pHtml = '';
                 profil.forEach(p => pHtml += `<h3 class='text-xl font-bold text-green-800 border-l-4 border-amber-500 pl-3 mb-4 mt-6'>${p.judul}</h3><div>${p.isi}</div>`);
                 document.getElementById('profil-container').innerHTML = pHtml;
 
-                // Guru
-                const guru = await fetchSheet('Guru');
+                // Guru / Anggota
+                const guru = dataSheets['Guru'] || [];
                 let gHtml = '';
                 guru.forEach(g => {
-                    let img = g.foto || 'https://via.placeholder.com/150';
+                    let img = parseImage(g.foto, 'https://via.placeholder.com/150');
                     gHtml += `<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center hover:-translate-y-2 transition transform">
                         <img src="${img}" class="w-32 h-32 object-cover rounded-full mx-auto border-4 border-green-50 mb-4 shadow">
                         <h3 class="font-bold text-green-800 text-lg">${g.nama}</h3>
@@ -401,36 +406,40 @@
                 document.getElementById('guru-container').innerHTML = gHtml;
 
                 // Galeri
-                const galeri = await fetchSheet('Galeri');
+                const galeri = dataSheets['Galeri'] || [];
                 let galHtml = '';
-                galeri.forEach(g => galHtml += `<div class="bg-white p-2 rounded shadow-sm border border-slate-200"><img src="${g.foto}" class="w-full h-56 object-cover rounded"><h3 class="font-bold text-center text-green-800 mt-3 text-sm">${g.judul}</h3></div>`);
+                galeri.forEach(g => {
+                    let imgGal = parseImage(g.foto, 'https://via.placeholder.com/400');
+                    galHtml += `<div class="bg-white p-2 rounded shadow-sm border border-slate-200"><img src="${imgGal}" class="w-full h-56 object-cover rounded"><h3 class="font-bold text-center text-green-800 mt-3 text-sm">${g.judul}</h3></div>`;
+                });
                 document.getElementById('galeri-container').innerHTML = galHtml;
 
                 // InfoSPMB
-                const spmb = await fetchSheet('InfoSPMB');
+                const spmb = dataSheets['InfoSPMB'] || [];
                 let spmbHtml = '';
                 spmb.forEach(s => {
                     if (s.kode === 'Header') {
+                        let imgSpmb = parseImage(s.media, '');
                         spmbHtml += `<h2 class='text-2xl font-bold text-green-800 mb-4'>${s.judul}</h2>
                         <div class='text-slate-600 mb-6 leading-relaxed text-justify'>${s.isi}</div>
-                        ${s.media ? `<img src='${s.media}' class='w-full rounded-xl shadow-sm'>` : ''}`;
+                        ${imgSpmb ? `<img src='${imgSpmb}' class='w-full rounded-xl shadow-sm'>` : ''}`;
                     }
                 });
                 document.getElementById('spmb-container').innerHTML = spmbHtml;
 
                 // LMS
-                const lms = await fetchSheet('LMS');
+                const lms = dataSheets['LMS'] || [];
                 let lmsHtml = '';
                 lms.forEach(l => lmsHtml += `<div class="bg-white p-8 text-center rounded-xl shadow-md border-t-4 border-green-600"><i class="fas fa-laptop-code text-5xl text-green-600 mb-4"></i><h4 class="font-bold mb-4">${l.judul}</h4><a href="${l.link}" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded text-sm w-full block transition">Akses Portal</a></div>`);
                 document.getElementById('lms-container').innerHTML = lmsHtml;
 
                 // AsetGambar (Logo)
-                const aset = await fetchSheet('AsetGambar');
+                const aset = dataSheets['AsetGambar'] || [];
                 const logo = aset.find(a => a.kode === 'Logo_Header' || a.kode === 'Logo');
-                if (logo) document.getElementById('logo-header').src = logo.url;
+                if (logo) document.getElementById('logo-header').src = parseImage(logo.url, '');
 
                 // MediaSosial
-                const medsos = await fetchSheet('MediaSosial');
+                const medsos = dataSheets['MediaSosial'] || [];
                 let mTop = '', mFoot = '';
                 medsos.forEach(m => {
                     let plat = m.platform.toLowerCase();
@@ -488,7 +497,6 @@
             if (pushHistory) history.pushState({ section: 'baca', slug: slug }, '', '#' + slug);
             
             try {
-                // Menarik data langsung dari server agar views bertambah
                 const response = await fetch(`${API_URL}?action=getBeritaBySlug&slug=${slug}`);
                 const res = await response.json();
 
