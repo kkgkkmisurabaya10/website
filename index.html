@@ -252,7 +252,6 @@
 
         function createSlug(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); }
 
-        // FUNGSI UTAMA UNTUK MENGUBAH STRING JSON ARRAY (["https..."]) MENJADI LINK BIASA
         function parseImage(imgStr, fallback) {
             if (!imgStr) return fallback;
             try {
@@ -265,7 +264,7 @@
         async function logGlobalView() {
             try {
                 if(!sessionStorage.getItem('view_logged')) {
-                    fetch(`${API_URL}?action=logView`); // Biarkan jalan di background
+                    fetch(`${API_URL}?action=logView`); 
                     sessionStorage.setItem('view_logged', 'true');
                 }
             } catch(e) { console.error("Gagal log views"); }
@@ -275,7 +274,6 @@
             try {
                 logGlobalView();
 
-                // 1 KALI PEMANGGILAN UNTUK SEMUA DATA (SANGAT CEPAT)
                 const res = await fetch(`${API_URL}?action=getInitData`);
                 const jsonRes = await res.json();
                 if(!jsonRes.success) {
@@ -284,7 +282,6 @@
                 }
                 const dataSheets = jsonRes.data;
 
-                // PENGOLAHAN MENU
                 const menus = dataSheets['menus'] || [];
                 let menuHtml = '<li><a onclick="nav(\'home\', \'BERANDA\')" id="link-home" class="active-link">BERANDA</a></li>';
                 
@@ -317,7 +314,6 @@
                 });
                 document.getElementById('dynamic-menus').innerHTML = menuHtml;
 
-                // Slider
                 const slider = dataSheets['Slider'] || [];
                 let sHtml = '';
                 slider.forEach((s, idx) => {
@@ -337,7 +333,6 @@
                 });
                 document.getElementById('carousel-container').innerHTML = sHtml || "<div class='carousel-item active' style='height: 500px;'><div class='absolute inset-0 bg-green-900 bg-opacity-70'></div></div>";
 
-                // QuickLinks
                 const qlinks = dataSheets['QuickLinks'] || [];
                 let qHtml = '';
                 qlinks.slice(0, 4).forEach(q => {
@@ -349,7 +344,6 @@
                 });
                 document.getElementById('quick-links-container').innerHTML = qHtml;
 
-                // LandingPage
                 const landing = dataSheets['LandingPage'] || [];
                 const kepsek = landing.find(l => l.kode === 'Kepala_Sekolah');
                 if(kepsek) {
@@ -358,7 +352,6 @@
                     if(kepsek.foto) document.getElementById('kepsek-foto').src = parseImage(kepsek.foto, 'https://via.placeholder.com/300');
                 }
 
-                // Berita
                 const berita = dataSheets['Berita'] || [];
                 let bHtmlHome = '', bHtmlAll = '';
                 [...berita].reverse().forEach((b, index) => {
@@ -386,13 +379,11 @@
                 document.getElementById('berita-home-container').innerHTML = bHtmlHome || "<p class='col-span-3 text-center'>Belum ada berita.</p>";
                 document.getElementById('berita-all-container').innerHTML = bHtmlAll || "<p class='col-span-3 text-center'>Belum ada berita.</p>";
 
-                // Profil
                 const profil = dataSheets['Profil'] || [];
                 let pHtml = '';
                 profil.forEach(p => pHtml += `<h3 class='text-xl font-bold text-green-800 border-l-4 border-amber-500 pl-3 mb-4 mt-6'>${p.judul}</h3><div>${p.isi}</div>`);
                 document.getElementById('profil-container').innerHTML = pHtml;
 
-                // Guru / Anggota
                 const guru = dataSheets['Guru'] || [];
                 let gHtml = '';
                 guru.forEach(g => {
@@ -405,7 +396,6 @@
                 });
                 document.getElementById('guru-container').innerHTML = gHtml;
 
-                // Galeri
                 const galeri = dataSheets['Galeri'] || [];
                 let galHtml = '';
                 galeri.forEach(g => {
@@ -414,7 +404,6 @@
                 });
                 document.getElementById('galeri-container').innerHTML = galHtml;
 
-                // InfoSPMB
                 const spmb = dataSheets['InfoSPMB'] || [];
                 let spmbHtml = '';
                 spmb.forEach(s => {
@@ -427,18 +416,15 @@
                 });
                 document.getElementById('spmb-container').innerHTML = spmbHtml;
 
-                // LMS
                 const lms = dataSheets['LMS'] || [];
                 let lmsHtml = '';
                 lms.forEach(l => lmsHtml += `<div class="bg-white p-8 text-center rounded-xl shadow-md border-t-4 border-green-600"><i class="fas fa-laptop-code text-5xl text-green-600 mb-4"></i><h4 class="font-bold mb-4">${l.judul}</h4><a href="${l.link}" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded text-sm w-full block transition">Akses Portal</a></div>`);
                 document.getElementById('lms-container').innerHTML = lmsHtml;
 
-                // AsetGambar (Logo)
                 const aset = dataSheets['AsetGambar'] || [];
                 const logo = aset.find(a => a.kode === 'Logo_Header' || a.kode === 'Logo');
                 if (logo) document.getElementById('logo-header').src = parseImage(logo.url, '');
 
-                // MediaSosial
                 const medsos = dataSheets['MediaSosial'] || [];
                 let mTop = '', mFoot = '';
                 medsos.forEach(m => {
