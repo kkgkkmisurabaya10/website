@@ -27,21 +27,27 @@
                 </div>
                 <div class="hidden sm:block">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> Terhubung ke Drive
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> Terhubung Dinamis
                     </span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        <div class="bg-white rounded-2xl shadow-xs border border-slate-200 p-4 sm:p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-4 shadow-2xs flex items-center space-x-2 overflow-x-auto whitespace-nowrap scrollbar-none">
+            <i class="fa-solid fa-house-chimney text-emerald-600 text-xs shrink-0"></i>
+            <div id="breadcrumbContainer" class="flex items-center space-x-2 text-xs sm:text-sm">
+                </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xs border border-slate-200 p-4 sm:p-6 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="relative w-full sm:max-w-md">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
                 </span>
-                <input type="text" id="searchBar" onkeyup="filterContent()" placeholder="Cari nama berkas atau folder..." 
+                <input type="text" id="searchBar" onkeyup="filterContent()" placeholder="Cari nama berkas atau folder di halaman ini..." 
                     class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all bg-slate-50/50 outline-none">
             </div>
             <div class="flex items-center space-x-3 text-xs sm:text-sm text-slate-500 w-full sm:w-auto justify-end">
@@ -52,27 +58,27 @@
 
         <div id="loading" class="flex flex-col items-center justify-center py-24">
             <div class="animate-spin rounded-full h-12 w-12 border-4 border-emerald-500 border-t-transparent mb-4"></div>
-            <p class="text-slate-500 text-sm font-medium animate-pulse">Sinkronisasi dokumen Google Drive...</p>
+            <p class="text-slate-500 text-sm font-medium animate-pulse">Memuat struktur direktori...</p>
         </div>
 
         <div id="errorView" class="hidden bg-red-50 border border-red-200 text-red-700 px-6 py-6 rounded-2xl text-center max-w-lg mx-auto">
             <i class="fa-solid fa-triangle-exclamation text-3xl mb-3 block text-red-500"></i>
-            <p class="font-bold text-lg">Konfigurasi API Diperlukan</p>
-            <p class="text-sm text-red-600 mt-2" id="errorMessage">Silakan tempel URL Web App Google Apps Script Anda ke dalam kode JavaScript file ini di repositori GitHub.</p>
+            <p class="font-bold text-lg">Gagal Memuat Data</p>
+            <p class="text-sm text-red-600 mt-2" id="errorMessage">Silakan periksa konfigurasi URL Web App Anda.</p>
         </div>
 
-        <div id="dashboardContent" class="hidden space-y-10">
+        <div id="dashboardContent" class="hidden space-y-8">
             <div id="folderSection" class="hidden">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center">
-                    <i class="fa-solid fa-folder-tree mr-2 text-emerald-600 text-sm"></i> Kategori Folder
+                <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 flex items-center">
+                    <i class="fa-solid fa-folder-tree mr-2 text-emerald-600 text-sm"></i> Sub-Folder Terkait
                 </h2>
                 <div id="folderGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     </div>
             </div>
 
             <div id="fileSection" class="hidden">
-                <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center">
-                    <i class="fa-solid fa-file-shield mr-2 text-emerald-600 text-sm"></i> Dokumen & File Resmi
+                <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 flex items-center">
+                    <i class="fa-solid fa-file-shield mr-2 text-emerald-600 text-sm"></i> Dokumen Resmi
                 </h2>
                 <div id="fileGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     </div>
@@ -80,45 +86,89 @@
             
             <div id="emptyState" class="hidden text-center py-16 bg-white border border-dashed border-slate-300 rounded-2xl">
                 <i class="fa-solid fa-box-open text-slate-300 text-5xl mb-3"></i>
-                <p class="text-slate-500 font-medium text-sm">Tidak ditemukan file atau folder yang sesuai kata kunci.</p>
+                <p class="text-slate-500 font-medium text-sm">Tidak ditemukan file atau folder di dalam direktori ini.</p>
             </div>
         </div>
 
     </main>
 
     <footer class="bg-white border-t border-slate-200 mt-auto py-6 text-center text-xs text-slate-400 font-medium shadow-2xs">
-        &copy; 2026 KKGMI Surabaya 10. Terenkripsi secara aman & didukung penuh oleh GitHub Pages.
+        © 2026 KKGMI Surabaya 10. Terenkripsi secara aman & didukung penuh oleh GitHub Pages.
     </footer>
 
     <script>
         // =========================================================================
         // MASUKKAN URL WEB APP YANG ANDA DAPATKAN DARI GOOGLE APPS SCRIPT DI SINI
         // =========================================================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbw6YVBkobitFMrjAMb0ELzbM8sTf2q51kBnjVUf83yqJAStz38D8poMNqV_BSxdDwbw/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyd9xJpFnpHUrzuaEqcbWdWR-uRvvMpuFVmm4vJum2K1krABnl8vgoW5gDpdlWgu1OX/exec';
+        
+        // ID Folder Utama sebagai patokan awal halaman
+        const ROOT_ID = "1UfkLLMbD6zd6-3dPx0Vg72DqXjZ4bSx6";
+        
+        // State untuk melacak struktur navigasi
+        let breadcrumbs = [];
 
-        async function initDashboard() {
+        async function fetchFolderContent(folderId, folderName = 'Beranda') {
+            // Tampilkan loading, sembunyikan konten
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('dashboardContent').classList.add('hidden');
+            document.getElementById('errorView').classList.add('hidden');
+            document.getElementById('searchBar').value = ''; // Reset bar pencarian ketika ganti folder
+
             if (API_URL === 'TEMPEL_URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI') {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('errorView').classList.remove('hidden');
+                document.getElementById('errorMessage').innerText = 'Silakan ganti nilai variabel API_URL di dalam script dengan URL Web App kompilasi terbaru Anda.';
                 return;
             }
 
             try {
-                const response = await fetch(API_URL);
+                // Susun URL endpoint dengan parameter query ID folder secara dinamis
+                const fetchUrl = folderId === ROOT_ID ? API_URL : `${API_URL}?id=${folderId}`;
+                const response = await fetch(fetchUrl);
                 const data = await response.json();
 
                 if (data.error) throw new Error(data.error);
 
+                // Perbarui susunan jejak halaman (breadcrumbs)
+                updateBreadcrumbs(folderId, folderName);
+
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('dashboardContent').classList.remove('hidden');
 
-                buildUI(data);
+                renderUI(data);
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('errorView').classList.remove('hidden');
-                document.getElementById('errorMessage').innerText = 'Gagal memuat data dari server Google Drive. Pastikan opsi izin Web App diatur ke "Anyone".';
+                document.getElementById('errorMessage').innerText = 'Gagal memproses data dari Drive. Pastikan izin Deploy diatur ke "Anyone" dan folder Drive dapat diakses publik.';
                 console.error(error);
             }
+        }
+
+        function updateBreadcrumbs(id, name) {
+            const index = breadcrumbs.findIndex(item => item.id === id);
+            
+            if (index !== -1) {
+                // Jika folder yang diklik sudah ada di riwayat, potong riwayat ke belakang (navigasi mundur)
+                breadcrumbs = breadcrumbs.slice(0, index + 1);
+            } else {
+                // Jika folder baru, tambahkan ke dalam riwayat jalan
+                breadcrumbs.push({ id, name });
+            }
+
+            const container = document.getElementById('breadcrumbContainer');
+            container.innerHTML = breadcrumbs.map((b, idx) => {
+                const isLast = idx === breadcrumbs.length - 1;
+                if (isLast) {
+                    return `<span class="text-emerald-700 font-bold truncate max-w-[120px] sm:max-w-xs">${b.name}</span>`;
+                }
+                return `
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button onclick="fetchFolderContent('${b.id}', '${b.name}')" class="text-slate-500 hover:text-emerald-600 font-semibold transition-colors cursor-pointer">${b.name}</button>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                    </div>
+                `;
+            }).join('');
         }
 
         function detectFileStyle(mimeType) {
@@ -131,25 +181,40 @@
             return { icon: 'fa-file-lines text-slate-500', bg: 'bg-slate-100' };
         }
 
-        function buildUI(data) {
+        function renderUI(data) {
             const folderGrid = document.getElementById('folderGrid');
             const fileGrid = document.getElementById('fileGrid');
             
             document.getElementById('folderCount').innerText = `${data.folders.length} Folder`;
             document.getElementById('fileCount').innerText = `${data.files.length} Berkas`;
 
-            // Penyusunan Folder
+            // Bersihkan tampilan lama
+            folderGrid.innerHTML = '';
+            fileGrid.innerHTML = '';
+            
+            // Sembunyikan blok section terlebih dahulu
+            document.getElementById('folderSection').classList.add('hidden');
+            document.getElementById('fileSection').classList.add('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+
+            if (data.folders.length === 0 && data.files.length === 0) {
+                document.getElementById('emptyState').classList.remove('hidden');
+                return;
+            }
+
+            // Render Sub-Folder jika ada
             if (data.folders.length > 0) {
                 document.getElementById('folderSection').classList.remove('hidden');
                 folderGrid.innerHTML = data.folders.map(folder => `
-                    <div class="card-node bg-white border border-slate-200 rounded-2xl p-4 flex items-center justify-between hover:shadow-md hover:border-emerald-400 transition-all cursor-pointer group" onclick="window.open('${folder.url}', '_blank')">
+                    <div class="card-node bg-white border border-slate-200 rounded-2xl p-4 flex items-center justify-between hover:shadow-md hover:border-emerald-400 transition-all cursor-pointer group" 
+                         onclick="fetchFolderContent('${folder.id}', '${folder.name.replace(/'/g, "\\'")}')">
                         <div class="flex items-center space-x-3.5 overflow-hidden">
                             <div class="p-3 bg-amber-50 rounded-xl text-amber-500 group-hover:bg-amber-100 transition-colors shrink-0">
                                 <i class="fa-solid fa-folder text-xl"></i>
                             </div>
                             <div class="overflow-hidden">
                                 <h3 class="text-sm font-bold text-slate-700 truncate group-hover:text-emerald-700 transition-colors" title="${folder.name}">${folder.name}</h3>
-                                <p class="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">Buka Folder</p>
+                                <p class="text-[10px] text-emerald-600 font-bold uppercase mt-0.5 tracking-wider">Jelajahi Folder</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-slate-300 text-xs group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all ml-2"></i>
@@ -157,7 +222,7 @@
                 `).join('');
             }
 
-            // Penyusunan Berkas File
+            // Render File jika ada
             if (data.files.length > 0) {
                 document.getElementById('fileSection').classList.remove('hidden');
                 fileGrid.innerHTML = data.files.map(file => {
@@ -192,27 +257,30 @@
         function filterContent() {
             const query = document.getElementById('searchBar').value.toLowerCase();
             const cards = document.querySelectorAll('.card-node');
-            let hasData = false;
+            let hasVisibleCard = false;
 
             cards.forEach(card => {
                 const title = card.querySelector('h3').innerText.toLowerCase();
                 if (title.includes(query)) {
-                    card.style.display = card.classList.contains('flex-col') ? 'flex' : 'flex';
-                    hasData = true;
+                    card.style.setProperty('display', card.classList.contains('flex-col') ? 'flex' : 'flex', 'important');
+                    hasVisibleCard = true;
                 } else {
-                    card.style.display = 'none';
+                    card.style.setProperty('display', 'none', 'important');
                 }
             });
 
             const emptyState = document.getElementById('emptyState');
-            if (!hasData && query !== '') {
+            if (!hasVisibleCard && query !== '') {
                 emptyState.classList.remove('hidden');
             } else {
                 emptyState.classList.add('hidden');
             }
         }
 
-        window.onload = initDashboard;
+        // Muat folder root pertama kali aplikasi dibuka
+        window.onload = () => {
+            fetchFolderContent(ROOT_ID, 'Beranda');
+        };
     </script>
 </body>
 </html>
