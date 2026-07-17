@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKGMI Surabaya 10 - Perangkat Pembelajaran</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
+        .islamic-pattern { background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M54.627 0l.83 22.092-21.26 21.26-22.092-.83L0 54.627l.83 22.092 21.26-21.26 22.092.83L60 54.627z" fill="%23e5e7eb" fill-opacity="0.4" fill-rule="evenodd"/%3E%3C/svg%3E'); }
+    </style>
+</head>
+<body>
+
+    <!-- AUTHENTICATION PAGE -->
+    <div id="auth-page" class="min-h-screen flex items-center justify-center p-4 islamic-pattern">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+            <div class="text-center mb-6">
+                <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo KKGMI" class="h-24 mx-auto mb-4">
+                <h2 class="text-2xl font-bold text-green-700">Aplikasi KKGMI</h2>
+                <p class="text-gray-500 text-sm">Surabaya 10</p>
+            </div>
+
+            <form id="auth-form" class="space-y-4">
+                <div id="madrasah-container" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700">Asal Madrasah</label>
+                    <select id="madrasah" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 p-2 border">
+                        <option value="">-- Pilih Madrasah --</option>
+                        <option value="MIN 1 Surabaya">MIN 1 Surabaya</option>
+                        <option value="MIN 2 Surabaya">MIN 2 Surabaya</option>
+                        <option value="MI Swasta Lainnya">MI Swasta Lainnya</option>
+                        <!-- Tambahkan madrasah lain sesuai kebutuhan -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                    <input type="text" id="nama" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring p-2 border" placeholder="Ketik nama Anda">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring p-2 border" placeholder="Ketik password">
+                </div>
+                
+                <button type="submit" id="btn-auth" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition">Masuk</button>
+            </form>
+            <div class="mt-4 text-center text-sm">
+                <a href="#" id="toggle-auth" class="text-green-600 hover:underline">Belum punya akun? Daftar sekarang</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboard-page" class="hidden min-h-screen pb-10">
+        <!-- Navbar -->
+        <nav class="bg-green-700 text-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center gap-3">
+                        <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo" class="h-10 bg-white rounded-full p-1">
+                        <span class="font-bold text-lg hidden sm:block">KKGMI Surabaya 10</span>
+                    </div>
+                    <div>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-sm font-semibold transition"><i class="fas fa-sign-out-alt mr-2"></i>Keluar</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Welcome Banner -->
+        <div class="bg-green-50 w-full islamic-pattern py-10 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <h1 class="text-3xl font-bold text-green-800 mb-2">Assalamu'alaikum Warahmatullahi Wabarakatuh</h1>
+                <p class="text-lg text-gray-600">Ahlan wa Sahlan, <span id="user-name" class="font-semibold text-green-700"></span></p>
+                <p class="text-sm text-gray-500 mt-1">Pusat Berbagi Perangkat Pembelajaran KKGMI Surabaya 10</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 mt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+                <!-- Search -->
+                <div class="w-full md:w-1/2 relative">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" id="search-input" onkeyup="filterFiles()" class="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500" placeholder="Cari RPP, Silabus, LKPD...">
+                </div>
+                <!-- Upload Button -->
+                <button onclick="openUploadModal()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105">
+                    <i class="fas fa-cloud-upload-alt mr-2"></i>Upload File
+                </button>
+            </div>
+
+            <!-- File Grid -->
+            <div id="file-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Files will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD MODAL -->
+    <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Upload Perangkat</h3>
+                <button onclick="closeUploadModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama File (Judul)</label>
+                    <input type="text" id="up-filename" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Contoh: RPP Fikih Kelas 4 Genap">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Folder Kelas</label>
+                    <select id="up-folder" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="">Memuat folder...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">File (Word/Excel/PDF, Max 10MB)</label>
+                    <input type="file" id="up-file" accept=".doc,.docx,.xls,.xlsx,.pdf" class="w-full p-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+                <button onclick="processUpload()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition mt-4 shadow-md">Kirim File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyM_O1bKcNTgFq70immuAy6EHdYRMaVppldZoLD6nd_fYxqoCONR2uoW6_fMtixoe2bMA/exec'; // GANTI INI
+        
+        let isLoginMode = true;
+        let currentUser = null;
+        let globalFiles = [];
+
+        // Auth Toggle Logic
+        document.getElementById('toggle-auth').addEventListener('click', (e) => {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            document.getElementById('madrasah-container').style.display = isLoginMode ? 'none' : 'block';
+            document.getElementById('btn-auth').innerText = isLoginMode ? 'Masuk' : 'Daftar';
+            document.getElementById('toggle-auth').innerText = isLoginMode ? 'Belum punya akun? Daftar sekarang' : 'Sudah punya akun? Masuk';
+        });
+
+        // Auth Submit
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nama = document.getElementById('nama').value;
+            const password = document.getElementById('password').value;
+            const madrasah = document.getElementById('madrasah').value;
+
+            if(!isLoginMode && !madrasah) return Swal.fire('Oops', 'Pilih madrasah terlebih dahulu!', 'warning');
+
+            const payload = { action: isLoginMode ? 'login' : 'register', nama, password, madrasah };
+            
+            Swal.fire({ title: 'Mohon Tunggu', text: 'Memproses data...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type': 'text/plain;charset=utf-8'} });
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    if (isLoginMode) {
+                        currentUser = data.user;
+                        Swal.fire('Berhasil', 'Login sukses!', 'success');
+                        showDashboard();
+                    } else {
+                        Swal.fire('Berhasil', 'Akun terdaftar, silakan Masuk!', 'success');
+                        document.getElementById('toggle-auth').click(); // Switch to login
+                    }
+                } else {
+                    Swal.fire('Gagal', data.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Error', 'Koneksi ke server gagal', 'error');
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('auth-page').classList.add('hidden');
+            document.getElementById('dashboard-page').classList.remove('hidden');
+            document.getElementById('user-name').innerText = currentUser.nama;
+            loadFiles();
+            loadFolders();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard-page').classList.add('hidden');
+            document.getElementById('auth-page').classList.remove('hidden');
+            document.getElementById('auth-form').reset();
+        }
+
+        async function loadFolders() {
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFolders' }) });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    const select = document.getElementById('up-folder');
+                    select.innerHTML = '<option value="">-- Pilih Folder --</option>';
+                    data.folders.forEach(f => {
+                        select.innerHTML += `<option value="${f.id}">${f.name}</option>`;
+                    });
+                }
+            } catch(e) { console.error('Gagal muat folder'); }
+        }
+
+        async function loadFiles() {
+            document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-green-600 mb-3"></i><p>Memuat perangkat pembelajaran...</p></div>';
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFiles' }) });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    globalFiles = data.files;
+                    renderFiles(globalFiles);
+                }
+            } catch(e) { 
+                document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full">Gagal memuat file.</p>'; 
+            }
+        }
+
+        function renderFiles(files) {
+            const grid = document.getElementById('file-grid');
+            grid.innerHTML = '';
+            
+            if(files.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10">Belum ada perangkat pembelajaran yang diunggah.</div>';
+                return;
+            }
+
+            files.forEach(file => {
+                const ext = file.filename.split('.').pop().toLowerCase();
+                let icon = 'fa-file-alt text-gray-500';
+                if(['pdf'].includes(ext)) icon = 'fa-file-pdf text-red-500';
+                else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
+                else if(['doc','docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
+
+                const isOwner = (file.uploader === currentUser.nama);
+
+                grid.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 flex flex-col">
+                        <div class="flex items-start gap-4 mb-3">
+                            <i class="fas ${icon} text-4xl"></i>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-gray-800 text-sm line-clamp-2" title="${file.filename}">${file.filename}</h4>
+                                <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded mt-1 inline-block"><i class="fas fa-folder-open mr-1"></i>${file.folder}</span>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500 mb-4 border-t pt-2">
+                            <p><i class="fas fa-user mr-1"></i> ${file.uploader}</p>
+                            <p><i class="fas fa-clock mr-1"></i> ${file.time}</p>
+                        </div>
+                        <div class="mt-auto flex gap-2">
+                            <a href="${file.url}" target="_blank" class="flex-1 bg-green-50 text-green-700 text-center py-2 rounded-lg font-semibold hover:bg-green-100 transition text-sm">Download</a>
+                            ${isOwner ? `<button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-lg hover:bg-red-100 transition" title="Hapus"><i class="fas fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterFiles() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = globalFiles.filter(f => f.filename.toLowerCase().includes(query) || f.folder.toLowerCase().includes(query) || f.uploader.toLowerCase().includes(query));
+            renderFiles(filtered);
+        }
+
+        function openUploadModal() { document.getElementById('upload-modal').classList.remove('hidden'); }
+        function closeUploadModal() { document.getElementById('upload-modal').classList.add('hidden'); document.getElementById('up-filename').value = ''; document.getElementById('up-file').value = ''; }
+
+        function processUpload() {
+            const judul = document.getElementById('up-filename').value;
+            const folderId = document.getElementById('up-folder').value;
+            const fileInput = document.getElementById('up-file').files[0];
+
+            if(!judul || !folderId || !fileInput) return Swal.fire('Warning', 'Lengkapi semua isian!', 'warning');
+            
+            // Validasi ukuran max 10MB
+            if(fileInput.size > 10 * 1024 * 1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Data = e.target.result.split(',')[1];
+                const finalName = judul + '.' + fileInput.name.split('.').pop();
+                
+                Swal.fire({ title: 'Mengunggah...', text: 'Memproses ke sistem sekilat kilatnya!', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                
+                const payload = { action: 'upload', base64: base64Data, filename: finalName, mimeType: fileInput.type, folderId: folderId, uploader: currentUser.nama };
+                
+                try {
+                    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type': 'text/plain;charset=utf-8'} });
+                    const data = await res.json();
+                    
+                    if(data.status === 'success') {
+                        Swal.fire('Alhamdulillah', 'File berhasil terunggah!', 'success');
+                        closeUploadModal();
+                        loadFiles(); // refresh list
+                    } else {
+                        Swal.fire('Gagal', data.message, 'error');
+                    }
+                } catch (err) {
+                    Swal.fire('Error', 'Gagal mengunggah file', 'error');
+                }
+            };
+            reader.readAsDataURL(fileInput);
+        }
+
+        async function deleteFile(fileId) {
+            const confirm = await Swal.fire({
+                title: 'Yakin hapus file ini?', text: "File tidak dapat dikembalikan", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!'
+            });
+            
+            if(confirm.isConfirmed) {
+                Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                try {
+                    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', fileId: fileId, uploader: currentUser.nama }), headers: {'Content-Type': 'text/plain;charset=utf-8'} });
+                    const data = await res.json();
+                    if(data.status === 'success') {
+                        Swal.fire('Terhapus!', 'File berhasil dihapus.', 'success');
+                        loadFiles();
+                    } else { Swal.fire('Gagal', data.message, 'error'); }
+                } catch(e) { Swal.fire('Error', 'Gagal menghapus file', 'error'); }
+            }
+        }
+    </script>
+</body>
+</html>
