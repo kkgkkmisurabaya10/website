@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KKGMI Surabaya 10 - Perangkat Pembelajaran</title>
+    <!-- Favicon ditambahkan -->
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -12,26 +14,34 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
-        .islamic-pattern { background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M54.627 0l.83 22.092-21.26 21.26-22.092-.83L0 54.627l.83 22.092 21.26-21.26 22.092.83L60 54.627z" fill="%23e5e7eb" fill-opacity="0.4" fill-rule="evenodd"/%3E%3C/svg%3E'); }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            /* Background diperbarui lebih ceria dan fresh */
+            background: linear-gradient(135deg, #e0f2fe 0%, #dcfce7 100%);
+            min-height: 100vh;
+        }
+        .islamic-pattern { 
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M54.627 0l.83 22.092-21.26 21.26-22.092-.83L0 54.627l.83 22.092 21.26-21.26 22.092.83L60 54.627z" fill="%2322c55e" fill-opacity="0.05" fill-rule="evenodd"/%3E%3C/svg%3E'); 
+        }
     </style>
 </head>
-<body>
+<body class="islamic-pattern">
 
     <!-- AUTHENTICATION PAGE -->
-    <div id="auth-page" class="min-h-screen flex items-center justify-center p-4 islamic-pattern">
-        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+    <div id="auth-page" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-xl w-full max-w-md border border-white">
             <div class="text-center mb-6">
-                <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo KKGMI" class="h-24 mx-auto mb-4">
-                <h2 class="text-2xl font-bold text-green-700">Aplikasi KKGMI</h2>
-                <p class="text-gray-500 text-sm">Surabaya 10</p>
+                <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo KKGMI" class="h-24 mx-auto mb-4 drop-shadow-md">
+                <h2 class="text-3xl font-bold text-green-700">Aplikasi KKGMI</h2>
+                <p class="text-green-600 font-medium text-sm mt-1">Surabaya 10</p>
             </div>
 
             <form id="auth-form" class="space-y-4">
                 <div id="madrasah-container" class="hidden">
                     <label class="block text-sm font-medium text-gray-700">Asal Madrasah</label>
-                    <select id="madrasah" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 p-2 border">
-                        <option value="">-- Pilih Madrasah --</option><option value="MIS Baiturrahman Gubeng">MIS Baiturrahman Gubeng</option>
+                    <select id="madrasah" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 p-2.5 border">
+                        <option value="">-- Pilih Madrasah --</option>
+<option value="MIS Baiturrahman Gubeng">MIS Baiturrahman Gubeng</option>
 <option value="MIS YAPISTHON">MIS YAPISTHON</option>
 <option value="MIS PERSMIN">MIS PERSMIN</option>
 <option value="MIS AL HUDA">MIS AL HUDA</option>
@@ -45,22 +55,21 @@
 <option value="MIS Al-Akbar">MIS Al-Akbar</option>
 <option value="MIS AL Hidayah">MIS AL Hidayah</option>
 <option value="MIS Muhammadiyah 5">MIS Muhammadiyah 5</option>
-                        <!-- Tambahkan madrasah lain sesuai kebutuhan -->
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                    <input type="text" id="nama" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring p-2 border" placeholder="Ketik nama Anda">
+                    <input type="text" id="nama" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 p-2.5 border" placeholder="Ketik nama Anda">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring p-2 border" placeholder="Ketik password">
+                    <input type="password" id="password" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 p-2.5 border" placeholder="Ketik password">
                 </div>
                 
-                <button type="submit" id="btn-auth" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition">Masuk</button>
+                <button type="submit" id="btn-auth" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl hover:from-green-600 hover:to-green-700 transition-all transform hover:-translate-y-0.5">Masuk</button>
             </form>
-            <div class="mt-4 text-center text-sm">
-                <a href="#" id="toggle-auth" class="text-green-600 hover:underline">Belum punya akun? Daftar sekarang</a>
+            <div class="mt-6 text-center text-sm">
+                <a href="#" id="toggle-auth" class="text-green-700 font-medium hover:text-green-800 hover:underline">Belum punya akun? Daftar sekarang</a>
             </div>
         </div>
     </div>
@@ -68,39 +77,39 @@
     <!-- DASHBOARD PAGE -->
     <div id="dashboard-page" class="hidden min-h-screen pb-10">
         <!-- Navbar -->
-        <nav class="bg-green-700 text-white shadow-lg sticky top-0 z-50">
+        <nav class="bg-gradient-to-r from-green-700 to-green-600 text-white shadow-lg sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center gap-3">
-                        <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo" class="h-10 bg-white rounded-full p-1">
-                        <span class="font-bold text-lg hidden sm:block">KKGMI Surabaya 10</span>
+                        <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo" class="h-10 bg-white rounded-full p-1 shadow-sm">
+                        <span class="font-bold text-lg hidden sm:block drop-shadow-sm">KKGMI Surabaya 10</span>
                     </div>
                     <div>
-                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-sm font-semibold transition"><i class="fas fa-sign-out-alt mr-2"></i>Keluar</button>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-full text-sm font-bold shadow-md transition transform hover:scale-105"><i class="fas fa-sign-out-alt mr-2"></i>Keluar</button>
                     </div>
                 </div>
             </div>
         </nav>
 
         <!-- Welcome Banner -->
-        <div class="bg-green-50 w-full islamic-pattern py-10 shadow-sm">
+        <div class="bg-white/60 backdrop-blur-md border-b border-white w-full py-10 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 text-center">
-                <h1 class="text-3xl font-bold text-green-800 mb-2">Assalamu'alaikum Warahmatullahi Wabarakatuh</h1>
-                <p class="text-lg text-gray-600">Ahlan wa Sahlan, <span id="user-name" class="font-semibold text-green-700"></span></p>
-                <p class="text-sm text-gray-500 mt-1">Pusat Berbagi Perangkat Pembelajaran KKGMI Surabaya 10</p>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-700 to-blue-600 mb-3 drop-shadow-sm">Assalamu'alaikum Warahmatullahi Wabarakatuh</h1>
+                <p class="text-xl text-gray-700">Ahlan wa Sahlan, <span id="user-name" class="font-bold text-green-700"></span> ✨</p>
+                <p class="text-sm text-gray-500 mt-2 font-medium">Pusat Berbagi Perangkat Pembelajaran KKGMI Surabaya 10</p>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="max-w-7xl mx-auto px-4 mt-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                 <!-- Search -->
                 <div class="w-full md:w-1/2 relative">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" id="search-input" onkeyup="filterFiles()" class="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500" placeholder="Cari RPP, Silabus, LKPD...">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                    <input type="text" id="search-input" onkeyup="filterFiles()" class="w-full pl-12 pr-4 py-3 border-0 bg-white shadow-md rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 font-medium" placeholder="Cari RPP, Silabus, LKPD...">
                 </div>
                 <!-- Upload Button -->
-                <button onclick="openUploadModal()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105">
+                <button onclick="openUploadModal()" class="w-full md:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-full font-bold shadow-lg transition transform hover:scale-105 hover:shadow-xl">
                     <i class="fas fa-cloud-upload-alt mr-2"></i>Upload File
                 </button>
             </div>
@@ -113,39 +122,48 @@
     </div>
 
     <!-- UPLOAD MODAL -->
-    <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
-        <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Upload Perangkat</h3>
-                <button onclick="closeUploadModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+    <div id="upload-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm hidden flex justify-center items-center z-50 p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl transform transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Upload Perangkat</h3>
+                <button onclick="closeUploadModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-2xl"></i></button>
             </div>
-            <div class="space-y-4">
+            <div class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama File (Judul)</label>
-                    <input type="text" id="up-filename" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Contoh: RPP Fikih Kelas 4 Genap">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama File (Judul)</label>
+                    <input type="text" id="up-filename" class="w-full p-3 border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition" placeholder="Contoh: RPP Fikih Kelas 4 Genap">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Folder Kelas</label>
-                    <select id="up-folder" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Folder Kelas</label>
+                    <select id="up-folder" class="w-full p-3 border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition">
                         <option value="">Memuat folder...</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">File (Word/Excel/PDF, Max 10MB)</label>
-                    <input type="file" id="up-file" accept=".doc,.docx,.xls,.xlsx,.pdf" class="w-full p-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">File (Word/Excel/PDF, Max 10MB)</label>
+                    <input type="file" id="up-file" accept=".doc,.docx,.xls,.xlsx,.pdf" class="w-full p-2 border border-gray-200 bg-gray-50 rounded-xl file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition">
                 </div>
-                <button onclick="processUpload()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition mt-4 shadow-md">Kirim File</button>
+                <button onclick="processUpload()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-blue-700 transition-all mt-2 transform hover:-translate-y-0.5">Kirim File</button>
             </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyM_O1bKcNTgFq70immuAy6EHdYRMaVppldZoLD6nd_fYxqoCONR2uoW6_fMtixoe2bMA/exec'; // GANTI INI
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzYLheKvwnaR2x9Y8N3aOc9uD25fc-cpdy9UAuqPQyJh_0eiHOj_D8fFAhs3dNbhUhFNQ/exec'; // GANTI INI
         
         let isLoginMode = true;
         let currentUser = null;
         let globalFiles = [];
+
+        // Fitur Cek Session saat reload
+        window.onload = () => {
+            const savedSession = localStorage.getItem('kkgmi_session');
+            if (savedSession) {
+                currentUser = JSON.parse(savedSession);
+                showDashboard();
+            }
+        };
 
         // Auth Toggle Logic
         document.getElementById('toggle-auth').addEventListener('click', (e) => {
@@ -176,11 +194,13 @@
                 if (data.status === 'success') {
                     if (isLoginMode) {
                         currentUser = data.user;
-                        Swal.fire('Berhasil', 'Login sukses!', 'success');
-                        showDashboard();
+                        // Simpan sesi ke localStorage
+                        localStorage.setItem('kkgmi_session', JSON.stringify(currentUser));
+                        Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Login sukses!', timer: 1500, showConfirmButton: false });
+                        setTimeout(showDashboard, 1000);
                     } else {
                         Swal.fire('Berhasil', 'Akun terdaftar, silakan Masuk!', 'success');
-                        document.getElementById('toggle-auth').click(); // Switch to login
+                        document.getElementById('toggle-auth').click(); 
                     }
                 } else {
                     Swal.fire('Gagal', data.message, 'error');
@@ -200,9 +220,11 @@
 
         function logout() {
             currentUser = null;
+            localStorage.removeItem('kkgmi_session'); // Hapus sesi
             document.getElementById('dashboard-page').classList.add('hidden');
             document.getElementById('auth-page').classList.remove('hidden');
             document.getElementById('auth-form').reset();
+            document.getElementById('file-grid').innerHTML = ''; // bersihkan grid
         }
 
         async function loadFolders() {
@@ -220,7 +242,7 @@
         }
 
         async function loadFiles() {
-            document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-green-600 mb-3"></i><p>Memuat perangkat pembelajaran...</p></div>';
+            document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-4xl text-green-500 mb-4 drop-shadow-md"></i><p class="font-medium text-gray-600">Memuat perangkat pembelajaran...</p></div>';
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFiles' }) });
                 const data = await res.json();
@@ -229,7 +251,7 @@
                     renderFiles(globalFiles);
                 }
             } catch(e) { 
-                document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full">Gagal memuat file.</p>'; 
+                document.getElementById('file-grid').innerHTML = '<p class="text-red-500 font-semibold text-center col-span-full bg-white p-4 rounded-xl shadow">Gagal memuat file. Pastikan koneksi internet stabil.</p>'; 
             }
         }
 
@@ -238,13 +260,13 @@
             grid.innerHTML = '';
             
             if(files.length === 0) {
-                grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10">Belum ada perangkat pembelajaran yang diunggah.</div>';
+                grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 bg-white/60 backdrop-blur-sm rounded-2xl">Belum ada perangkat pembelajaran yang diunggah.</div>';
                 return;
             }
 
             files.forEach(file => {
                 const ext = file.filename.split('.').pop().toLowerCase();
-                let icon = 'fa-file-alt text-gray-500';
+                let icon = 'fa-file-alt text-gray-400';
                 if(['pdf'].includes(ext)) icon = 'fa-file-pdf text-red-500';
                 else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
                 else if(['doc','docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
@@ -252,21 +274,23 @@
                 const isOwner = (file.uploader === currentUser.nama);
 
                 grid.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 flex flex-col">
-                        <div class="flex items-start gap-4 mb-3">
-                            <i class="fas ${icon} text-4xl"></i>
+                    <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col group transform hover:-translate-y-1">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="bg-gray-50 p-3 rounded-xl shadow-inner group-hover:bg-blue-50 transition">
+                                <i class="fas ${icon} text-4xl drop-shadow-sm"></i>
+                            </div>
                             <div class="flex-1">
-                                <h4 class="font-bold text-gray-800 text-sm line-clamp-2" title="${file.filename}">${file.filename}</h4>
-                                <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded mt-1 inline-block"><i class="fas fa-folder-open mr-1"></i>${file.folder}</span>
+                                <h4 class="font-bold text-gray-800 text-sm line-clamp-2 leading-snug" title="${file.filename}">${file.filename}</h4>
+                                <span class="text-xs bg-green-50 text-green-700 font-semibold px-2.5 py-1 rounded-md mt-2 inline-block shadow-sm"><i class="fas fa-folder-open mr-1"></i>${file.folder}</span>
                             </div>
                         </div>
-                        <div class="text-xs text-gray-500 mb-4 border-t pt-2">
-                            <p><i class="fas fa-user mr-1"></i> ${file.uploader}</p>
-                            <p><i class="fas fa-clock mr-1"></i> ${file.time}</p>
+                        <div class="text-xs text-gray-500 mb-5 border-t border-gray-100 pt-3">
+                            <p class="font-medium text-gray-600 mb-1"><i class="fas fa-user-circle mr-1.5 text-gray-400"></i> ${file.uploader}</p>
+                            <p><i class="fas fa-clock mr-1.5 text-gray-400"></i> ${file.time}</p>
                         </div>
-                        <div class="mt-auto flex gap-2">
-                            <a href="${file.url}" target="_blank" class="flex-1 bg-green-50 text-green-700 text-center py-2 rounded-lg font-semibold hover:bg-green-100 transition text-sm">Download</a>
-                            ${isOwner ? `<button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-lg hover:bg-red-100 transition" title="Hapus"><i class="fas fa-trash"></i></button>` : ''}
+                        <div class="mt-auto flex gap-3">
+                            <a href="${file.url}" target="_blank" class="flex-1 bg-gradient-to-r from-green-50 to-green-100 text-green-700 text-center py-2.5 rounded-xl font-bold hover:from-green-100 hover:to-green-200 hover:shadow-md transition text-sm">Download</a>
+                            ${isOwner ? `<button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 px-4 py-2.5 rounded-xl font-bold hover:bg-red-100 hover:shadow-md transition" title="Hapus"><i class="fas fa-trash-alt"></i></button>` : ''}
                         </div>
                     </div>
                 `;
@@ -289,7 +313,6 @@
 
             if(!judul || !folderId || !fileInput) return Swal.fire('Warning', 'Lengkapi semua isian!', 'warning');
             
-            // Validasi ukuran max 10MB
             if(fileInput.size > 10 * 1024 * 1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
 
             const reader = new FileReader();
@@ -306,9 +329,9 @@
                     const data = await res.json();
                     
                     if(data.status === 'success') {
-                        Swal.fire('Alhamdulillah', 'File berhasil terunggah!', 'success');
+                        Swal.fire({ icon: 'success', title: 'Alhamdulillah', text: 'File berhasil terunggah!', timer: 2000, showConfirmButton: false });
                         closeUploadModal();
-                        loadFiles(); // refresh list
+                        loadFiles(); 
                     } else {
                         Swal.fire('Gagal', data.message, 'error');
                     }
@@ -322,7 +345,7 @@
         async function deleteFile(fileId) {
             const confirm = await Swal.fire({
                 title: 'Yakin hapus file ini?', text: "File tidak dapat dikembalikan", icon: 'warning',
-                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!'
+                showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#6b7280', confirmButtonText: 'Ya, Hapus!', cancelButtonText: 'Batal'
             });
             
             if(confirm.isConfirmed) {
@@ -331,7 +354,7 @@
                     const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', fileId: fileId, uploader: currentUser.nama }), headers: {'Content-Type': 'text/plain;charset=utf-8'} });
                     const data = await res.json();
                     if(data.status === 'success') {
-                        Swal.fire('Terhapus!', 'File berhasil dihapus.', 'success');
+                        Swal.fire({ icon: 'success', title: 'Terhapus!', text: 'File berhasil dihapus.', timer: 1500, showConfirmButton: false });
                         loadFiles();
                     } else { Swal.fire('Gagal', data.message, 'error'); }
                 } catch(e) { Swal.fire('Error', 'Gagal menghapus file', 'error'); }
