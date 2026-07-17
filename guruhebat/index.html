@@ -154,13 +154,12 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyM_O1bKcNTgFq70immuAy6EHdYRMaVppldZoLD6nd_fYxqoCONR2uoW6_fMtixoe2bMA/exec'; 
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyRf7lTop2xmp4oTgBSRIdC-jxfBA-j5AIdtnhDX99QqzH1NYfnsMYgEtz0fwdf7_71Ww/exec'; 
         
         let isLoginMode = true;
         let currentUser = null;
         let globalFiles = [];
 
-        // Fitur Cek Session yang disempurnakan agar tetap login saat reload
         document.addEventListener('DOMContentLoaded', () => {
             const savedSession = localStorage.getItem('kkgmi_session');
             if (savedSession) {
@@ -175,7 +174,6 @@
             }
         });
 
-        // Auth Toggle Logic
         document.getElementById('toggle-auth').addEventListener('click', (e) => {
             e.preventDefault();
             isLoginMode = !isLoginMode;
@@ -184,7 +182,6 @@
             document.getElementById('toggle-auth').innerText = isLoginMode ? 'Belum punya akun? Daftar sekarang' : 'Sudah punya akun? Masuk';
         });
 
-        // Auth Submit
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nama = document.getElementById('nama').value;
@@ -204,7 +201,7 @@
                 if (data.status === 'success') {
                     if (isLoginMode) {
                         currentUser = data.user;
-                        localStorage.setItem('kkgmi_session', JSON.stringify(currentUser)); // Simpan sesi
+                        localStorage.setItem('kkgmi_session', JSON.stringify(currentUser));
                         Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Login sukses!', timer: 1500, showConfirmButton: false });
                         setTimeout(showDashboard, 1000);
                     } else {
@@ -229,7 +226,7 @@
 
         function logout() {
             currentUser = null;
-            localStorage.removeItem('kkgmi_session'); // Hapus sesi saat logout
+            localStorage.removeItem('kkgmi_session');
             document.getElementById('dashboard-page').classList.add('hidden');
             document.getElementById('auth-page').classList.remove('hidden');
             document.getElementById('auth-form').reset();
