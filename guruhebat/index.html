@@ -154,12 +154,26 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // GANTI URL DI BAWAH INI DENGAN URL DEPLOY TERBARU JIKA BERUBAH
         const API_URL = 'https://script.google.com/macros/s/AKfycbyM_O1bKcNTgFq70immuAy6EHdYRMaVppldZoLD6nd_fYxqoCONR2uoW6_fMtixoe2bMA/exec'; 
         
         let isLoginMode = true;
         let currentUser = null;
         let globalFiles = [];
+
+        // Fitur Cek Session yang disempurnakan agar tetap login saat reload
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSession = localStorage.getItem('kkgmi_session');
+            if (savedSession) {
+                try {
+                    currentUser = JSON.parse(savedSession);
+                    if (currentUser && currentUser.nama) {
+                        showDashboard();
+                    }
+                } catch (error) {
+                    localStorage.removeItem('kkgmi_session');
+                }
+            }
+        });
 
         // Auth Toggle Logic
         document.getElementById('toggle-auth').addEventListener('click', (e) => {
@@ -190,11 +204,12 @@
                 if (data.status === 'success') {
                     if (isLoginMode) {
                         currentUser = data.user;
-                        Swal.fire('Berhasil', 'Login sukses!', 'success');
-                        showDashboard();
+                        localStorage.setItem('kkgmi_session', JSON.stringify(currentUser)); // Simpan sesi
+                        Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Login sukses!', timer: 1500, showConfirmButton: false });
+                        setTimeout(showDashboard, 1000);
                     } else {
                         Swal.fire('Berhasil', 'Akun terdaftar, silakan Masuk!', 'success');
-                        document.getElementById('toggle-auth').click(); // Switch to login
+                        document.getElementById('toggle-auth').click(); 
                     }
                 } else {
                     Swal.fire('Gagal', data.message, 'error');
@@ -214,9 +229,11 @@
 
         function logout() {
             currentUser = null;
+            localStorage.removeItem('kkgmi_session'); // Hapus sesi saat logout
             document.getElementById('dashboard-page').classList.add('hidden');
             document.getElementById('auth-page').classList.remove('hidden');
             document.getElementById('auth-form').reset();
+            document.getElementById('file-grid').innerHTML = ''; 
         }
 
         async function loadFolders() {
@@ -264,8 +281,6 @@
                 else if(['doc','docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
 
                 const isOwner = (file.uploader === currentUser.nama);
-
-                // Membuat link khusus untuk force download agar tidak bentrok dengan preview
                 const downloadUrl = `https://drive.google.com/uc?export=download&id=${file.id}`;
 
                 grid.innerHTML += `
@@ -291,7 +306,6 @@
             });
         }
 
-        // Fitur Buka Preview
         function openPreview(fileId, filename) {
             const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
             document.getElementById('preview-title').innerText = filename;
@@ -299,7 +313,6 @@
             document.getElementById('preview-modal').classList.remove('hidden');
         }
 
-        // Fitur Tutup Preview
         function closePreviewModal() {
             document.getElementById('preview-modal').classList.add('hidden');
             document.getElementById('preview-frame').src = '';
@@ -321,7 +334,6 @@
 
             if(!judul || !folderId || !fileInput) return Swal.fire('Warning', 'Lengkapi semua isian!', 'warning');
             
-            // Validasi ukuran max 10MB
             if(fileInput.size > 10 * 1024 * 1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
 
             const reader = new FileReader();
@@ -338,9 +350,9 @@
                     const data = await res.json();
                     
                     if(data.status === 'success') {
-                        Swal.fire('Alhamdulillah', 'File berhasil terunggah!', 'success');
+                        Swal.fire({ icon: 'success', title: 'Alhamdulillah', text: 'File berhasil terunggah!', timer: 2000, showConfirmButton: false });
                         closeUploadModal();
-                        loadFiles(); // refresh list
+                        loadFiles(); 
                     } else {
                         Swal.fire('Gagal', data.message, 'error');
                     }
@@ -363,7 +375,7 @@
                     const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', fileId: fileId, uploader: currentUser.nama }), headers: {'Content-Type': 'text/plain;charset=utf-8'} });
                     const data = await res.json();
                     if(data.status === 'success') {
-                        Swal.fire('Terhapus!', 'File berhasil dihapus.', 'success');
+                        Swal.fire({ icon: 'success', title: 'Terhapus!', text: 'File berhasil dihapus.', timer: 1500, showConfirmButton: false });
                         loadFiles();
                     } else { Swal.fire('Gagal', data.message, 'error'); }
                 } catch(e) { Swal.fire('Error', 'Gagal menghapus file', 'error'); }
