@@ -185,14 +185,25 @@ body.exam-mode { overflow: hidden; user-select: none; }
             target._success = null; target._failure = null;
             
             fetch(BACKEND_API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ action: prop, args: args })
-            })
-            .then(res => res.json())
-            .then(data => { if (successCb) successCb(data); })
-            .catch(err => { if (failureCb) failureCb(err); else console.error("API Error:", err); });
-          };
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ action: prop, args: args })
+})
+.then(async res => {
+  if (!res.ok) throw new Error("HTTP Error: " + res.status);
+  const text = await res.text(); // Tarik jawaban server sebagai teks murni
+  try {
+    return JSON.parse(text); // Coba ubah menjadi JSON
+  } catch (e) {
+    console.error("Balasan server bukan JSON:", text);
+    throw new Error("Format balasan server tidak valid.");
+  }
+})
+.then(data => { if (successCb) successCb(data); })
+.catch(err => { 
+  console.error("API Gateway Error:", err); 
+  if (failureCb) failureCb(err); 
+});
         }
       })
     }
