@@ -4,74 +4,96 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRYOUT TKA KKGMI SURABAYA 11</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Library untuk membaca Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        :root { --primary: #00796b; --primary-dark: #004d40; --accent: #1976d2; --danger: #d32f2f; --bg: #f5f5f5; }
+        :root { --primary: #00796b; --primary-dark: #004d40; --accent: #1976d2; --danger: #d32f2f; --bg: #f4f7f6; --text: #333;}
         * { box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; margin: 0; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; user-select: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; user-select: none; }
         
         .header-logo { display: flex; align-items: center; gap: 10px; }
         .logo-img { height: 40px; width: auto; }
-        .header-info { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header-info { background: var(--primary); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        #loginScreen, .dashboard-screen { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 90vh; padding: 20px; }
-        .login-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; position: relative; margin: auto; }
+        #loginScreen, .dashboard-screen { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 90vh; padding: 30px 20px; }
+        .login-box { background: white; padding: 45px 30px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 420px; position: relative; margin: auto; border-top: 5px solid var(--primary); }
         
-        .login-logo { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100px; height: 100px; background: white; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 10px; }
+        .login-logo { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 90px; height: 90px; background: white; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); padding: 10px; border: 3px solid var(--bg); }
         .login-logo .logo-img { height: 100%; width: 100%; object-fit: contain; }
 
-        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; color: #333; }
-        input[type="text"], input[type="password"], input[type="date"], select, input[type="number"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        label { font-weight: 600; display: block; margin-top: 15px; margin-bottom: 8px; color: #444; font-size: 0.95rem;}
+        input[type="text"], input[type="password"], input[type="date"], select, input[type="number"], input[type="file"] { width: 100%; padding: 12px 15px; border: 1.5px solid #e0e0e0; border-radius: 6px; font-size: 1rem; transition: border-color 0.3s; background: #fafafa;}
+        input:focus, select:focus { border-color: var(--primary); outline: none; background: white;}
         
         .password-wrapper { position: relative; width: 100%; }
-        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666; font-size: 1.2rem; }
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; font-size: 1.2rem; }
         
-        .btn-custom { width: 100%; padding: 12px 15px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight:bold; font-size: 1rem; margin-top: 15px; transition: background 0.3s; }
-        .btn-custom:hover { background: var(--primary-dark); }
-        .btn-secondary { background: #607d8b; }
-        .btn-danger { background: var(--danger); }
+        .btn-custom { width: 100%; padding: 14px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem; margin-top: 20px; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,121,107,0.2); }
+        .btn-custom:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,121,107,0.3); }
+        .btn-secondary { background: #607d8b; box-shadow: 0 4px 6px rgba(96,125,139,0.2); }
+        .btn-secondary:hover { background: #455a64; box-shadow: 0 6px 12px rgba(96,125,139,0.3); }
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 6px rgba(211,47,47,0.2);}
+        .btn-danger:hover { background: #b71c1c; }
         
-        .panel-box { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 1000px; margin-top:20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .menu-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .menu-tabs button { padding: 10px 20px; border: none; background: #eee; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .panel-box { background: white; padding: 35px; border-radius: 12px; width: 100%; max-width: 1050px; margin-top:10px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; }
+        .menu-tabs { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .menu-tabs button { padding: 10px 25px; border: none; background: transparent; cursor: pointer; border-radius: 6px 6px 0 0; font-weight: bold; color: #666; font-size: 1rem; transition: all 0.3s; }
+        .menu-tabs button:hover { color: var(--primary); background: #f0f7f6; }
         .menu-tabs button.active { background: var(--primary); color: white; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
-        table, th, td { border: 1px solid #ddd; }
-        th, td { padding: 12px; text-align: left; }
-        th { background-color: var(--primary); color: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95rem; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        table, th, td { border: none; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: var(--primary); color: white; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        tr:hover { background-color: #f9fbfa; }
         
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .badge-green { background: #e8f5e9; color: #2e7d32; }
+        .badge-orange { background: #fff3e0; color: #ef6c00; }
+        .badge-red { background: #ffebee; color: #c62828; }
+
+        /* Excel Upload Box */
+        .upload-box { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 8px; background: #fafafa; margin-bottom: 20px; }
+        .upload-box:hover { border-color: var(--primary); background: #f0f7f6; }
+
         /* Layout Ujian */
-        .main-container { display: flex; flex-grow: 1; padding: 20px; gap: 20px; max-width: 1300px; width: 100%; margin: auto; }
-        .content-area { flex: 3; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .sidebar-area { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+        .main-container { display: flex; flex-grow: 1; padding: 25px; gap: 25px; max-width: 1300px; width: 100%; margin: auto; }
+        .content-area { flex: 3; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .sidebar-area { flex: 1; display: flex; flex-direction: column; gap: 25px; }
         
-        .timer-box, .nav-box { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        #timerDisplay { font-size: 2.5rem; font-weight: bold; color: var(--danger); }
+        .timer-box, .nav-box { background: white; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        #timerDisplay { font-size: 2.8rem; font-weight: bold; color: var(--danger); margin-top: 10px; font-family: monospace; }
         
-        #soalNav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-        #soalNav button { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; font-weight: bold; }
-        #soalNav button.active { background: var(--accent); color: white; border-color: var(--accent); }
-        #soalNav button.answered { background: #06D83E; color: var(--primary-dark); border-color: #06D83E; }
-        #soalNav button.active.answered { background: var(--primary); color: white; }
+        #soalNav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 15px; }
+        #soalNav button { width: 40px; height: 40px; border-radius: 8px; border: 1.5px solid #ddd; background: #fff; cursor: pointer; font-weight: bold; color: #555; transition: all 0.2s; }
+        #soalNav button:hover { border-color: var(--primary); color: var(--primary); }
+        #soalNav button.active { background: var(--accent); color: white; border-color: var(--accent); transform: scale(1.05); }
+        #soalNav button.answered { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+        #soalNav button.active.answered { background: var(--primary); color: white; border-color: var(--primary-dark); }
         
-        .opsi { display: flex; align-items: center; padding: 12px; border: 1px solid #eee; margin-bottom: 10px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        .opsi { display: flex; align-items: center; padding: 15px 20px; border: 1.5px solid #e0e0e0; margin-bottom: 12px; border-radius: 8px; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+        .opsi:hover { background: #f9fbfa; border-color: #b2dfdb; }
         .opsi input[type="radio"], .opsi input[type="checkbox"] { display: none; }
-        .opsi label { display: flex; align-items: center; flex-grow: 1; cursor: pointer; line-height: 1.5; }
-        .opsi label::before { content: ''; display: inline-block; width: 20px; height: 20px; margin-right: 15px; border: 2px solid #ccc; border-radius: 50%; background: white; }
-        .opsi input:checked + label::before { background: var(--primary); border-color: var(--primary); box-shadow: inset 0 0 0 4px white; }
+        .opsi label { display: flex; align-items: center; flex-grow: 1; cursor: pointer; line-height: 1.5; font-size: 1.05rem; }
+        .opsi label::before { content: ''; display: inline-block; width: 22px; height: 22px; margin-right: 15px; border: 2px solid #ccc; border-radius: 50%; background: white; transition: all 0.2s; }
+        .opsi input:checked + label::before { background: var(--primary); border-color: var(--primary); box-shadow: inset 0 0 0 5px white; }
         
-        .opsi-kategori { padding: 10px; margin-bottom: 10px; background: #f7f7f7; border-radius: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid #eee; }
-        .btn-kategori { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: 500; background: #fff; transition: all 0.2s; }
+        .opsi-kategori { padding: 15px 20px; margin-bottom: 12px; background: #fafafa; border-radius: 8px; display: flex; align-items: center; gap: 15px; border: 1.5px solid #e0e0e0; }
+        .btn-kategori { padding: 10px 20px; border: 1.5px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: 600; background: #fff; transition: all 0.2s; font-size: 0.95rem; }
+        .btn-kategori:hover { border-color: var(--primary); color: var(--primary); }
         .btn-kategori.active { background: var(--primary); color: #fff; border-color: var(--primary-dark); }
         
-        .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;}
-        .nav-buttons button { padding: 12px 25px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; color: white;}
+        .nav-buttons { display: flex; justify-content: space-between; gap: 15px; margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px;}
+        .nav-buttons button { padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; color: white; display: flex; align-items: center; gap: 8px; transition: background 0.3s;}
         
-        @media (max-width: 768px) { .main-container { flex-direction: column; padding: 10px; } .sidebar-area { order: -1; width: 100%; } }
+        @media (max-width: 768px) { .main-container { flex-direction: column; padding: 15px; } .sidebar-area { order: -1; width: 100%; } .menu-tabs button { flex: 1 1 100%; border-radius: 6px; margin-bottom: 5px; } }
     </style>
 </head>
 <body>
@@ -79,87 +101,95 @@
     <div id="loginScreen">
         <div class="login-box">
             <div class="login-logo"><img src="https://lh3.googleusercontent.com/d/1bmKHxXSnIZKHcPgxK9xEai1njzZWOn8h" class="logo-img"></div>
-            <h2 style="text-align: center; color: var(--primary); margin-top: 40px; margin-bottom: 0;">PORTAL CBT</h2>
+            <h2 style="text-align: center; color: var(--primary); margin-top: 35px; margin-bottom: 5px; letter-spacing: 1px;">PORTAL CBT</h2>
+            <p style="text-align: center; color: #777; margin-top: 0; font-size: 0.9rem;">TKA KKGMI SURABAYA 11</p>
             
-            <label>Login Sebagai:</label>
+            <label>Login Sebagai</label>
             <select id="roleSelect" onchange="toggleLoginFields()">
-                <option value="peserta">Peserta Ujian</option>
-                <option value="guru">Guru / Pengawas</option>
-                <option value="admin">Administrator</option>
+                <option value="peserta">👨‍🎓 Peserta Ujian</option>
+                <option value="guru">👨‍🏫 Guru / Pengawas</option>
+                <option value="admin">⚙️ Administrator</option>
             </select>
 
             <div id="pesertaFields">
-                <label>Pilih Ujian:</label>
-                <select id="kodeUjianSelect" required><option>Memuat...</option></select>
-                <label>Tanggal Lahir:</label><input type="date" id="tanggalLahirInput">
+                <label>Pilih Ujian</label>
+                <select id="kodeUjianSelect" required><option>Memuat Ujian Aktif...</option></select>
+                <label>Tanggal Lahir</label>
+                <input type="date" id="tanggalLahirInput">
             </div>
 
-            <label>Username:</label>
+            <label>Username</label>
             <input type="text" id="usernameInput" placeholder="Masukkan Username Anda">
             
-            <label>Password:</label>
+            <label>Password</label>
             <div class="password-wrapper">
                 <input type="password" id="passwordInput" placeholder="Masukkan Password">
                 <span class="toggle-password" onclick="togglePasswordVisibility('passwordInput')">👁️</span>
             </div>
 
-            <button id="btnMulaiUjian" class="btn-custom" onclick="prosesLogin()">MASUK</button>
-            <p id="loginError" style="color: var(--danger); text-align: center; display: none; margin-top: 15px; font-weight: bold;"></p>
+            <button id="btnMulaiUjian" class="btn-custom" onclick="prosesLogin()">MASUK PORTAL</button>
+            <p id="loginError" style="color: var(--danger); text-align: center; display: none; margin-top: 15px; font-weight: bold; background: #ffebee; padding: 10px; border-radius: 6px; border: 1px solid #ffcdd2;"></p>
         </div>
     </div>
 
     <!-- PANEL ADMIN -->
     <div id="adminScreen" class="dashboard-screen" style="display: none;">
-        <div class="header-info" style="width:100%">
-            <h3>DASHBOARD ADMINISTRATOR</h3>
-            <button onclick="location.reload()" class="btn-custom" style="width:auto; margin:0; padding:8px 15px; background:white; color:var(--primary);">Logout</button>
+        <div class="header-info" style="width:100%; border-radius: 8px;">
+            <h3 style="margin: 0; font-size: 1.2rem;">⚙️ DASHBOARD ADMINISTRATOR</h3>
+            <button onclick="location.reload()" class="btn-custom" style="width:auto; margin:0; padding:8px 20px; background:white; color:var(--primary); font-size: 0.9rem;">Keluar</button>
         </div>
+        
         <div class="panel-box">
             <div class="menu-tabs">
-                <button onclick="switchAdminTab('sync')" id="tab_sync" class="active">Sinkronisasi Master</button>
-                <button onclick="switchAdminTab('peserta')" id="tab_peserta">Tambah Peserta</button>
-                <button onclick="switchAdminTab('monitor')" id="tab_monitor">Live Monitoring</button>
-                <button onclick="switchAdminTab('pengaturan')" id="tab_pengaturan">Akses Ujian</button>
+                <button onclick="switchAdminTab('sync')" id="tab_sync" class="active">🔄 Sinkronisasi Master</button>
+                <button onclick="switchAdminTab('peserta')" id="tab_peserta">👥 Tambah Peserta</button>
+                <button onclick="switchAdminTab('monitor')" id="tab_monitor">📊 Live Monitoring</button>
+                <button onclick="switchAdminTab('pengaturan')" id="tab_pengaturan">🔐 Akses Guru</button>
             </div>
             
             <!-- Tab Sync -->
             <div id="admin_sync">
-                <h3 style="color:var(--primary)">Sinkronisasi Data Spreadsheet <-> Hosting</h3>
-                <button class="btn-custom" onclick="adminSyncToHosting()">1. Tarik Master (Peserta, Jadwal, Soal) dari Sheet ke Hosting</button>
-                <button class="btn-custom btn-secondary" onclick="adminPushToSheet()">2. Backup Hasil Pengerjaan ke Spreadsheet (Manual)</button>
-                <p id="adminStatus" style="font-weight:bold; margin-top:15px; color:var(--danger);"></p>
+                <h3 style="color:var(--primary); margin-top: 0;">Sinkronisasi Data Spreadsheet ↔ Hosting</h3>
+                <p style="color:#666; margin-bottom: 25px; line-height: 1.5;">Proses ini memindahkan data jadwal, soal, dan peserta yang baru Anda input di Google Spreadsheet ke dalam Database Server (Hosting).</p>
+                
+                <button class="btn-custom" onclick="adminSyncToHosting()" style="padding: 18px; font-size: 1.1rem;">📥 1. Tarik Master Data ke Hosting</button>
+                <button class="btn-custom btn-secondary" onclick="adminPushToSheet()" style="padding: 18px; font-size: 1.1rem;">📤 2. Backup Hasil Pengerjaan ke Sheet</button>
+                
+                <div id="adminStatusBox" style="display:none; margin-top:20px; padding: 15px; border-radius: 6px; background: #e3f2fd; border: 1px solid #bbdefb; color: #1565c0; font-weight: bold;">
+                    <span id="adminStatus"></span>
+                </div>
             </div>
 
             <!-- Tab Tambah Peserta -->
             <div id="admin_peserta" style="display: none;">
-                <h3 style="color:var(--primary)">Tambah Peserta (Otomatis Sinkron ke Sheet)</h3>
-                <input type="text" id="add_nisn" placeholder="NISN">
-                <input type="text" id="add_username" placeholder="Username">
-                <input type="text" id="add_nama" placeholder="Nama Lengkap">
-                <input type="date" id="add_tgl">
-                <input type="text" id="add_pass" placeholder="Password">
-                <input type="text" id="add_madrasah" placeholder="Asal Madrasah">
-                <button class="btn-custom" onclick="adminTambahPeserta()">Tambah Peserta</button>
+                <h3 style="color:var(--primary); margin-top: 0;">Tambah Peserta Massal (Excel)</h3>
+                <div class="upload-box">
+                    <p style="margin-bottom: 15px; color: #555;">Pilih file Excel (.xlsx) dengan kolom berurutan: <br><b>NISN | Username | Nama Lengkap | Tgl Lahir (YYYY-MM-DD) | Password | Asal Madrasah</b></p>
+                    <input type="file" id="excelFile" accept=".xlsx, .xls" style="max-width: 300px; margin: auto; display: block;">
+                    <button class="btn-custom" onclick="prosesUploadExcel()" style="max-width: 300px; margin: 20px auto 0;">Upload & Sinkron</button>
+                </div>
             </div>
 
             <!-- Tab Monitor -->
             <div id="admin_monitor" style="display: none;">
-                <h3 style="color:var(--primary)">Live Monitoring Siswa</h3>
-                <button class="btn-custom btn-secondary" onclick="muatMonitoring('ALL')" style="width:auto">Refresh Data</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color:var(--primary); margin: 0;">Live Monitoring Seluruh Siswa</h3>
+                    <button class="btn-custom btn-secondary" onclick="muatMonitoring('ALL')" style="width:auto; margin:0; padding: 8px 15px;">🔄 Refresh Data</button>
+                </div>
                 <div style="overflow-x:auto;">
                     <table id="tabelMonitorAdmin">
-                        <thead><tr><th>NISN</th><th>Nama</th><th>Madrasah</th><th>Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead>
+                        <thead><tr><th>NISN</th><th>Nama Peserta</th><th>Asal Madrasah</th><th>Mapel Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Tab Pengaturan Ujian (Buka Tutup Download) -->
+            <!-- Tab Pengaturan Ujian -->
             <div id="admin_pengaturan" style="display: none;">
-                <h3 style="color:var(--primary)">Pengaturan Akses Guru</h3>
+                <h3 style="color:var(--primary); margin-top: 0;">Izin Download Soal untuk Guru</h3>
                 <div style="overflow-x:auto;">
                     <table id="tabelPengaturanAdmin">
-                        <thead><tr><th>Kode Ujian</th><th>Judul</th><th>Akses Download Soal Guru</th></tr></thead>
+                        <thead><tr><th>Kode Ujian</th><th>Judul Ujian</th><th>Akses Download PDF</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -169,39 +199,44 @@
 
     <!-- PANEL GURU -->
     <div id="guruScreen" class="dashboard-screen" style="display: none;">
-        <div class="header-info" style="width:100%">
-            <h3>DASHBOARD GURU</h3>
-            <span id="guruMadrasahDisplay" style="margin-right:20px; font-weight:bold;"></span>
-            <button onclick="location.reload()" class="btn-custom" style="width:auto; margin:0; padding:8px 15px; background:white; color:var(--primary);">Logout</button>
+        <div class="header-info" style="width:100%; border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h3 style="margin: 0; font-size: 1.2rem;">👨‍🏫 DASHBOARD GURU</h3>
+                <span class="badge badge-orange" id="guruMadrasahDisplay"></span>
+            </div>
+            <button onclick="location.reload()" class="btn-custom" style="width:auto; margin:0; padding:8px 20px; background:white; color:var(--primary); font-size: 0.9rem;">Keluar</button>
         </div>
+        
         <div class="panel-box">
             <div class="menu-tabs">
-                <button onclick="switchGuruTab('administrasi')" id="tabG_administrasi" class="active">Cetak Administrasi</button>
-                <button onclick="switchGuruTab('monitorG')" id="tabG_monitorG">Monitoring Siswa</button>
-                <button onclick="switchGuruTab('hasilG')" id="tabG_hasilG">Hasil Ujian</button>
+                <button onclick="switchGuruTab('administrasi')" id="tabG_administrasi" class="active">🖨️ Cetak Administrasi</button>
+                <button onclick="switchGuruTab('monitorG')" id="tabG_monitorG">📊 Monitoring Siswa</button>
+                <button onclick="switchGuruTab('hasilG')" id="tabG_hasilG">🏆 Hasil Ujian</button>
             </div>
             
             <!-- Tab Administrasi & Download -->
             <div id="guru_administrasi">
-                <h3 style="color:var(--primary)">Cetak Administrasi Ujian</h3>
-                <p>Pilih Ujian:</p>
-                <select id="guruKodeUjianSelect"></select>
+                <h3 style="color:var(--primary); margin-top: 0;">Pusat Cetak Berkas Ujian</h3>
+                <label>Silakan Pilih Ujian Aktif:</label>
+                <select id="guruKodeUjianSelect" style="max-width: 400px; margin-bottom: 20px;"></select>
                 
-                <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
-                    <button class="btn-custom" style="width:auto; margin:0" onclick="cetakKartu()">Cetak Kartu Login</button>
-                    <button class="btn-custom" style="width:auto; margin:0" onclick="cetakDaftarHadir()">Cetak Daftar Hadir</button>
-                    <button class="btn-custom" style="width:auto; margin:0" onclick="cetakBeritaAcara()">Cetak Berita Acara</button>
-                    <button class="btn-custom btn-secondary" style="width:auto; margin:0" onclick="guruDownloadSoal()">📥 Download Soal (PDF)</button>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <button class="btn-custom" style="width:auto; margin:0; flex-grow: 1;" onclick="cetakKartu()">💳 Kartu Login</button>
+                    <button class="btn-custom" style="width:auto; margin:0; flex-grow: 1;" onclick="cetakDaftarHadir()">📝 Daftar Hadir</button>
+                    <button class="btn-custom" style="width:auto; margin:0; flex-grow: 1;" onclick="cetakBeritaAcara()">📑 Berita Acara</button>
+                    <button class="btn-custom btn-secondary" style="width:auto; margin:0; flex-grow: 1;" onclick="guruDownloadSoal()">📥 Download Soal (PDF)</button>
                 </div>
             </div>
 
             <!-- Tab Monitor -->
             <div id="guru_monitorG" style="display: none;">
-                <h3 style="color:var(--primary)">Siswa Sedang Mengerjakan</h3>
-                <button class="btn-custom btn-secondary" onclick="muatMonitoring(globalProfile.madrasah)" style="width:auto">Refresh</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color:var(--primary); margin: 0;">Siswa Sedang Mengerjakan</h3>
+                    <button class="btn-custom btn-secondary" onclick="muatMonitoring(globalProfile.madrasah)" style="width:auto; margin:0; padding: 8px 15px;">🔄 Refresh</button>
+                </div>
                 <div style="overflow-x:auto;">
                     <table id="tabelMonitorGuru">
-                        <thead><tr><th>Nama</th><th>Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead>
+                        <thead><tr><th>Nama Peserta</th><th>Mapel Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -209,11 +244,13 @@
 
             <!-- Tab Hasil -->
             <div id="guru_hasilG" style="display: none;">
-                <h3 style="color:var(--primary)">Hasil Pengerjaan</h3>
-                <button class="btn-custom btn-secondary" onclick="cetakHasil()" style="width:auto">Refresh</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color:var(--primary); margin: 0;">Rekapitulasi Hasil Pengerjaan</h3>
+                    <button class="btn-custom btn-secondary" onclick="cetakHasil()" style="width:auto; margin:0; padding: 8px 15px;">🔄 Refresh Tabel</button>
+                </div>
                 <div style="overflow-x:auto;">
                     <table id="tabelHasilGuru">
-                        <thead><tr><th>Nama Peserta</th><th>Kode Ujian</th><th>Skor</th><th>Waktu Selesai</th></tr></thead>
+                        <thead><tr><th>Nama Peserta</th><th>Kode Ujian</th><th>Skor Akhir</th><th>Waktu Penyelesaian</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -223,24 +260,32 @@
 
     <!-- LAYAR UJIAN SISWA -->
     <div id="ujianScreen" style="display: none; flex-direction: column; flex-grow: 1;">
-        <div class="header-info">
-            <div class="header-logo"><h4 id="judulUjianDisplay" style="margin: 0;"></h4></div>
-            <p style="margin: 0; font-size:1.1rem;">Peserta: <strong id="namaPesertaDisplay"></strong></p>
+        <div class="header-info" style="border-radius: 0 0 15px 15px;">
+            <div class="header-logo"><h4 id="judulUjianDisplay" style="margin: 0; font-size: 1.3rem;"></h4></div>
+            <div style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">
+                <p style="margin: 0; font-size:1rem;">Peserta: <strong id="namaPesertaDisplay"></strong></p>
+            </div>
         </div>
         <div class="main-container">
             <div class="content-area">
-                <h3 id="nomorSoalDisplay" style="margin-top: 0; color: var(--accent); border-bottom:2px solid #eee; padding-bottom:10px;"></h3>
-                <div id="soalBox" style="flex-grow: 1; margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6;"></div>
+                <h3 id="nomorSoalDisplay" style="margin-top: 0; color: var(--accent); border-bottom:2px solid #f0f0f0; padding-bottom:15px; font-size: 1.4rem;"></h3>
+                <div id="soalBox" style="flex-grow: 1; margin-bottom: 30px; font-size: 1.15rem; line-height: 1.7;"></div>
                 <div class="nav-buttons">
                     <button id="prevSoal" onclick="navigasiSoal(-1)" style="background:#607d8b">◀ Sebelumnya</button>
                     <div style="flex-grow: 1;"></div>
                     <button id="nextSoal" onclick="navigasiSoal(1)" style="background:var(--primary)">Selanjutnya ▶</button>
-                    <button id="finishUjian" style="display: none; background:var(--danger);" onclick="submitKuis()">SELESAI & KIRIM</button>
+                    <button id="finishUjian" style="display: none; background:var(--danger);" onclick="submitKuis()">SELESAI & KIRIM JAWABAN</button>
                 </div>
             </div>
             <div class="sidebar-area">
-                <div class="timer-box"><h3 style="margin-top:0;">Waktu Tersisa</h3><div id="timerDisplay">--:--</div></div>
-                <div class="nav-box"><h3 style="margin-top:0;">Navigasi Soal</h3><div id="soalNav"></div></div>
+                <div class="timer-box">
+                    <h3 style="margin:0; color:#555; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Sisa Waktu Pengerjaan</h3>
+                    <div id="timerDisplay">--:--</div>
+                </div>
+                <div class="nav-box">
+                    <h3 style="margin:0 0 15px 0; color:#555; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Peta Navigasi Soal</h3>
+                    <div id="soalNav"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -282,7 +327,7 @@
                         if(selGuru) selGuru.innerHTML += `<option value="${u.kode}">${u.judul}</option>`;
                     });
                 } else {
-                    sel.innerHTML = '<option value="">Tidak ada ujian aktif</option>';
+                    sel.innerHTML = '<option value="">(Tidak ada ujian aktif)</option>';
                 }
             } catch (e) { console.log(e); }
         }
@@ -294,16 +339,16 @@
             const errorMsg = document.getElementById('loginError');
             errorMsg.style.display = 'none';
 
-            if (!username || !password) { errorMsg.textContent = "Username & Password wajib diisi!"; errorMsg.style.display = 'block'; return; }
+            if (!username || !password) { errorMsg.innerHTML = "⚠️ Username & Password wajib diisi!"; errorMsg.style.display = 'block'; return; }
             let payload = { action: 'login', role: role, username: username, password: password };
 
             if(role === 'peserta'){
                 payload.tgl_lahir = document.getElementById('tanggalLahirInput').value;
                 payload.kodeUjian = document.getElementById('kodeUjianSelect').value;
-                if (!payload.tgl_lahir || !payload.kodeUjian) { errorMsg.textContent = "Ujian & Tanggal Lahir wajib diisi!"; errorMsg.style.display = 'block'; return; }
+                if (!payload.tgl_lahir || !payload.kodeUjian) { errorMsg.innerHTML = "⚠️ Ujian & Tanggal Lahir wajib diisi!"; errorMsg.style.display = 'block'; return; }
             }
 
-            document.getElementById('btnMulaiUjian').textContent = "MEMPROSES...";
+            document.getElementById('btnMulaiUjian').textContent = "MEMPROSES Otorisasi...";
             try {
                 const res = await fetch(`${API_URL}?action=login`, { method: 'POST', body: JSON.stringify(payload) });
                 const data = await res.json();
@@ -313,9 +358,18 @@
                     if (role === 'admin') { showAdmin(); muatPengaturanAkses(); }
                     else if (role === 'guru') showGuru();
                     else loadSoalPeserta(payload.kodeUjian);
-                } else { errorMsg.textContent = data.message; errorMsg.style.display = 'block'; }
-            } catch (e) { errorMsg.textContent = "Gagal terhubung ke server."; errorMsg.style.display = 'block'; }
-            document.getElementById('btnMulaiUjian').textContent = "MASUK";
+                } else { errorMsg.innerHTML = "❌ " + data.message; errorMsg.style.display = 'block'; }
+            } catch (e) { errorMsg.innerHTML = "📡 Gagal terhubung ke server Hosting."; errorMsg.style.display = 'block'; }
+            document.getElementById('btnMulaiUjian').textContent = "MASUK PORTAL";
+        }
+
+        function setStatusBox(text, type='info') {
+            const box = document.getElementById('adminStatusBox');
+            const stat = document.getElementById('adminStatus');
+            box.style.display = 'block';
+            stat.textContent = text;
+            if(type === 'error') { box.style.background = '#ffebee'; box.style.borderColor = '#ffcdd2'; box.style.color = '#c62828'; }
+            else { box.style.background = '#e8f5e9'; box.style.borderColor = '#c8e6c9'; box.style.color = '#2e7d32'; }
         }
 
         // --- DASHBOARD ADMIN ---
@@ -331,33 +385,71 @@
         }
 
         async function adminSyncToHosting() {
-            const stat = document.getElementById('adminStatus'); stat.textContent = "Memproses sinkronisasi dari Google Sheet...";
-            try { const res = await fetch(`${GAS_URL}?action=pushToHost`); const data = await res.json(); stat.textContent = `Selesai: ${data.message || 'Berhasil'}`; } 
-            catch(e) { stat.textContent = "Gagal menghubungi Apps Script."; }
+            setStatusBox("⏳ Memproses tarikan data dari Spreadsheet... Mohon tunggu jangan tutup jendela ini.", "info");
+            try { const res = await fetch(`${GAS_URL}?action=pushToHost`); const data = await res.json(); setStatusBox(`✅ Selesai: ${data.message || 'Sukses'}`, "info"); } 
+            catch(e) { setStatusBox("❌ Gagal menghubungi Apps Script.", "error"); }
         }
         async function adminPushToSheet() {
-            const stat = document.getElementById('adminStatus'); stat.textContent = "Menarik jawaban dari Hosting...";
-            try { const res = await fetch(`${GAS_URL}?action=pullFromHost`); const data = await res.json(); stat.textContent = `Selesai: ${data.message}`; } 
-            catch(e) { stat.textContent = "Gagal menghubungi Apps Script."; }
+            setStatusBox("⏳ Sedang membackup hasil ke Spreadsheet...", "info");
+            try { const res = await fetch(`${GAS_URL}?action=pullFromHost`); const data = await res.json(); setStatusBox(`✅ Selesai: ${data.message}`, "info"); } 
+            catch(e) { setStatusBox("❌ Gagal menghubungi Apps Script.", "error"); }
         }
         
-        async function adminTambahPeserta() {
-            const payload = {
-                action: 'tambah_peserta',
-                nisn: document.getElementById('add_nisn').value, username: document.getElementById('add_username').value,
-                nama: document.getElementById('add_nama').value, tgl_lahir: document.getElementById('add_tgl').value,
-                password: document.getElementById('add_pass').value, madrasah: document.getElementById('add_madrasah').value
+        // --- UPLOAD EXCEL BATCH ---
+        function prosesUploadExcel() {
+            const fileUpload = document.getElementById('excelFile');
+            if (!fileUpload.files || fileUpload.files.length === 0) { alert("Pilih file Excel terlebih dahulu!"); return; }
+            const file = fileUpload.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rows = XLSX.utils.sheet_to_json(worksheet, {header: 1}); // Output array of arrays
+                    
+                    if(rows.length <= 1) { alert("File kosong atau hanya berisi Header."); return; }
+                    
+                    const pesertaBatch = [];
+                    // Mulai dari i=1 untuk skip baris pertama (Header)
+                    for(let i=1; i<rows.length; i++) {
+                        let r = rows[i];
+                        if(r.length < 6 || !r[1]) continue; // Lewati baris kosong atau tanpa username
+                        // Normalisasi tanggal Excel jika berupa nomor seri
+                        let tgl = r[3];
+                        if(typeof tgl === 'number') {
+                            let dateObj = new Date(Math.round((tgl - 25569)*86400*1000));
+                            tgl = dateObj.toISOString().split('T')[0];
+                        }
+                        pesertaBatch.push({ nisn: r[0], username: r[1], nama: r[2], tgl_lahir: tgl, password: r[4], madrasah: r[5] });
+                    }
+                    
+                    if(pesertaBatch.length === 0) { alert("Tidak ada data peserta valid ditemukan di baris isi."); return; }
+                    
+                    const payload = { action: 'tambah_peserta_batch', peserta_list: pesertaBatch };
+                    document.getElementById('excelFile').disabled = true;
+                    
+                    const res = await fetch(`${API_URL}?action=tambah_peserta_batch`, { method: 'POST', body: JSON.stringify(payload) });
+                    const respData = await res.json();
+                    
+                    if(respData.status === 'success') { alert('Berhasil: ' + respData.msg); document.getElementById('excelFile').value = ""; } 
+                    else { alert("Gagal: " + respData.msg); }
+                } catch(error) {
+                    alert("Terjadi kesalahan membaca file. Pastikan format tabel benar.");
+                } finally {
+                    document.getElementById('excelFile').disabled = false;
+                }
             };
-            const res = await fetch(`${API_URL}?action=tambah_peserta`, { method: 'POST', body: JSON.stringify(payload) });
-            const data = await res.json();
-            if(data.status === 'success') { alert('Peserta Berhasil Ditambahkan & Disinkronkan ke Sheet!'); } else { alert(data.msg); }
+            reader.readAsArrayBuffer(file);
         }
 
         async function muatPengaturanAkses() {
             const tbody = document.querySelector('#tabelPengaturanAdmin tbody'); tbody.innerHTML = '';
             daftarUjianGlobal.forEach(u => {
-                const btn = `<button class="btn-custom" style="margin:0; padding:5px; background:${u.allow_download==1?'var(--danger)':'#4caf50'}" onclick="toggleDownload('${u.kode}', ${u.allow_download==1?0:1})">${u.allow_download==1?'Tutup Akses':'Buka Akses'}</button>`;
-                tbody.innerHTML += `<tr><td>${u.kode}</td><td>${u.judul}</td><td>${btn}</td></tr>`;
+                const btn = `<button class="btn-custom" style="margin:0; padding:6px 12px; font-size:0.85rem; background:${u.allow_download==1?'var(--danger)':'#4caf50'}" onclick="toggleDownload('${u.kode}', ${u.allow_download==1?0:1})">${u.allow_download==1?'🔒 Tutup Akses':'🔓 Buka Akses'}</button>`;
+                tbody.innerHTML += `<tr><td><strong>${u.kode}</strong></td><td>${u.judul}</td><td>${btn}</td></tr>`;
             });
         }
         async function toggleDownload(kode, status) {
@@ -365,14 +457,20 @@
             loadDaftarUjian().then(() => muatPengaturanAkses());
         }
 
+        function formatStatusBadge(status) {
+            if(status === 'Selesai') return `<span class="badge badge-green">Selesai</span>`;
+            if(status === 'Sedang Mengerjakan') return `<span class="badge badge-orange">Sedang Mengerjakan</span>`;
+            return `<span class="badge badge-red">${status}</span>`;
+        }
+
         async function muatMonitoring(madrasah) {
             const tbody = document.querySelector(madrasah==='ALL' ? '#tabelMonitorAdmin tbody' : '#tabelMonitorGuru tbody');
-            tbody.innerHTML = '<tr><td colspan="6" align="center">Memuat...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" align="center">📡 Memuat status live...</td></tr>';
             const res = await fetch(`${API_URL}?action=get_monitoring`, { method: 'POST', body: JSON.stringify({madrasah: madrasah, role: madrasah==='ALL'?'admin':'guru'}) });
             const data = await res.json(); tbody.innerHTML = '';
-            if(data.data.length===0) tbody.innerHTML = '<tr><td colspan="6" align="center">Belum ada siswa aktif</td></tr>';
+            if(data.data.length===0) tbody.innerHTML = '<tr><td colspan="6" align="center">Belum ada siswa yang login.</td></tr>';
             data.data.forEach(d => {
-                const row = `<td>${d.nama_lengkap}</td><td>${d.kode_ujian}</td><td><strong style="color:${d.status==='Selesai'?'#4caf50':'#ff9800'}">${d.status}</strong></td><td>${d.last_active}</td>`;
+                const row = `<td><strong>${d.nama_lengkap}</strong></td>` + (madrasah==='ALL'?`<td>${d.madrasah}</td>`:'') + `<td>${d.kode_ujian}</td><td>${formatStatusBadge(d.status)}</td><td>${d.last_active}</td>`;
                 tbody.innerHTML += madrasah==='ALL' ? `<tr><td>${d.nisn}</td>${row}</tr>` : `<tr>${row}</tr>`;
             });
         }
@@ -380,7 +478,7 @@
         // --- DASHBOARD GURU ---
         function showGuru() { 
             document.getElementById('loginScreen').style.display = 'none'; document.getElementById('guruScreen').style.display = 'flex'; 
-            document.getElementById('guruMadrasahDisplay').textContent = `Sekolah: ${globalProfile.madrasah}`;
+            document.getElementById('guruMadrasahDisplay').textContent = globalProfile.madrasah;
         }
         function switchGuruTab(tab) {
             ['administrasi', 'monitorG', 'hasilG'].forEach(t => {
@@ -400,46 +498,48 @@
 
         async function cetakKartu() {
             const p = await getPesertaGuru();
-            let html = `<html><head><title>Kartu Ujian</title><style>body{font-family:Arial;} .card{border:1px solid #000; width:300px; padding:15px; margin:10px; display:inline-block; border-radius:8px;} h3{margin:0 0 10px 0; text-align:center;}</style></head><body>`;
-            p.data.forEach(d => { html += `<div class="card"><h3>KARTU LOGIN CBT</h3><hr><p><b>Nama:</b> ${d.nama_lengkap}</p><p><b>Username:</b> ${d.username}</p><p><b>Password:</b> ${d.password}</p></div>`; });
+            let html = `<html><head><title>Kartu Login Ujian</title><style>body{font-family:'Segoe UI', Arial; font-size: 14px;} .card{border:2px dashed #444; width:300px; padding:20px; margin:10px; display:inline-block; border-radius:10px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);} h3{margin:0 0 15px 0; text-align:center; border-bottom: 2px solid #ddd; padding-bottom:10px; color:#00796b;} p {margin: 8px 0;}</style></head><body>`;
+            p.data.forEach(d => { html += `<div class="card"><h3>KARTU LOGIN CBT</h3><p><b>Nama :</b> ${d.nama_lengkap}</p><p><b>Asal :</b> ${d.madrasah}</p><p><b>Username :</b> <u>${d.username}</u></p><p><b>Password :</b> <u>${d.password}</u></p></div>`; });
             html += `</body></html>`;
             const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
         }
 
         async function cetakDaftarHadir() {
             const p = await getPesertaGuru();
-            const judul = document.getElementById('guruKodeUjianSelect').options[document.getElementById('guruKodeUjianSelect').selectedIndex].text;
-            let html = `<html><head><title>Daftar Hadir</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #000; padding:8px;} h2{text-align:center;}</style></head><body>`;
-            html += `<h2>DAFTAR HADIR UJIAN</h2><p><b>Madrasah:</b> ${globalProfile.madrasah}<br><b>Ujian:</b> ${judul}</p>`;
-            html += `<table><tr><th>No</th><th>Username</th><th>Nama Lengkap</th><th>Tanda Tangan</th></tr>`;
-            p.data.forEach((d, i) => { html += `<tr><td>${i+1}</td><td>${d.username}</td><td>${d.nama_lengkap}</td><td></td></tr>`; });
+            const eSel = document.getElementById('guruKodeUjianSelect');
+            const judul = eSel.options[eSel.selectedIndex]?.text || '';
+            let html = `<html><head><title>Daftar Hadir</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse; margin-top:20px;} th,td{border:1px solid #000; padding:10px;} h2{text-align:center; margin-bottom: 5px;}</style></head><body>`;
+            html += `<h2>DAFTAR HADIR PELAKSANAAN UJIAN</h2><p style="text-align:center;"><b>Madrasah:</b> ${globalProfile.madrasah} | <b>Ujian:</b> ${judul}</p>`;
+            html += `<table><tr><th width="5%">No</th><th width="20%">Username</th><th width="45%">Nama Lengkap</th><th width="30%">Tanda Tangan</th></tr>`;
+            p.data.forEach((d, i) => { html += `<tr><td align="center">${i+1}</td><td>${d.username}</td><td>${d.nama_lengkap}</td><td>${i+1}. </td></tr>`; });
             html += `</table></body></html>`;
             const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
         }
 
         function cetakBeritaAcara() {
-            const judul = document.getElementById('guruKodeUjianSelect').options[document.getElementById('guruKodeUjianSelect').selectedIndex].text;
-            let html = `<html><head><title>Berita Acara</title><style>body{font-family:Arial; line-height:1.6;} h2{text-align:center;}</style></head><body style="padding:40px">`;
-            html += `<h2>BERITA ACARA PELAKSANAAN UJIAN</h2><br><br><p>Pada hari ini .................... tanggal .................... telah dilaksanakan ujian <b>${judul}</b> di <b>${globalProfile.madrasah}</b>.</p><p>Jumlah Peserta Seharusnya : ...... Siswa<br>Hadir : ...... Siswa<br>Tidak Hadir : ...... Siswa</p><br><br><br><p style="float:right">Pengawas Ruang,<br><br><br>( ${globalProfile.nama_lengkap} )</p></body></html>`;
+            const eSel = document.getElementById('guruKodeUjianSelect');
+            const judul = eSel.options[eSel.selectedIndex]?.text || '';
+            let html = `<html><head><title>Berita Acara</title><style>body{font-family:'Times New Roman'; line-height:1.8; font-size: 16px;} h2{text-align:center; text-decoration: underline; margin-bottom: 30px;}</style></head><body style="padding:40px 60px">`;
+            html += `<h2>BERITA ACARA PELAKSANAAN UJIAN</h2><p>Pada hari ini .................... tanggal ........................................ bulan ........................................ tahun .................... telah diselenggarakan pelaksanaan ujian untuk mata pelajaran <b>${judul}</b> di <b>${globalProfile.madrasah}</b>.</p><p style="margin-left: 20px;">1. Jumlah Peserta Seharusnya : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Siswa<br>2. Jumlah Hadir : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Siswa<br>3. Jumlah Tidak Hadir : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Siswa</p><p>Catatan penting selama pelaksanaan ujian: ........................................................................................................................................................................................................................................................................</p><br><br><table style="width:100%; margin-top: 30px; border:none;"><tr><td style="border:none; width:60%"></td><td style="border:none; text-align:center;">Pengawas Ruang,<br><br><br><br><br>( <b>${globalProfile.nama_lengkap}</b> )</td></tr></table></body></html>`;
             const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
         }
 
         async function guruDownloadSoal() {
             const kode = document.getElementById('guruKodeUjianSelect').value;
             const uji = daftarUjianGlobal.find(u => u.kode === kode);
-            if(!uji || uji.allow_download != 1) { alert("Akses download soal untuk mapel ini DITUTUP oleh Administrator."); return; }
+            if(!uji || uji.allow_download != 1) { alert("🔒 Akses cetak PDF soal mapel ini ditutup oleh Administrator."); return; }
             
             const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode}) });
             const data = await res.json();
             
-            let html = `<html><head><title>Soal ${kode}</title><style>body{font-family:Arial; line-height:1.5; padding:20px;} .soal{margin-bottom:20px;} .opsi{margin-left:20px;} h2{text-align:center;}</style></head><body>`;
-            html += `<h2>NASKAH SOAL: ${data.config.judul}</h2><hr>`;
+            let html = `<html><head><title>Naskah Soal - ${kode}</title><style>body{font-family:'Times New Roman', serif; line-height:1.6; padding:30px;} .soal{margin-bottom:25px;} .opsi{margin-left:25px;} h2{text-align:center; text-transform:uppercase;} .header-doc{border-bottom:3px solid #000; padding-bottom: 15px; margin-bottom:20px;}</style></head><body>`;
+            html += `<div class="header-doc"><h2>NASKAH SOAL</h2><h3 style="text-align:center; margin-top:0;">${data.config.judul}</h3></div>`;
             data.soal.forEach((s, i) => {
-                html += `<div class="soal"><b>${i+1}.</b> ${s.soal}<br>`;
+                html += `<div class="soal"><table style="border:none; width:100%"><tr style="vertical-align:top"><td style="border:none; width:30px"><b>${i+1}.</b></td><td style="border:none">${s.soal}</td></tr></table>`;
                 if(s.tipe === 'PGS' || s.tipe === 'MCMA') {
                     s.opsi.forEach((o, idx) => { if(o) html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o}</div>`; });
                 } else {
-                    s.opsi.forEach((o, idx) => { if(o) html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o} (Benar / Salah)</div>`; });
+                    s.opsi.forEach((o, idx) => { if(o) html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o} <b>(Benar / Salah)</b></div>`; });
                 }
                 html += `</div>`;
             });
@@ -448,18 +548,19 @@
         }
 
         async function cetakHasil() {
-            const tbody = document.querySelector('#tabelHasilGuru tbody'); tbody.innerHTML = '<tr><td colspan="4" align="center">Memuat...</td></tr>';
+            const tbody = document.querySelector('#tabelHasilGuru tbody'); tbody.innerHTML = '<tr><td colspan="4" align="center">Menarik Data Tabel...</td></tr>';
             try {
                 const res = await fetch(`${API_URL}?action=get_laporan`, { method: 'POST', body: JSON.stringify({role: 'guru', madrasah: globalProfile.madrasah}) });
                 const data = await res.json(); tbody.innerHTML = '';
-                data.data.forEach(d => { tbody.innerHTML += `<tr><td>${d.nama_lengkap}</td><td>${d.kode_ujian}</td><td><b>${d.skor}</b></td><td>${d.waktu_selesai}</td></tr>`; });
+                if(data.data.length === 0) tbody.innerHTML = '<tr><td colspan="4" align="center">Belum ada siswa yang selesai mengerjakan.</td></tr>';
+                data.data.forEach(d => { tbody.innerHTML += `<tr><td><strong>${d.nama_lengkap}</strong></td><td>${d.kode_ujian}</td><td><strong style="color:var(--primary); font-size:1.1rem;">${d.skor}</strong></td><td>${d.waktu_selesai}</td></tr>`; });
             } catch (e) { tbody.innerHTML = '<tr><td colspan="4">Gagal memuat.</td></tr>'; }
         }
 
         // --- UJIAN PESERTA ---
         async function loadSoalPeserta(kodeUjian) {
             globalProfile.kodeUjian = kodeUjian;
-            document.getElementById('loginScreen').innerHTML = "<h2 style='text-align:center; padding:50px;'>Memuat Soal...</h2>";
+            document.getElementById('loginScreen').innerHTML = "<h2 style='text-align:center; padding:50px; color:var(--primary)'>Mempersiapkan Lembar Soal...</h2>";
 
             const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kodeUjian}) });
             const data = await res.json();
@@ -492,27 +593,29 @@
 
         function tampilkanSoal(idx) {
             currentSoal = idx; const soal = soalData[idx];
-            document.getElementById('nomorSoalDisplay').textContent = `Soal ${idx + 1} dari ${soalData.length}`;
-            let html = `<div>${soal.soal}</div>`; const jwbSiswa = jawabanSiswa[idx] || {};
+            document.getElementById('nomorSoalDisplay').textContent = `Soal No. ${idx + 1} <span style="font-size:0.9rem; color:#888; font-weight:normal;">/ ${soalData.length}</span>`;
+            let html = `<div style="margin-bottom: 20px;">${soal.soal}</div>`; const jwbSiswa = jawabanSiswa[idx] || {};
 
             if (soal.tipe === 'PGS' || soal.tipe === 'MCMA') {
                 const jnsInput = soal.tipe === 'PGS' ? 'radio' : 'checkbox';
+                if(soal.tipe === 'MCMA') html += `<div style="background:#e3f2fd; padding:10px 15px; border-radius:6px; color:#1565c0; font-size:0.9rem; margin-bottom:15px; font-weight:bold;">💡 Info: Pilih lebih dari satu jawaban yang benar</div>`;
                 soal.opsi.forEach((opt, oIdx) => {
                     const label = String.fromCharCode(65 + oIdx); const checked = jwbSiswa[label] ? 'checked' : '';
                     if(opt) html += `<div class="opsi"><input type="${jnsInput}" id="opt_${idx}_${oIdx}" ${checked} onchange="simpanJawaban('${label}', ${idx}, '${soal.tipe}')"><label for="opt_${idx}_${oIdx}"><strong>${label}.</strong> <span style="margin-left:10px">${opt}</span></label></div>`;
                 });
             } else if (soal.tipe === 'KATEGORI') {
+                html += `<div style="background:#e3f2fd; padding:10px 15px; border-radius:6px; color:#1565c0; font-size:0.9rem; margin-bottom:15px; font-weight:bold;">💡 Info: Tentukan nilai (Benar/Salah) untuk pernyataan di bawah</div>`;
                 soal.opsi.forEach((opt, oIdx) => {
                     const label = String.fromCharCode(65 + oIdx); const isB = jwbSiswa[label] === 'Benar' ? 'active' : ''; const isS = jwbSiswa[label] === 'Salah' ? 'active' : '';
-                    if(opt) html += `<div class="opsi-kategori"><div style="flex-grow:1;"><strong>${label}.</strong> ${opt}</div><div style="display:flex; gap:5px;"><button class="btn-kategori ${isB}" onclick="simpanJawaban('${label}:Benar', ${idx}, 'KATEGORI')">Benar</button><button class="btn-kategori ${isS}" onclick="simpanJawaban('${label}:Salah', ${idx}, 'KATEGORI')">Salah</button></div></div>`;
+                    if(opt) html += `<div class="opsi-kategori"><div style="flex-grow:1;"><strong>${label}.</strong> ${opt}</div><div style="display:flex; gap:8px;"><button class="btn-kategori ${isB}" onclick="simpanJawaban('${label}:Benar', ${idx}, 'KATEGORI')">Benar</button><button class="btn-kategori ${isS}" onclick="simpanJawaban('${label}:Salah', ${idx}, 'KATEGORI')">Salah</button></div></div>`;
                 });
             }
             document.getElementById('soalBox').innerHTML = html;
             if (window.renderMathInElement) { try { renderMathInElement(document.getElementById('soalBox'), { delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false} ], throwOnError : false }); } catch (e) {} }
             
             document.getElementById('prevSoal').style.visibility = idx === 0 ? 'hidden' : 'visible';
-            document.getElementById('nextSoal').style.display = idx === soalData.length - 1 ? 'none' : 'inline-block';
-            document.getElementById('finishUjian').style.display = idx === soalData.length - 1 ? 'inline-block' : 'none';
+            document.getElementById('nextSoal').style.display = idx === soalData.length - 1 ? 'none' : 'flex';
+            document.getElementById('finishUjian').style.display = idx === soalData.length - 1 ? 'flex' : 'none';
             document.querySelectorAll('#soalNav button').forEach((b, i) => { b.classList.remove('active'); if(i === idx) b.classList.add('active'); });
         }
 
@@ -534,9 +637,9 @@
         }
 
         async function submitKuis(otomatis = false) {
-            if(!otomatis && !confirm("Yakin ingin mengirim jawaban?")) return;
+            if(!otomatis && !confirm("Pastikan semua soal telah terjawab. Yakin ingin MENGIRIM JAWABAN?")) return;
             clearInterval(timerId); clearInterval(pingId);
-            document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh;'><h2 style='color:var(--primary);'>MENGIRIM JAWABAN...</h2></div>";
+            document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh; background:white;'><div style='text-align:center;'><h2 style='color:var(--primary); font-size:2rem;'>Mengamankan Jawaban...</h2><p style='color:#666;'>Tunggu sebentar, jangan refresh halaman.</p></div></div>";
             
             let totalScore = 0;
             soalData.forEach((soal, i) => {
@@ -560,8 +663,8 @@
             const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, skor: (totalScore / soalData.length) * 100, jawabanPeserta: finalObjek };
             try {
                 await fetch(`${API_URL}?action=submit_jawaban`, { method: 'POST', body: JSON.stringify(payload) });
-                document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:5rem; margin:0;'>🎉</h1><h2 style='color:#4caf50;'>Ujian Selesai!</h2></div>`;
-            } catch (e) { alert("Gagal menghubungi server."); }
+                document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:5rem; margin:0; text-shadow: 0 4px 6px rgba(0,0,0,0.1);'>🎉</h1><h2 style='color:#2e7d32; font-size:2.5rem; margin-top:10px;'>Ujian Selesai!</h2><p style='font-size:1.1rem; color:#4caf50; font-weight:bold;'>Jawaban Anda telah direkam sistem.</p></div>`;
+            } catch (e) { alert("Sistem mendeteksi kegagalan jaringan saat mengirim."); }
         }
     </script>
 </body>
