@@ -17,22 +17,32 @@
         .logo-img { height: 40px; width: auto; }
         .header-info { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
-        #loginScreen, #adminScreen, #guruScreen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; padding: 20px; }
-        .login-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; position: relative; }
+        #loginScreen, .dashboard-screen { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 90vh; padding: 20px; }
+        .login-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; position: relative; margin: auto; }
         
         .login-logo { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100px; height: 100px; background: white; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 10px; }
         .login-logo .logo-img { height: 100%; width: 100%; object-fit: contain; }
 
         label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; color: #333; }
-        input[type="text"], input[type="password"], input[type="date"], select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        input[type="text"], input[type="password"], input[type="date"], select, input[type="number"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
         
         .password-wrapper { position: relative; width: 100%; }
         .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666; font-size: 1.2rem; }
         
-        .btn-custom { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight:bold; font-size: 1.1rem; margin-top: 25px; transition: background 0.3s; }
+        .btn-custom { width: 100%; padding: 12px 15px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight:bold; font-size: 1rem; margin-top: 15px; transition: background 0.3s; }
         .btn-custom:hover { background: var(--primary-dark); }
+        .btn-secondary { background: #607d8b; }
+        .btn-danger { background: var(--danger); }
         
-        .panel-box { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 900px; margin-top:20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .panel-box { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 1000px; margin-top:20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .menu-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .menu-tabs button { padding: 10px 20px; border: none; background: #eee; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .menu-tabs button.active { background: var(--primary); color: white; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 12px; text-align: left; }
+        th { background-color: var(--primary); color: white; }
         
         /* Layout Ujian */
         .main-container { display: flex; flex-grow: 1; padding: 20px; gap: 20px; max-width: 1300px; width: 100%; margin: auto; }
@@ -49,30 +59,18 @@
         #soalNav button.active.answered { background: var(--primary); color: white; }
         
         .opsi { display: flex; align-items: center; padding: 12px; border: 1px solid #eee; margin-bottom: 10px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
-        .opsi:hover { background: #f0f0f0; }
         .opsi input[type="radio"], .opsi input[type="checkbox"] { display: none; }
         .opsi label { display: flex; align-items: center; flex-grow: 1; cursor: pointer; line-height: 1.5; }
         .opsi label::before { content: ''; display: inline-block; width: 20px; height: 20px; margin-right: 15px; border: 2px solid #ccc; border-radius: 50%; background: white; }
         .opsi input:checked + label::before { background: var(--primary); border-color: var(--primary); box-shadow: inset 0 0 0 4px white; }
-        .opsi-mcma label::before { border-radius: 4px; }
-        .opsi-mcma input[type="checkbox"]:checked + label::before { content: '✓'; font-size: 14px; line-height: 18px; text-align: center; background: var(--primary); color: white; box-shadow: none; }
         
         .opsi-kategori { padding: 10px; margin-bottom: 10px; background: #f7f7f7; border-radius: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid #eee; }
-        .btn-kategori { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: 500; background: #fff; color: #333; transition: all 0.2s; }
+        .btn-kategori { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: 500; background: #fff; transition: all 0.2s; }
         .btn-kategori.active { background: var(--primary); color: #fff; border-color: var(--primary-dark); }
         
-        .soal-image { max-width: 100%; height: auto; display: block; margin: 10px auto; border: 1px solid #eee; padding: 5px; }
-        
         .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;}
-        .nav-buttons button { padding: 12px 25px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        #prevSoal { background: #607d8b; color: white; }
-        #nextSoal, #finishUjian { background: var(--primary); color: white; }
+        .nav-buttons button { padding: 12px 25px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; color: white;}
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table, th, td { border: 1px solid #ddd; }
-        th, td { padding: 12px; text-align: left; }
-        th { background-color: var(--primary); color: white; }
-
         @media (max-width: 768px) { .main-container { flex-direction: column; padding: 10px; } .sidebar-area { order: -1; width: 100%; } }
     </style>
 </head>
@@ -80,11 +78,8 @@
     <!-- LAYAR LOGIN -->
     <div id="loginScreen">
         <div class="login-box">
-            <div class="login-logo">
-                <img src="https://lh3.googleusercontent.com/d/1bmKHxXSnIZKHcPgxK9xEai1njzZWOn8h" alt="Logo" class="logo-img">
-            </div>
+            <div class="login-logo"><img src="https://lh3.googleusercontent.com/d/1bmKHxXSnIZKHcPgxK9xEai1njzZWOn8h" class="logo-img"></div>
             <h2 style="text-align: center; color: var(--primary); margin-top: 40px; margin-bottom: 0;">PORTAL CBT</h2>
-            <p style="text-align: center; color: #666; margin-top: 5px;">TKA KKGMI SURABAYA 11</p>
             
             <label>Login Sebagai:</label>
             <select id="roleSelect" onchange="toggleLoginFields()">
@@ -96,9 +91,7 @@
             <div id="pesertaFields">
                 <label>Pilih Ujian:</label>
                 <select id="kodeUjianSelect" required><option>Memuat...</option></select>
-                
-                <label>Tanggal Lahir:</label>
-                <input type="date" id="tanggalLahirInput">
+                <label>Tanggal Lahir:</label><input type="date" id="tanggalLahirInput">
             </div>
 
             <label>Username:</label>
@@ -107,7 +100,7 @@
             <label>Password:</label>
             <div class="password-wrapper">
                 <input type="password" id="passwordInput" placeholder="Masukkan Password">
-                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+                <span class="toggle-password" onclick="togglePasswordVisibility('passwordInput')">👁️</span>
             </div>
 
             <button id="btnMulaiUjian" class="btn-custom" onclick="prosesLogin()">MASUK</button>
@@ -116,39 +109,114 @@
     </div>
 
     <!-- PANEL ADMIN -->
-    <div id="adminScreen" style="display: none;">
-        <div class="header-info" style="width:100%"><h3>DASHBOARD ADMINISTRATOR</h3><button onclick="location.reload()" style="padding:8px 15px; background:white; color:var(--primary); border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Logout</button></div>
+    <div id="adminScreen" class="dashboard-screen" style="display: none;">
+        <div class="header-info" style="width:100%">
+            <h3>DASHBOARD ADMINISTRATOR</h3>
+            <button onclick="location.reload()" class="btn-custom" style="width:auto; margin:0; padding:8px 15px; background:white; color:var(--primary);">Logout</button>
+        </div>
         <div class="panel-box">
-            <h3 style="color:var(--primary)">1. Manajemen Master Data (Sinkronisasi dari Google Sheet)</h3>
-            <p style="color:#555">Proses ini akan menarik data Peserta, Soal, dan Konfigurasi terbaru dari Google Sheet ke dalam Hosting. Lakukan hanya jika Anda baru saja memperbarui data di Spreadsheet.</p>
-            <button class="btn-custom" onclick="adminSyncToHosting()" style="background:var(--accent); margin-top:10px;">Tarik Data Sheet ke Hosting</button>
-            <p id="adminStatus" style="font-weight:bold; margin-top:10px; color:var(--danger);"></p>
+            <div class="menu-tabs">
+                <button onclick="switchAdminTab('sync')" id="tab_sync" class="active">Sinkronisasi Master</button>
+                <button onclick="switchAdminTab('peserta')" id="tab_peserta">Tambah Peserta</button>
+                <button onclick="switchAdminTab('monitor')" id="tab_monitor">Live Monitoring</button>
+                <button onclick="switchAdminTab('pengaturan')" id="tab_pengaturan">Akses Ujian</button>
+            </div>
             
-            <hr style="margin:40px 0; border:0; border-top:1px solid #ccc;">
-            
-            <h3 style="color:var(--primary)">2. Backup Hasil ke Spreadsheet</h3>
-            <p style="color:#555">Meskipun sistem akan membackup otomatis setiap 30 menit, Anda dapat menggunakan tombol ini untuk menarik data jawaban masuk secara langsung (Real-time).</p>
-            <button class="btn-custom" onclick="adminPushToSheet()" style="background:#4caf50; margin-top:10px;">Kirim Hasil dari Hosting ke Sheet</button>
+            <!-- Tab Sync -->
+            <div id="admin_sync">
+                <h3 style="color:var(--primary)">Sinkronisasi Data Spreadsheet <-> Hosting</h3>
+                <button class="btn-custom" onclick="adminSyncToHosting()">1. Tarik Master (Peserta, Jadwal, Soal) dari Sheet ke Hosting</button>
+                <button class="btn-custom btn-secondary" onclick="adminPushToSheet()">2. Backup Hasil Pengerjaan ke Spreadsheet (Manual)</button>
+                <p id="adminStatus" style="font-weight:bold; margin-top:15px; color:var(--danger);"></p>
+            </div>
+
+            <!-- Tab Tambah Peserta -->
+            <div id="admin_peserta" style="display: none;">
+                <h3 style="color:var(--primary)">Tambah Peserta (Otomatis Sinkron ke Sheet)</h3>
+                <input type="text" id="add_nisn" placeholder="NISN">
+                <input type="text" id="add_username" placeholder="Username">
+                <input type="text" id="add_nama" placeholder="Nama Lengkap">
+                <input type="date" id="add_tgl">
+                <input type="text" id="add_pass" placeholder="Password">
+                <input type="text" id="add_madrasah" placeholder="Asal Madrasah">
+                <button class="btn-custom" onclick="adminTambahPeserta()">Tambah Peserta</button>
+            </div>
+
+            <!-- Tab Monitor -->
+            <div id="admin_monitor" style="display: none;">
+                <h3 style="color:var(--primary)">Live Monitoring Siswa</h3>
+                <button class="btn-custom btn-secondary" onclick="muatMonitoring('ALL')" style="width:auto">Refresh Data</button>
+                <div style="overflow-x:auto;">
+                    <table id="tabelMonitorAdmin">
+                        <thead><tr><th>NISN</th><th>Nama</th><th>Madrasah</th><th>Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pengaturan Ujian (Buka Tutup Download) -->
+            <div id="admin_pengaturan" style="display: none;">
+                <h3 style="color:var(--primary)">Pengaturan Akses Guru</h3>
+                <div style="overflow-x:auto;">
+                    <table id="tabelPengaturanAdmin">
+                        <thead><tr><th>Kode Ujian</th><th>Judul</th><th>Akses Download Soal Guru</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- PANEL GURU -->
-    <div id="guruScreen" style="display: none;">
+    <div id="guruScreen" class="dashboard-screen" style="display: none;">
         <div class="header-info" style="width:100%">
             <h3>DASHBOARD GURU</h3>
             <span id="guruMadrasahDisplay" style="margin-right:20px; font-weight:bold;"></span>
-            <button onclick="location.reload()" style="padding:8px 15px; background:white; color:var(--primary); border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Logout</button>
+            <button onclick="location.reload()" class="btn-custom" style="width:auto; margin:0; padding:8px 15px; background:white; color:var(--primary);">Logout</button>
         </div>
         <div class="panel-box">
-            <h3 style="color:var(--primary)">Data Hasil Ujian Siswa</h3>
-            <p>Anda hanya melihat hasil pengerjaan siswa yang berasal dari <strong><span id="guruMadrasahText"></span></strong>.</p>
-            <button class="btn-custom" onclick="cetakHasil()" style="background:#4caf50; width:auto; padding: 10px 20px;">Muat Ulang Tabel Hasil</button>
+            <div class="menu-tabs">
+                <button onclick="switchGuruTab('administrasi')" id="tabG_administrasi" class="active">Cetak Administrasi</button>
+                <button onclick="switchGuruTab('monitorG')" id="tabG_monitorG">Monitoring Siswa</button>
+                <button onclick="switchGuruTab('hasilG')" id="tabG_hasilG">Hasil Ujian</button>
+            </div>
             
-            <div style="overflow-x:auto;">
-                <table id="tabelHasilGuru">
-                    <thead><tr><th>Nama Peserta</th><th>Kode Ujian</th><th>Skor</th><th>Waktu Selesai</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            <!-- Tab Administrasi & Download -->
+            <div id="guru_administrasi">
+                <h3 style="color:var(--primary)">Cetak Administrasi Ujian</h3>
+                <p>Pilih Ujian:</p>
+                <select id="guruKodeUjianSelect"></select>
+                
+                <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+                    <button class="btn-custom" style="width:auto; margin:0" onclick="cetakKartu()">Cetak Kartu Login</button>
+                    <button class="btn-custom" style="width:auto; margin:0" onclick="cetakDaftarHadir()">Cetak Daftar Hadir</button>
+                    <button class="btn-custom" style="width:auto; margin:0" onclick="cetakBeritaAcara()">Cetak Berita Acara</button>
+                    <button class="btn-custom btn-secondary" style="width:auto; margin:0" onclick="guruDownloadSoal()">📥 Download Soal (PDF)</button>
+                </div>
+            </div>
+
+            <!-- Tab Monitor -->
+            <div id="guru_monitorG" style="display: none;">
+                <h3 style="color:var(--primary)">Siswa Sedang Mengerjakan</h3>
+                <button class="btn-custom btn-secondary" onclick="muatMonitoring(globalProfile.madrasah)" style="width:auto">Refresh</button>
+                <div style="overflow-x:auto;">
+                    <table id="tabelMonitorGuru">
+                        <thead><tr><th>Nama</th><th>Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Hasil -->
+            <div id="guru_hasilG" style="display: none;">
+                <h3 style="color:var(--primary)">Hasil Pengerjaan</h3>
+                <button class="btn-custom btn-secondary" onclick="cetakHasil()" style="width:auto">Refresh</button>
+                <div style="overflow-x:auto;">
+                    <table id="tabelHasilGuru">
+                        <thead><tr><th>Nama Peserta</th><th>Kode Ujian</th><th>Skor</th><th>Waktu Selesai</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -156,52 +224,40 @@
     <!-- LAYAR UJIAN SISWA -->
     <div id="ujianScreen" style="display: none; flex-direction: column; flex-grow: 1;">
         <div class="header-info">
-            <div class="header-logo">
-                <img src="https://lh3.googleusercontent.com/d/17PFUvnIUrEjXgMJkiAA0D1pejOgJkKfS" alt="Logo" class="logo-img">
-                <h4 id="judulUjianDisplay" style="margin: 0;"></h4>
-            </div>
+            <div class="header-logo"><h4 id="judulUjianDisplay" style="margin: 0;"></h4></div>
             <p style="margin: 0; font-size:1.1rem;">Peserta: <strong id="namaPesertaDisplay"></strong></p>
         </div>
-        
         <div class="main-container">
             <div class="content-area">
                 <h3 id="nomorSoalDisplay" style="margin-top: 0; color: var(--accent); border-bottom:2px solid #eee; padding-bottom:10px;"></h3>
                 <div id="soalBox" style="flex-grow: 1; margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6;"></div>
-                
                 <div class="nav-buttons">
-                    <button id="prevSoal" onclick="navigasiSoal(-1)">◀ Sebelumnya</button>
+                    <button id="prevSoal" onclick="navigasiSoal(-1)" style="background:#607d8b">◀ Sebelumnya</button>
                     <div style="flex-grow: 1;"></div>
-                    <button id="nextSoal" onclick="navigasiSoal(1)">Selanjutnya ▶</button>
+                    <button id="nextSoal" onclick="navigasiSoal(1)" style="background:var(--primary)">Selanjutnya ▶</button>
                     <button id="finishUjian" style="display: none; background:var(--danger);" onclick="submitKuis()">SELESAI & KIRIM</button>
                 </div>
             </div>
-            
             <div class="sidebar-area">
-                <div class="timer-box">
-                    <h3 style="margin-top:0;">Waktu Tersisa</h3>
-                    <div id="timerDisplay">--:--</div>
-                </div>
-                
-                <div class="nav-box">
-                    <h3 style="margin-top:0;">Navigasi Soal</h3>
-                    <div id="soalNav"></div>
-                </div>
+                <div class="timer-box"><h3 style="margin-top:0;">Waktu Tersisa</h3><div id="timerDisplay">--:--</div></div>
+                <div class="nav-box"><h3 style="margin-top:0;">Navigasi Soal</h3><div id="soalNav"></div></div>
             </div>
         </div>
     </div>
 
     <script>
         const API_URL = 'https://mibaiturrahmangubeng.sch.id/tka/api.php'; 
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQ_htkGPe8eqYYpqNANfwQs8ewPtDS97GVHdoM7yXsQq0YThGSlIEafjH2pmzddsnwAg/exec'; // GANTI DENGAN URL DEPLOY SCRIPT ANDA!
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQ_htkGPe8eqYYpqNANfwQs8ewPtDS97GVHdoM7yXsQq0YThGSlIEafjH2pmzddsnwAg/exec';
         
-        let soalData = [], jawabanSiswa = [], currentSoal = 0, detikTersisa, timerId;
+        let soalData = [], jawabanSiswa = [], currentSoal = 0, detikTersisa, timerId, pingId;
         let globalProfile = {};
+        let daftarUjianGlobal = [];
 
         document.addEventListener('DOMContentLoaded', () => { loadDaftarUjian(); });
 
-        function togglePasswordVisibility() {
-            const p = document.getElementById('passwordInput');
-            const icon = document.querySelector('.toggle-password');
+        function togglePasswordVisibility(id) {
+            const p = document.getElementById(id);
+            const icon = p.nextElementSibling;
             if (p.type === 'password') { p.type = 'text'; icon.textContent = '🙈'; } 
             else { p.type = 'password'; icon.textContent = '👁️'; }
         }
@@ -216,9 +272,15 @@
                 const res = await fetch(`${API_URL}?action=get_ujian`);
                 const data = await res.json();
                 const sel = document.getElementById('kodeUjianSelect');
-                sel.innerHTML = '';
+                const selGuru = document.getElementById('guruKodeUjianSelect');
+                sel.innerHTML = ''; if(selGuru) selGuru.innerHTML = '';
+                
                 if(data.status === 'ok' && data.daftar.length > 0){
-                    data.daftar.forEach(u => { sel.innerHTML += `<option value="${u.kode}">${u.judul} (${u.kode})</option>`; });
+                    daftarUjianGlobal = data.daftar;
+                    data.daftar.forEach(u => { 
+                        sel.innerHTML += `<option value="${u.kode}">${u.judul}</option>`; 
+                        if(selGuru) selGuru.innerHTML += `<option value="${u.kode}">${u.judul}</option>`;
+                    });
                 } else {
                     sel.innerHTML = '<option value="">Tidak ada ujian aktif</option>';
                 }
@@ -229,289 +291,277 @@
             const role = document.getElementById('roleSelect').value;
             const username = document.getElementById('usernameInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
-            const btn = document.getElementById('btnMulaiUjian');
             const errorMsg = document.getElementById('loginError');
-            
             errorMsg.style.display = 'none';
 
-            if (!username || !password) {
-                errorMsg.textContent = "Username dan Password wajib diisi!"; errorMsg.style.display = 'block'; return;
-            }
-
+            if (!username || !password) { errorMsg.textContent = "Username & Password wajib diisi!"; errorMsg.style.display = 'block'; return; }
             let payload = { action: 'login', role: role, username: username, password: password };
 
             if(role === 'peserta'){
                 payload.tgl_lahir = document.getElementById('tanggalLahirInput').value;
                 payload.kodeUjian = document.getElementById('kodeUjianSelect').value;
-                if (!payload.tgl_lahir || !payload.kodeUjian) {
-                    errorMsg.textContent = "Ujian dan Tanggal Lahir wajib diisi!"; errorMsg.style.display = 'block'; return;
-                }
+                if (!payload.tgl_lahir || !payload.kodeUjian) { errorMsg.textContent = "Ujian & Tanggal Lahir wajib diisi!"; errorMsg.style.display = 'block'; return; }
             }
 
-            btn.textContent = "MEMPROSES..."; btn.disabled = true;
-
+            document.getElementById('btnMulaiUjian').textContent = "MEMPROSES...";
             try {
                 const res = await fetch(`${API_URL}?action=login`, { method: 'POST', body: JSON.stringify(payload) });
                 const data = await res.json();
                 
                 if (data.status === 'ok') {
                     globalProfile = data.data;
-                    if (role === 'admin') showAdmin();
+                    if (role === 'admin') { showAdmin(); muatPengaturanAkses(); }
                     else if (role === 'guru') showGuru();
                     else loadSoalPeserta(payload.kodeUjian);
-                } else {
-                    errorMsg.textContent = data.message; errorMsg.style.display = 'block';
-                }
-            } catch (e) { 
-                errorMsg.textContent = "Gagal terhubung ke server."; errorMsg.style.display = 'block'; 
-            }
-            btn.textContent = "MASUK"; btn.disabled = false;
+                } else { errorMsg.textContent = data.message; errorMsg.style.display = 'block'; }
+            } catch (e) { errorMsg.textContent = "Gagal terhubung ke server."; errorMsg.style.display = 'block'; }
+            document.getElementById('btnMulaiUjian').textContent = "MASUK";
         }
 
-        function showAdmin() { 
-            document.getElementById('loginScreen').style.display = 'none'; 
-            document.getElementById('adminScreen').style.display = 'flex'; 
-        }
-        
-        function showGuru() { 
-            document.getElementById('loginScreen').style.display = 'none'; 
-            document.getElementById('guruScreen').style.display = 'flex'; 
-            document.getElementById('guruMadrasahDisplay').textContent = `Sekolah: ${globalProfile.madrasah}`;
-            document.getElementById('guruMadrasahText').textContent = globalProfile.madrasah;
-            cetakHasil();
+        // --- DASHBOARD ADMIN ---
+        function showAdmin() { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('adminScreen').style.display = 'flex'; }
+        function switchAdminTab(tab) {
+            ['sync', 'peserta', 'monitor', 'pengaturan'].forEach(t => {
+                document.getElementById(`admin_${t}`).style.display = 'none';
+                document.getElementById(`tab_${t}`).classList.remove('active');
+            });
+            document.getElementById(`admin_${tab}`).style.display = 'block';
+            document.getElementById(`tab_${tab}`).classList.add('active');
+            if(tab === 'monitor') muatMonitoring('ALL');
         }
 
         async function adminSyncToHosting() {
-            const stat = document.getElementById('adminStatus');
-            stat.textContent = "Memproses sinkronisasi dari Google Sheet... Mohon jangan tutup halaman ini.";
-            try {
-                const res = await fetch(`${GAS_URL}?action=pushToHost`);
-                const data = await res.json();
-                stat.textContent = `Selesai: ${data.message || 'Data Terkirim'}`;
-            } catch(e) {
-                stat.textContent = "Gagal menghubungi Apps Script. Pastikan URL GAS sudah benar.";
-            }
+            const stat = document.getElementById('adminStatus'); stat.textContent = "Memproses sinkronisasi dari Google Sheet...";
+            try { const res = await fetch(`${GAS_URL}?action=pushToHost`); const data = await res.json(); stat.textContent = `Selesai: ${data.message || 'Berhasil'}`; } 
+            catch(e) { stat.textContent = "Gagal menghubungi Apps Script."; }
+        }
+        async function adminPushToSheet() {
+            const stat = document.getElementById('adminStatus'); stat.textContent = "Menarik jawaban dari Hosting...";
+            try { const res = await fetch(`${GAS_URL}?action=pullFromHost`); const data = await res.json(); stat.textContent = `Selesai: ${data.message}`; } 
+            catch(e) { stat.textContent = "Gagal menghubungi Apps Script."; }
+        }
+        
+        async function adminTambahPeserta() {
+            const payload = {
+                action: 'tambah_peserta',
+                nisn: document.getElementById('add_nisn').value, username: document.getElementById('add_username').value,
+                nama: document.getElementById('add_nama').value, tgl_lahir: document.getElementById('add_tgl').value,
+                password: document.getElementById('add_pass').value, madrasah: document.getElementById('add_madrasah').value
+            };
+            const res = await fetch(`${API_URL}?action=tambah_peserta`, { method: 'POST', body: JSON.stringify(payload) });
+            const data = await res.json();
+            if(data.status === 'success') { alert('Peserta Berhasil Ditambahkan & Disinkronkan ke Sheet!'); } else { alert(data.msg); }
         }
 
-        async function adminPushToSheet() {
-            const stat = document.getElementById('adminStatus');
-            stat.textContent = "Menarik jawaban dari Hosting... Mohon tunggu.";
-            try {
-                const res = await fetch(`${GAS_URL}?action=pullFromHost`);
-                const data = await res.json();
-                stat.textContent = `Selesai: ${data.message}`;
-            } catch(e) {
-                stat.textContent = "Gagal menghubungi Apps Script.";
-            }
+        async function muatPengaturanAkses() {
+            const tbody = document.querySelector('#tabelPengaturanAdmin tbody'); tbody.innerHTML = '';
+            daftarUjianGlobal.forEach(u => {
+                const btn = `<button class="btn-custom" style="margin:0; padding:5px; background:${u.allow_download==1?'var(--danger)':'#4caf50'}" onclick="toggleDownload('${u.kode}', ${u.allow_download==1?0:1})">${u.allow_download==1?'Tutup Akses':'Buka Akses'}</button>`;
+                tbody.innerHTML += `<tr><td>${u.kode}</td><td>${u.judul}</td><td>${btn}</td></tr>`;
+            });
+        }
+        async function toggleDownload(kode, status) {
+            await fetch(`${API_URL}?action=toggle_download`, { method: 'POST', body: JSON.stringify({kode:kode, status:status}) });
+            loadDaftarUjian().then(() => muatPengaturanAkses());
+        }
+
+        async function muatMonitoring(madrasah) {
+            const tbody = document.querySelector(madrasah==='ALL' ? '#tabelMonitorAdmin tbody' : '#tabelMonitorGuru tbody');
+            tbody.innerHTML = '<tr><td colspan="6" align="center">Memuat...</td></tr>';
+            const res = await fetch(`${API_URL}?action=get_monitoring`, { method: 'POST', body: JSON.stringify({madrasah: madrasah, role: madrasah==='ALL'?'admin':'guru'}) });
+            const data = await res.json(); tbody.innerHTML = '';
+            if(data.data.length===0) tbody.innerHTML = '<tr><td colspan="6" align="center">Belum ada siswa aktif</td></tr>';
+            data.data.forEach(d => {
+                const row = `<td>${d.nama_lengkap}</td><td>${d.kode_ujian}</td><td><strong style="color:${d.status==='Selesai'?'#4caf50':'#ff9800'}">${d.status}</strong></td><td>${d.last_active}</td>`;
+                tbody.innerHTML += madrasah==='ALL' ? `<tr><td>${d.nisn}</td>${row}</tr>` : `<tr>${row}</tr>`;
+            });
+        }
+
+        // --- DASHBOARD GURU ---
+        function showGuru() { 
+            document.getElementById('loginScreen').style.display = 'none'; document.getElementById('guruScreen').style.display = 'flex'; 
+            document.getElementById('guruMadrasahDisplay').textContent = `Sekolah: ${globalProfile.madrasah}`;
+        }
+        function switchGuruTab(tab) {
+            ['administrasi', 'monitorG', 'hasilG'].forEach(t => {
+                document.getElementById(`guru_${t}`).style.display = 'none';
+                document.getElementById(`tabG_${t}`).classList.remove('active');
+            });
+            document.getElementById(`guru_${tab}`).style.display = 'block';
+            document.getElementById(`tabG_${tab}`).classList.add('active');
+            if(tab === 'monitorG') muatMonitoring(globalProfile.madrasah);
+            if(tab === 'hasilG') cetakHasil();
+        }
+
+        async function getPesertaGuru() {
+            const res = await fetch(`${API_URL}?action=get_peserta_guru`, { method: 'POST', body: JSON.stringify({madrasah: globalProfile.madrasah}) });
+            return await res.json();
+        }
+
+        async function cetakKartu() {
+            const p = await getPesertaGuru();
+            let html = `<html><head><title>Kartu Ujian</title><style>body{font-family:Arial;} .card{border:1px solid #000; width:300px; padding:15px; margin:10px; display:inline-block; border-radius:8px;} h3{margin:0 0 10px 0; text-align:center;}</style></head><body>`;
+            p.data.forEach(d => { html += `<div class="card"><h3>KARTU LOGIN CBT</h3><hr><p><b>Nama:</b> ${d.nama_lengkap}</p><p><b>Username:</b> ${d.username}</p><p><b>Password:</b> ${d.password}</p></div>`; });
+            html += `</body></html>`;
+            const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
+        }
+
+        async function cetakDaftarHadir() {
+            const p = await getPesertaGuru();
+            const judul = document.getElementById('guruKodeUjianSelect').options[document.getElementById('guruKodeUjianSelect').selectedIndex].text;
+            let html = `<html><head><title>Daftar Hadir</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #000; padding:8px;} h2{text-align:center;}</style></head><body>`;
+            html += `<h2>DAFTAR HADIR UJIAN</h2><p><b>Madrasah:</b> ${globalProfile.madrasah}<br><b>Ujian:</b> ${judul}</p>`;
+            html += `<table><tr><th>No</th><th>Username</th><th>Nama Lengkap</th><th>Tanda Tangan</th></tr>`;
+            p.data.forEach((d, i) => { html += `<tr><td>${i+1}</td><td>${d.username}</td><td>${d.nama_lengkap}</td><td></td></tr>`; });
+            html += `</table></body></html>`;
+            const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
+        }
+
+        function cetakBeritaAcara() {
+            const judul = document.getElementById('guruKodeUjianSelect').options[document.getElementById('guruKodeUjianSelect').selectedIndex].text;
+            let html = `<html><head><title>Berita Acara</title><style>body{font-family:Arial; line-height:1.6;} h2{text-align:center;}</style></head><body style="padding:40px">`;
+            html += `<h2>BERITA ACARA PELAKSANAAN UJIAN</h2><br><br><p>Pada hari ini .................... tanggal .................... telah dilaksanakan ujian <b>${judul}</b> di <b>${globalProfile.madrasah}</b>.</p><p>Jumlah Peserta Seharusnya : ...... Siswa<br>Hadir : ...... Siswa<br>Tidak Hadir : ...... Siswa</p><br><br><br><p style="float:right">Pengawas Ruang,<br><br><br>( ${globalProfile.nama_lengkap} )</p></body></html>`;
+            const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
+        }
+
+        async function guruDownloadSoal() {
+            const kode = document.getElementById('guruKodeUjianSelect').value;
+            const uji = daftarUjianGlobal.find(u => u.kode === kode);
+            if(!uji || uji.allow_download != 1) { alert("Akses download soal untuk mapel ini DITUTUP oleh Administrator."); return; }
+            
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode}) });
+            const data = await res.json();
+            
+            let html = `<html><head><title>Soal ${kode}</title><style>body{font-family:Arial; line-height:1.5; padding:20px;} .soal{margin-bottom:20px;} .opsi{margin-left:20px;} h2{text-align:center;}</style></head><body>`;
+            html += `<h2>NASKAH SOAL: ${data.config.judul}</h2><hr>`;
+            data.soal.forEach((s, i) => {
+                html += `<div class="soal"><b>${i+1}.</b> ${s.soal}<br>`;
+                if(s.tipe === 'PGS' || s.tipe === 'MCMA') {
+                    s.opsi.forEach((o, idx) => { if(o) html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o}</div>`; });
+                } else {
+                    s.opsi.forEach((o, idx) => { if(o) html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o} (Benar / Salah)</div>`; });
+                }
+                html += `</div>`;
+            });
+            html += `</body></html>`;
+            const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
         }
 
         async function cetakHasil() {
-            const tbody = document.querySelector('#tabelHasilGuru tbody');
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Memuat Data...</td></tr>';
+            const tbody = document.querySelector('#tabelHasilGuru tbody'); tbody.innerHTML = '<tr><td colspan="4" align="center">Memuat...</td></tr>';
             try {
-                const res = await fetch(`${API_URL}?action=get_laporan`, {
-                    method: 'POST', body: JSON.stringify({role: 'guru', madrasah: globalProfile.madrasah})
-                });
-                const data = await res.json();
-                tbody.innerHTML = '';
-                if(data.data.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Belum ada data siswa mengerjakan</td></tr>';
-                data.data.forEach(d => {
-                    tbody.innerHTML += `<tr><td>${d.nama_lengkap}</td><td>${d.kode_ujian}</td><td><strong style="color:var(--primary)">${d.skor}</strong></td><td>${d.waktu_selesai}</td></tr>`;
-                });
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:red;">Gagal memuat.</td></tr>';
-            }
+                const res = await fetch(`${API_URL}?action=get_laporan`, { method: 'POST', body: JSON.stringify({role: 'guru', madrasah: globalProfile.madrasah}) });
+                const data = await res.json(); tbody.innerHTML = '';
+                data.data.forEach(d => { tbody.innerHTML += `<tr><td>${d.nama_lengkap}</td><td>${d.kode_ujian}</td><td><b>${d.skor}</b></td><td>${d.waktu_selesai}</td></tr>`; });
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="4">Gagal memuat.</td></tr>'; }
         }
 
-        // ==================================
-        // FUNGSI UJIAN PESERTA
-        // ==================================
+        // --- UJIAN PESERTA ---
         async function loadSoalPeserta(kodeUjian) {
             globalProfile.kodeUjian = kodeUjian;
-            document.getElementById('loginScreen').innerHTML = "<h2 style='text-align:center; padding:50px; width:100%;'>Memuat Soal... Mohon Tunggu.</h2>";
+            document.getElementById('loginScreen').innerHTML = "<h2 style='text-align:center; padding:50px;'>Memuat Soal...</h2>";
 
             const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kodeUjian}) });
             const data = await res.json();
             
             if(data.status === 'ok'){
-                soalData = data.soal;
-                jawabanSiswa = soalData.map(() => ({}));
-                detikTersisa = data.config.durasi * 60;
+                soalData = data.soal; jawabanSiswa = soalData.map(() => ({})); detikTersisa = data.config.durasi * 60;
                 
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('ujianScreen').style.display = 'flex';
                 document.getElementById('judulUjianDisplay').textContent = data.config.judul;
                 document.getElementById('namaPesertaDisplay').textContent = globalProfile.nama_lengkap;
                 
-                // Layar Penuh Anti Cheat Dasar
-                const el = document.documentElement;
-                if (el.requestFullscreen) el.requestFullscreen().catch(e => console.log(e));
+                const el = document.documentElement; if (el.requestFullscreen) el.requestFullscreen().catch(e => console.log(e));
                 
-                tampilkanSoal(0);
-                renderNavigasi();
-                timerId = setInterval(() => {
-                    detikTersisa--; updateTimerUI();
-                    if(detikTersisa <= 0) { clearInterval(timerId); submitKuis(true); }
-                }, 1000);
-            } else {
-                alert("Gagal memuat soal. Pastikan Kode Ujian Benar.");
-                location.reload();
+                tampilkanSoal(0); renderNavigasi();
+                
+                timerId = setInterval(() => { detikTersisa--; updateTimerUI(); if(detikTersisa <= 0) { clearInterval(timerId); submitKuis(true); } }, 1000);
+                pingId = setInterval(() => {
+                    fetch(`${API_URL}?action=ping_monitoring`, { method: 'POST', body: JSON.stringify({nisn: globalProfile.username, nama: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kode: kodeUjian}) });
+                }, 60000);
             }
         }
 
         function updateTimerUI() {
-            const m = Math.floor(detikTersisa / 60).toString().padStart(2, '0');
-            const s = (detikTersisa % 60).toString().padStart(2, '0');
+            const m = Math.floor(detikTersisa / 60).toString().padStart(2, '0'); const s = (detikTersisa % 60).toString().padStart(2, '0');
             document.getElementById('timerDisplay').textContent = `${m}:${s}`;
         }
 
-        function navigasiSoal(delta) {
-            let nextIndex = currentSoal + delta;
-            if (nextIndex >= 0 && nextIndex < soalData.length) tampilkanSoal(nextIndex);
-        }
+        function navigasiSoal(delta) { let nextIndex = currentSoal + delta; if (nextIndex >= 0 && nextIndex < soalData.length) tampilkanSoal(nextIndex); }
 
         function tampilkanSoal(idx) {
-            currentSoal = idx; 
-            const soal = soalData[idx];
+            currentSoal = idx; const soal = soalData[idx];
             document.getElementById('nomorSoalDisplay').textContent = `Soal ${idx + 1} dari ${soalData.length}`;
-            let html = `<div>${soal.soal}</div>`;
-            const jwbSiswa = jawabanSiswa[idx] || {};
+            let html = `<div>${soal.soal}</div>`; const jwbSiswa = jawabanSiswa[idx] || {};
 
             if (soal.tipe === 'PGS' || soal.tipe === 'MCMA') {
-                if (soal.tipe === 'MCMA') html += '<p style="color: #666; font-size: 0.9rem;"><em>(Pilih jawaban benar lebih dari satu)</em></p>';
                 const jnsInput = soal.tipe === 'PGS' ? 'radio' : 'checkbox';
                 soal.opsi.forEach((opt, oIdx) => {
-                    const label = String.fromCharCode(65 + oIdx);
-                    const checked = jwbSiswa[label] ? 'checked' : '';
-                    if(opt) {
-                        html += `
-                        <div class="opsi opsi-${soal.tipe.toLowerCase()}">
-                            <input type="${jnsInput}" name="opt_${idx}" id="opt_${idx}_${oIdx}" ${checked} onchange="simpanJawaban('${label}', ${idx}, '${soal.tipe}')">
-                            <label for="opt_${idx}_${oIdx}"><strong>${label}.</strong> <span style="margin-left:10px">${opt}</span></label>
-                        </div>`;
-                    }
+                    const label = String.fromCharCode(65 + oIdx); const checked = jwbSiswa[label] ? 'checked' : '';
+                    if(opt) html += `<div class="opsi"><input type="${jnsInput}" id="opt_${idx}_${oIdx}" ${checked} onchange="simpanJawaban('${label}', ${idx}, '${soal.tipe}')"><label for="opt_${idx}_${oIdx}"><strong>${label}.</strong> <span style="margin-left:10px">${opt}</span></label></div>`;
                 });
             } else if (soal.tipe === 'KATEGORI') {
-                html += '<p style="color: #666; font-size: 0.9rem;"><em>(Tentukan Benar / Salah)</em></p>';
                 soal.opsi.forEach((opt, oIdx) => {
-                    const label = String.fromCharCode(65 + oIdx);
-                    const isBenar = jwbSiswa[label] === 'Benar' ? 'active' : '';
-                    const isSalah = jwbSiswa[label] === 'Salah' ? 'active' : '';
-                    if(opt) {
-                        html += `
-                        <div class="opsi-kategori">
-                            <div style="flex-grow: 1;"><strong>${label}.</strong> ${opt}</div>
-                            <div style="display: flex; gap: 5px;">
-                                <button class="btn-kategori ${isBenar}" onclick="simpanJawaban('${label}:Benar', ${idx}, 'KATEGORI')">Benar</button>
-                                <button class="btn-kategori ${isSalah}" onclick="simpanJawaban('${label}:Salah', ${idx}, 'KATEGORI')">Salah</button>
-                            </div>
-                        </div>`;
-                    }
+                    const label = String.fromCharCode(65 + oIdx); const isB = jwbSiswa[label] === 'Benar' ? 'active' : ''; const isS = jwbSiswa[label] === 'Salah' ? 'active' : '';
+                    if(opt) html += `<div class="opsi-kategori"><div style="flex-grow:1;"><strong>${label}.</strong> ${opt}</div><div style="display:flex; gap:5px;"><button class="btn-kategori ${isB}" onclick="simpanJawaban('${label}:Benar', ${idx}, 'KATEGORI')">Benar</button><button class="btn-kategori ${isS}" onclick="simpanJawaban('${label}:Salah', ${idx}, 'KATEGORI')">Salah</button></div></div>`;
                 });
             }
-            
-            const box = document.getElementById('soalBox');
-            box.innerHTML = html;
-            
-            if (window.renderMathInElement) {
-                try { renderMathInElement(box, { delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}, {left: "\\(", right: "\\)", display: false} ], throwOnError : false }); } catch (e) {}
-            }
+            document.getElementById('soalBox').innerHTML = html;
+            if (window.renderMathInElement) { try { renderMathInElement(document.getElementById('soalBox'), { delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false} ], throwOnError : false }); } catch (e) {} }
             
             document.getElementById('prevSoal').style.visibility = idx === 0 ? 'hidden' : 'visible';
             document.getElementById('nextSoal').style.display = idx === soalData.length - 1 ? 'none' : 'inline-block';
             document.getElementById('finishUjian').style.display = idx === soalData.length - 1 ? 'inline-block' : 'none';
-            
-            document.querySelectorAll('#soalNav button').forEach((b, i) => {
-                b.classList.remove('active'); if(i === idx) b.classList.add('active');
-            });
+            document.querySelectorAll('#soalNav button').forEach((b, i) => { b.classList.remove('active'); if(i === idx) b.classList.add('active'); });
         }
 
         function simpanJawaban(opsi, idx, tipe) {
             const jwb = jawabanSiswa[idx];
-            if (tipe === 'PGS') {
-                jawabanSiswa[idx] = {}; 
-                jawabanSiswa[idx][opsi] = true;
-                navigasiSoal(1);
-            } else if (tipe === 'MCMA') {
-                if (jwb[opsi]) delete jwb[opsi]; else jwb[opsi] = true;
-            } else if (tipe === 'KATEGORI') {
-                const [lbl, val] = opsi.split(':');
-                if (jwb[lbl] === val) delete jwb[lbl]; else jwb[lbl] = val;
-                tampilkanSoal(idx);
-            }
+            if (tipe === 'PGS') { jawabanSiswa[idx] = {}; jawabanSiswa[idx][opsi] = true; navigasiSoal(1); } 
+            else if (tipe === 'MCMA') { if (jwb[opsi]) delete jwb[opsi]; else jwb[opsi] = true; } 
+            else if (tipe === 'KATEGORI') { const [lbl, val] = opsi.split(':'); if (jwb[lbl] === val) delete jwb[lbl]; else jwb[lbl] = val; tampilkanSoal(idx); }
             renderNavigasi();
         }
 
         function renderNavigasi() {
             const nav = document.getElementById('soalNav'); nav.innerHTML = '';
             soalData.forEach((_, i) => {
-                const btn = document.createElement('button');
-                btn.textContent = i + 1;
-                btn.onclick = () => tampilkanSoal(i);
+                const btn = document.createElement('button'); btn.textContent = i + 1; btn.onclick = () => tampilkanSoal(i);
                 if (Object.keys(jawabanSiswa[i]).length > 0) btn.classList.add('answered');
-                if (i === currentSoal) btn.classList.add('active');
-                nav.appendChild(btn);
+                if (i === currentSoal) btn.classList.add('active'); nav.appendChild(btn);
             });
         }
 
         async function submitKuis(otomatis = false) {
-            if(!otomatis) {
-                if(!confirm("Yakin ingin mengirim jawaban? Tindakan ini tidak dapat dibatalkan.")) return;
-            }
-            clearInterval(timerId);
-            document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh; background:#fff;'><h2 style='color:var(--primary);'>MENGIRIM JAWABAN...<br>Mohon jangan tutup halaman.</h2></div>";
+            if(!otomatis && !confirm("Yakin ingin mengirim jawaban?")) return;
+            clearInterval(timerId); clearInterval(pingId);
+            document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh;'><h2 style='color:var(--primary);'>MENGIRIM JAWABAN...</h2></div>";
             
-            // HITUNG SKOR
-            const totalScore = soalData.reduce((acc, soal, i) => {
-                const ansSiswa = jawabanSiswa[i];
-                const ansServer = soal.jawabanBenar;
-                if (!ansSiswa || Object.keys(ansSiswa).length === 0) return acc;
-                let itemScore = 0;
-                
-                if (soal.tipe === 'PGS') {
-                    if (ansServer.includes(Object.keys(ansSiswa)[0])) itemScore = 1;
-                } else if (soal.tipe === 'MCMA') {
-                    const sel = Object.keys(ansSiswa); const totKeys = ansServer.length;
-                    let match = 0, wrong = 0;
-                    sel.forEach(k => { if (ansServer.includes(k)) match++; else wrong++; });
-                    if (totKeys > 0) itemScore = Math.max(0, (match - wrong) / totKeys);
-                } else if (soal.tipe === 'KATEGORI') {
-                    let corr = 0, totItems = Object.keys(ansServer).length;
-                    for (const k in ansServer) { if (ansSiswa[k] === ansServer[k]) corr++; }
-                    if (totItems > 0) itemScore = corr / totItems;
-                }
-                return acc + itemScore;
-            }, 0);
-            
-            const skorAkhir = (totalScore / soalData.length) * 100;
-
-            const finalObjek = {};
+            let totalScore = 0;
             soalData.forEach((soal, i) => {
-                const jwb = jawabanSiswa[i];
-                if (Object.keys(jwb).length > 0) {
-                    if (soal.tipe === 'PGS') finalObjek[soal.id] = Object.keys(jwb)[0]; 
-                    else if (soal.tipe === 'MCMA') finalObjek[soal.id] = Object.keys(jwb); 
-                    else if (soal.tipe === 'KATEGORI') finalObjek[soal.id] = jwb; 
+                const ansS = jawabanSiswa[i]; const ansK = soal.jawabanBenar;
+                if (!ansS || Object.keys(ansS).length === 0) return;
+                if (soal.tipe === 'PGS' && ansK.includes(Object.keys(ansS)[0])) totalScore += 1;
+                else if (soal.tipe === 'MCMA') {
+                    let m = 0, w = 0; Object.keys(ansS).forEach(k => { if (ansK.includes(k)) m++; else w++; });
+                    if (ansK.length > 0) totalScore += Math.max(0, (m - w) / ansK.length);
+                } else if (soal.tipe === 'KATEGORI') {
+                    let c = 0; for (const k in ansK) { if (ansS[k] === ansK[k]) c++; }
+                    if (Object.keys(ansK).length > 0) totalScore += c / Object.keys(ansK).length;
                 }
             });
+            const finalObjek = {};
+            soalData.forEach((soal, i) => {
+                const j = jawabanSiswa[i];
+                if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j);
+            });
 
-            const payload = {
-                action: 'submit_jawaban', nisn: globalProfile.username,
-                namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah || "",
-                kodeUjian: globalProfile.kodeUjian, skor: skorAkhir, jawabanPeserta: finalObjek
-            };
-
+            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, skor: (totalScore / soalData.length) * 100, jawabanPeserta: finalObjek };
             try {
-                const res = await fetch(`${API_URL}?action=submit_jawaban`, { method: 'POST', body: JSON.stringify(payload) });
-                const out = await res.json();
-                if(out.status === 'success') {
-                    document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:5rem; margin:0;'>🎉</h1><h2 style='color:#4caf50;'>Ujian Selesai!</h2><p>Jawaban berhasil direkam.</p></div>`;
-                } else {
-                    alert("Terjadi kesalahan sistem di server: " + out.msg);
-                }
-            } catch (e) {
-                alert("Gagal menghubungi server. Internet mungkin terputus.");
-            }
+                await fetch(`${API_URL}?action=submit_jawaban`, { method: 'POST', body: JSON.stringify(payload) });
+                document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:5rem; margin:0;'>🎉</h1><h2 style='color:#4caf50;'>Ujian Selesai!</h2></div>`;
+            } catch (e) { alert("Gagal menghubungi server."); }
         }
     </script>
 </body>
