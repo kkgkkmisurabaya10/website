@@ -402,6 +402,9 @@
         let globalProfile = {}; let daftarUjianGlobal = []; let dataLaporanAdmin = []; let dataLaporanGuru = [];
         let isSubmitting = false; let cheatCount = 0;
         let lastPingTime = 0; 
+        
+        // VARIABEL GLOBAL BARU AGAR CKEDITOR HANYA DI INISIALISASI SEKALI
+        let isEditorReady = false; 
 
         document.addEventListener('DOMContentLoaded', () => { 
             initAntiCheatSiswa();
@@ -428,7 +431,7 @@
             location.reload();
         }
 
-        // FUNGSI RENDER ULANG CKEDITOR YANG BUG FREE (MENGHANCURKAN & MERENDER ULANG KETIKA DIPANGGIL)
+        // FUNGSI INISIALISASI CKEDITOR HANYA SEKALI TANPA DESTROY
         function initCKEditor() {
             const tb = [
                 { name: 'document', items: [ 'Source' ] },
@@ -443,14 +446,15 @@
             const editors = ['formSoalTeks', 'formSoalOpsiA', 'formSoalOpsiB', 'formSoalOpsiC', 'formSoalOpsiD'];
             
             editors.forEach(id => {
-                if (CKEDITOR.instances[id]) { CKEDITOR.instances[id].destroy(true); }
-                CKEDITOR.replace(id, { 
-                    height: (id === 'formSoalTeks' ? 150 : 80), 
-                    toolbar: tb,
-                    allowedContent: true,
-                    extraPlugins: 'mathjax,base64image,pastefromword', 
-                    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
-                });
+                if (!CKEDITOR.instances[id]) {
+                    CKEDITOR.replace(id, { 
+                        height: (id === 'formSoalTeks' ? 150 : 80), 
+                        toolbar: tb,
+                        allowedContent: true,
+                        extraPlugins: 'mathjax,base64image,pastefromword', 
+                        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
+                    });
+                }
             });
         }
 
@@ -711,16 +715,26 @@
             document.getElementById('formSoalId').value = '';
             document.getElementById('formSoalKunci').value = '';
             
-            document.getElementById('formSoalTeks').value = '';
-            document.getElementById('formSoalOpsiA').value = '';
-            document.getElementById('formSoalOpsiB').value = '';
-            document.getElementById('formSoalOpsiC').value = '';
-            document.getElementById('formSoalOpsiD').value = '';
-
+            // Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
             
-            // Panggil init CKEditor SELETAH textarea terisi dan div tampil
-            initCKEditor();
+            // Panggil init CKEditor SATU KALI SAJA saat dibutuhkan
+            if (!isEditorReady) {
+                initCKEditor();
+                isEditorReady = true;
+            }
+
+            // Gunakan setData dengan setTimeout agar instances tereksekusi tanpa crash
+            setTimeout(() => {
+                if(CKEDITOR.instances.formSoalTeks) {
+                    CKEDITOR.instances.formSoalTeks.setData('');
+                    CKEDITOR.instances.formSoalOpsiA.setData('');
+                    CKEDITOR.instances.formSoalOpsiB.setData('');
+                    CKEDITOR.instances.formSoalOpsiC.setData('');
+                    CKEDITOR.instances.formSoalOpsiD.setData('');
+                }
+            }, 300);
+            
             gantiPetunjukSoal();
         }
 
@@ -732,18 +746,27 @@
             document.getElementById('formSoalKode').value = kode;
             document.getElementById('formSoalTipe').value = s.tipe;
             document.getElementById('formSoalKunci').value = s.jawabanBenarStr;
-            
-            // Tulis Teks ke Dalam Tag Textarea Dulu, sebelum Modal & CKEditor bekerja
-            document.getElementById('formSoalTeks').value = s.soal;
-            document.getElementById('formSoalOpsiA').value = s.opsi[0] || '';
-            document.getElementById('formSoalOpsiB').value = s.opsi[1] || '';
-            document.getElementById('formSoalOpsiC').value = s.opsi[2] || '';
-            document.getElementById('formSoalOpsiD').value = s.opsi[3] || '';
 
+            // Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
 
-            // Panggil init CKEditor SELETAH textarea terisi dan div tampil
-            initCKEditor();
+            // Panggil init CKEditor SATU KALI SAJA saat dibutuhkan
+            if (!isEditorReady) {
+                initCKEditor();
+                isEditorReady = true;
+            }
+
+            // Gunakan setData dengan setTimeout agar instances tereksekusi tanpa crash
+            setTimeout(() => {
+                if(CKEDITOR.instances.formSoalTeks) {
+                    CKEDITOR.instances.formSoalTeks.setData(s.soal);
+                    CKEDITOR.instances.formSoalOpsiA.setData(s.opsi[0] || '');
+                    CKEDITOR.instances.formSoalOpsiB.setData(s.opsi[1] || '');
+                    CKEDITOR.instances.formSoalOpsiC.setData(s.opsi[2] || '');
+                    CKEDITOR.instances.formSoalOpsiD.setData(s.opsi[3] || '');
+                }
+            }, 300);
+            
             gantiPetunjukSoal();
         }
 
@@ -983,7 +1006,6 @@
         // --- SISTEM THROTTLING PING ---
         function sendPing() {
             const now = Date.now();
-            // Batasi agar ping hanya terkirim min setiap 10 detik meski diklik cepat, menjaga server tetap ringan
             if (now - lastPingTime > 10000) { 
                 lastPingTime = now;
                 fetch(`${API_URL}?action=ping_monitoring`, { method: 'POST', body: JSON.stringify({nisn: globalProfile.username, nama: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kode: globalProfile.kodeUjian}) }).catch(e=>{});
@@ -1021,9 +1043,8 @@
                 
                 tampilkanSoal(currentSoal); renderNavigasi();
                 
-                // Set Interval Ping dikurangi menjadi per 5 Menit (300000 ms) sesuai request (Optimasi Server)
                 pingId = setInterval(sendPing, 300000); 
-                sendPing(); // Ping saat baru mulai
+                sendPing(); 
                 
                 timerId = setInterval(() => { 
                     detikTersisa--; 
