@@ -111,7 +111,7 @@
         <div class="login-box">
             <div class="login-logo"><img src="https://lh3.googleusercontent.com/d/1bmKHxXSnIZKHcPgxK9xEai1njzZWOn8h" class="logo-img"></div>
             <h2 style="text-align: center; color: var(--primary); margin-top: 30px; margin-bottom: 5px;">PORTAL CBT</h2>
-            <p style="text-align: center; color: #777; margin-top: 0; font-size: 0.85rem;">TKA KKGMI SURABAYA 10 & 11</p>
+            <p style="text-align: center; color: #777; margin-top: 0; font-size: 0.85rem;">TKA KKGMI SURABAYA 10</p>
             
             <label>Login Sebagai</label>
             <select id="roleSelect" onchange="toggleLoginFields()">
@@ -954,7 +954,7 @@
                 p.data.forEach(d => { 
                     let tgl = d.tgl_lahir ? d.tgl_lahir : '-';
                     html += `<div class="card">
-                        <h3>Kartu Tanda Peserta CBT<br><span style="font-size:9px; color:#555">KKGMI SURABAYA 10 & 11</span></h3>
+                        <h3>Kartu Tanda Peserta CBT<br><span style="font-size:9px; color:#555">KKGMI SURABAYA 10</span></h3>
                         <div style="width:75%">
                             <p>Nama : <span class="val">${d.nama_lengkap.substring(0, 22)}</span></p>
                             <p>Asal : <span class="val">${d.madrasah}</span></p>
@@ -973,7 +973,7 @@
 
         async function cetakDaftarHadir() {
             const p = await getPesertaGuru(); const eSel = document.getElementById('guruKodeUjianSelect'); const judul = eSel.options[eSel.selectedIndex]?.text || '';
-            let html = `<html><head><title>Daftar Hadir</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse; margin-top:20px;} th,td{border:1px solid #000; padding:10px;} th{background:#e0e0e0} h2{text-align:center; margin-bottom:5px; text-transform:uppercase;} .kop{text-align:center; border-bottom:3px solid #000; padding-bottom:10px; margin-bottom:20px;} .kop h2{margin:0; font-size:20px;} .kop p{margin:2px; font-size:14px;}</style></head><body><div class="kop"><h2>KELOMPOK KERJA GURU MADRASAH IBTIDAIYAH (KKGMI)</h2><p>SURABAYA WILAYAH 10 DAN 11</p></div><h2>DAFTAR HADIR PESERTA UJIAN</h2><p style="text-align:center;"><b>Madrasah:</b> ${globalProfile.madrasah} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Mata Pelajaran:</b> ${judul}</p><table><tr><th width="5%">No</th><th width="20%">NISN/Username</th><th width="50%">Nama Lengkap</th><th width="25%">Tanda Tangan</th></tr>`;
+            let html = `<html><head><title>Daftar Hadir</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse; margin-top:20px;} th,td{border:1px solid #000; padding:10px;} th{background:#e0e0e0} h2{text-align:center; margin-bottom:5px; text-transform:uppercase;} .kop{text-align:center; border-bottom:3px solid #000; padding-bottom:10px; margin-bottom:20px;} .kop h2{margin:0; font-size:20px;} .kop p{margin:2px; font-size:14px;}</style></head><body><div class="kop"><h2>KELOMPOK KERJA GURU MADRASAH IBTIDAIYAH (KKGMI)</h2><p>SURABAYA WILAYAH 10</p></div><h2>DAFTAR HADIR PESERTA UJIAN</h2><p style="text-align:center;"><b>Madrasah:</b> ${globalProfile.madrasah} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Mata Pelajaran:</b> ${judul}</p><table><tr><th width="5%">No</th><th width="20%">NISN/Username</th><th width="50%">Nama Lengkap</th><th width="25%">Tanda Tangan</th></tr>`;
             if (p.data) {
                 p.data.forEach((d, i) => { html += `<tr><td align="center">${i+1}</td><td align="center">${d.username}</td><td>${d.nama_lengkap}</td><td>${i+1}. </td></tr>`; });
             }
@@ -1002,7 +1002,7 @@
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
             <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>
             <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
-            <style>body{font-family:'Times New Roman', serif; line-height:1.5; padding:20px; font-size:14px;} .soal{margin-bottom:20px; page-break-inside: avoid;} .opsi{margin-left:25px;} .kop{text-align:center; border-bottom:3px double #000; padding-bottom:10px; margin-bottom:20px;} .kop h2{margin:0; font-size:22px;} .kop p{margin:2px; font-size:15px;} img{max-width:100%; height:auto; display:block; margin: 10px 0;} .petunjuk{background:#eee; padding:5px 10px; font-weight:bold; font-style:italic; margin-bottom:10px; border-left:4px solid #333;}</style></head><body><div class="kop"><h2>NASKAH SOAL TRYOUT TKA</h2><p>KKGMI SURABAYA 10 & 11</p></div><h3 style="text-align:center; margin-top:0; text-transform:uppercase; text-decoration:underline;">Mata Pelajaran: ${data.config.judul}</h3><br>`;
+            <style>body{font-family:'Times New Roman', serif; line-height:1.5; padding:20px; font-size:14px;} .soal{margin-bottom:20px; page-break-inside: avoid;} .opsi{margin-left:25px;} .kop{text-align:center; border-bottom:3px double #000; padding-bottom:10px; margin-bottom:20px;} .kop h2{margin:0; font-size:22px;} .kop p{margin:2px; font-size:15px;} img{max-width:100%; height:auto; display:block; margin: 10px 0;} .petunjuk{background:#eee; padding:5px 10px; font-weight:bold; font-style:italic; margin-bottom:10px; border-left:4px solid #333;}</style></head><body><div class="kop"><h2>NASKAH SOAL TRYOUT TKA</h2><p>KKGMI SURABAYA 10</p></div><h3 style="text-align:center; margin-top:0; text-transform:uppercase; text-decoration:underline;">Mata Pelajaran: ${data.config.judul}</h3><br>`;
             
             let currTipe = '';
             data.soal.forEach((s, i) => {
