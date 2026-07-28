@@ -715,16 +715,13 @@
             document.getElementById('formSoalId').value = '';
             document.getElementById('formSoalKunci').value = '';
             
-            // Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
             
-            // Panggil init CKEditor SATU KALI SAJA saat dibutuhkan
             if (!isEditorReady) {
                 initCKEditor();
                 isEditorReady = true;
             }
 
-            // Gunakan setData dengan setTimeout agar instances tereksekusi tanpa crash
             setTimeout(() => {
                 if(CKEDITOR.instances.formSoalTeks) {
                     CKEDITOR.instances.formSoalTeks.setData('');
@@ -747,16 +744,13 @@
             document.getElementById('formSoalTipe').value = s.tipe;
             document.getElementById('formSoalKunci').value = s.jawabanBenarStr;
 
-            // Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
 
-            // Panggil init CKEditor SATU KALI SAJA saat dibutuhkan
             if (!isEditorReady) {
                 initCKEditor();
                 isEditorReady = true;
             }
 
-            // Gunakan setData dengan setTimeout agar instances tereksekusi tanpa crash
             setTimeout(() => {
                 if(CKEDITOR.instances.formSoalTeks) {
                     CKEDITOR.instances.formSoalTeks.setData(s.soal);
@@ -909,15 +903,44 @@
             return await res.json();
         }
 
+        // FUNGSI CETAK KARTU YANG SUDAH DIPERBAIKI
         async function cetakKartu() {
             const p = await getPesertaGuru();
-            let html = `<html><head><title>Kartu Login Ujian</title><style>@media print { @page { size: A4 portrait; margin: 10mm; } } body{font-family:'Segoe UI', Arial; background:#fff; margin:0;} .container{display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;} .card{width:48%; height:45mm; box-sizing:border-box; border:2px solid #00796b; padding:10px; margin-bottom:5mm; border-radius:8px; position:relative; background-color:#e0f2f1 !important; -webkit-print-color-adjust: exact;} h3{margin:0 0 5px 0; text-align:center; border-bottom: 2px solid #00796b; padding-bottom:5px; color:#004d40; text-transform:uppercase; font-size:12px;} .foto{position:absolute; right:10px; top:35px; width:50px; height:65px; border:1px solid #aaa; background:#fff; text-align:center; line-height:65px; font-size:10px; color:#aaa;} p{margin:4px 0; font-size:11px; color:#333;} .val{font-size:13px; font-weight:bold; color:#000;}</style></head><body><div class="container">`;
+            let html = `<html><head><title>Kartu Login Ujian</title>
+            <style>
+                @media print { 
+                    @page { size: A4 portrait; margin: 10mm; } 
+                    .card { page-break-inside: avoid; } /* Mencegah kartu terpotong beda halaman */
+                } 
+                body { font-family:'Segoe UI', Arial; background:#fff; margin:0; } 
+                .container { display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start; } 
+                .card { width:48%; min-height:55mm; box-sizing:border-box; border:2px solid #00796b; padding:10px; margin-bottom:5mm; border-radius:8px; position:relative; background-color:#e0f2f1 !important; -webkit-print-color-adjust: exact; page-break-inside: avoid; } 
+                h3 { margin:0 0 5px 0; text-align:center; border-bottom: 2px solid #00796b; padding-bottom:5px; color:#004d40; text-transform:uppercase; font-size:12px; } 
+                .foto { position:absolute; right:10px; top:35px; width:50px; height:65px; border:1px solid #aaa; background:#fff; text-align:center; line-height:65px; font-size:10px; color:#aaa; } 
+                p { margin:4px 0; font-size:11px; color:#333; } 
+                .val { font-size:13px; font-weight:bold; color:#000; }
+            </style>
+            </head><body><div class="container">`;
+            
             if (p.data) {
-                p.data.forEach(d => { html += `<div class="card"><h3>Kartu Tanda Peserta CBT<br><span style="font-size:9px; color:#555">KKGMI SURABAYA 10 & 11</span></h3><div style="width:75%"><p>Nama : <span class="val">${d.nama_lengkap.substring(0, 20)}</span></p><p>Asal : <span class="val">${d.madrasah}</span></p><p>Username : <span class="val">${d.username}</span></p><p>Password : <span class="val">${d.password}</span></p></div><div class="foto">Foto 3x4</div></div>`; });
+                p.data.forEach(d => { 
+                    let tgl = d.tgl_lahir ? d.tgl_lahir : '-';
+                    html += `<div class="card">
+                        <h3>Kartu Tanda Peserta CBT<br><span style="font-size:9px; color:#555">KKGMI SURABAYA 10 & 11</span></h3>
+                        <div style="width:75%">
+                            <p>Nama : <span class="val">${d.nama_lengkap.substring(0, 22)}</span></p>
+                            <p>Asal : <span class="val">${d.madrasah}</span></p>
+                            <p>Tgl Lahir : <span class="val">${tgl}</span></p>
+                            <p>Username : <span class="val">${d.username}</span></p>
+                            <p>Password : <span class="val">${d.password}</span></p>
+                        </div>
+                        <div class="foto">Foto 3x4</div>
+                    </div>`; 
+                });
             }
             html += `</div></body></html>`; 
             const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
-            setTimeout(() => { w.print(); }, 500); // Tanpa loading screen agar lebih cepat
+            setTimeout(() => { w.print(); }, 500); 
         }
 
         async function cetakDaftarHadir() {
