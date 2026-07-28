@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- CKEditor Full untuk Rumus & Gambar -->
     <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
@@ -67,7 +66,7 @@
         
         /* MODAL KHUSUS EDITOR */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-        .modal-content { background-color: #fff; padding: 30px; border-radius: 8px; width: 95%; max-width: 900px; max-height: 95vh; overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-content { background-color: #fff; padding: 30px; border-radius: 8px; width: 95%; max-width: 1000px; max-height: 95vh; overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
         /* UJIAN LAYOUT (Menarik) */
         .main-container { display: flex; flex-grow: 1; padding: 20px; gap: 20px; max-width: 1300px; width: 100%; margin: auto; }
@@ -161,9 +160,9 @@
             </div>
             
             <div id="admin_sync">
-                <h3 style="color:var(--primary); margin-top: 0;">Sinkronisasi Data Spreadsheet ↔ Hosting</h3>
+                <h3 style="color:var(--primary); margin-top: 0;">Sinkronisasi Master Data Spreadsheet ↔ Hosting</h3>
                 <button class="btn-custom" onclick="adminSyncToHosting()" style="padding: 15px; font-size: 1.05rem;">📥 1. Tarik Master Data ke Hosting</button>
-                <button class="btn-custom btn-secondary" onclick="adminPushToSheet()" style="padding: 15px; font-size: 1.05rem;">📤 2. Backup Hasil Pengerjaan ke Sheet</button>
+                <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">* Backup hasil ujian langsung gunakan menu Rekap CSV/Excel di bawah.</p>
             </div>
 
             <div id="admin_peserta" style="display: none;">
@@ -266,18 +265,17 @@
                 </div>
             </div>
 
-            <label style="margin-bottom:2px;">Teks Soal <span style="font-weight:normal; color:#666;">(Bisa Copy-Paste Word, Gambar, atau Rumus dengan ikon $ \Sigma $)</span>:</label>
-            <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalTeks')" style="padding:0; border:none; background:transparent;"></div>
+            <label style="margin-bottom:2px;">Teks Soal <span style="font-weight:normal; color:#666;">(Bisa Copy-Paste dari Word / Gambar via Icon Image / Rumus $math$)</span>:</label>
             <textarea id="formSoalTeks" name="formSoalTeks"></textarea>
             
             <div id="opsiContainer" style="margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 6px; border: 1px solid #ddd;">
-                <label style="margin-top:0; margin-bottom:2px;">Opsi A:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiA')" style="padding:0; border:none; background:transparent;"></div>
+                <label style="margin-top:0; margin-bottom:2px;">Opsi A:</label> 
                 <textarea id="formSoalOpsiA" name="formSoalOpsiA"></textarea><br>
-                <label style="margin-top:0; margin-bottom:2px;">Opsi B:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiB')" style="padding:0; border:none; background:transparent;"></div>
+                <label style="margin-top:0; margin-bottom:2px;">Opsi B:</label> 
                 <textarea id="formSoalOpsiB" name="formSoalOpsiB"></textarea><br>
-                <label style="margin-top:0; margin-bottom:2px;">Opsi C:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiC')" style="padding:0; border:none; background:transparent;"></div>
+                <label style="margin-top:0; margin-bottom:2px;">Opsi C:</label> 
                 <textarea id="formSoalOpsiC" name="formSoalOpsiC"></textarea><br>
-                <label style="margin-top:0; margin-bottom:2px;">Opsi D:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiD')" style="padding:0; border:none; background:transparent;"></div>
+                <label style="margin-top:0; margin-bottom:2px;">Opsi D:</label> 
                 <textarea id="formSoalOpsiD" name="formSoalOpsiD"></textarea>
             </div>
             
@@ -395,15 +393,14 @@
     <footer class="footer">Support by Belajar Inovasi (MadrasahHebat)</footer>
 
     <script>
-        const API_URL = 'https://mibaiturrahmangubeng.sch.id/tka/api.php'; 
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQ_htkGPe8eqYYpqNANfwQs8ewPtDS97GVHdoM7yXsQq0YThGSlIEafjH2pmzddsnwAg/exec';
+        const API_URL = 'https://cbt-belajar-inovasi.my.id/tka/api.php'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxFRgRkDYyuqt9McsFt9633sFvx20s_376hthFkIutmZw4r5Q_IYMxShP5JUthOOI-4qg/exec';
         
         let soalData = [], jawabanSiswa = [], currentSoal = 0, detikTersisa, timerId, pingId;
         let globalProfile = {}; let daftarUjianGlobal = []; let dataLaporanAdmin = []; let dataLaporanGuru = [];
         let isSubmitting = false; let cheatCount = 0;
 
         document.addEventListener('DOMContentLoaded', () => { 
-            initCKEditor();
             initAntiCheatSiswa();
             checkSession(); 
         });
@@ -428,35 +425,31 @@
             location.reload();
         }
 
-        // Initialize CKEditor MathJax + Image Upload
+        // FUNGSI BARU: Inisialisasi ulang CKEditor setiap Modal Dibuka
         function initCKEditor() {
-            CKEDITOR.config.allowedContent = true;
-            CKEDITOR.config.extraPlugins = 'mathjax,base64image'; 
-            CKEDITOR.config.mathJaxLib = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML';
-            
             const tb = [
                 { name: 'document', items: [ 'Source' ] },
-                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Subscript', 'Superscript' ] },
-                { name: 'insert', items: [ 'Image', 'Table', 'Mathjax' ] }
+                { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
+                { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                { name: 'insert', items: [ 'Image', 'Table', 'Mathjax', 'SpecialChar' ] },
+                { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+                { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
             ];
 
-            CKEDITOR.replace('formSoalTeks', { height: 150, toolbar: tb });
-            CKEDITOR.replace('formSoalOpsiA', { height: 60, toolbar: tb });
-            CKEDITOR.replace('formSoalOpsiB', { height: 60, toolbar: tb });
-            CKEDITOR.replace('formSoalOpsiC', { height: 60, toolbar: tb });
-            CKEDITOR.replace('formSoalOpsiD', { height: 60, toolbar: tb });
-        }
-
-        function insertImage(fileInput, editorId) {
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgHtml = `<img src="${e.target.result}" style="max-width:100%; height:auto;" />`;
-                    CKEDITOR.instances[editorId].insertHtml(imgHtml);
-                    fileInput.value = ""; 
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            }
+            const editors = ['formSoalTeks', 'formSoalOpsiA', 'formSoalOpsiB', 'formSoalOpsiC', 'formSoalOpsiD'];
+            
+            editors.forEach(id => {
+                if (CKEDITOR.instances[id]) { CKEDITOR.instances[id].destroy(true); }
+                CKEDITOR.replace(id, { 
+                    height: (id === 'formSoalTeks' ? 150 : 80), 
+                    toolbar: tb,
+                    allowedContent: true,
+                    extraPlugins: 'mathjax,uploadimage', 
+                    uploadUrl: API_URL + '?action=upload_image',
+                    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
+                });
+            });
         }
 
         function initAntiCheatSiswa() {
@@ -624,11 +617,6 @@
                 if(data.status==='error') Swal.fire('Gagal', data.message, 'error'); else { Swal.fire('Berhasil', 'Sinkronisasi Master Sukses', 'success'); muatDashboardAdmin();}
             } catch(e) { Swal.fire('Error', 'Gagal menghubungi Apps Script', 'error'); }
         }
-        async function adminPushToSheet() {
-            Swal.fire({ title: 'Backup Hasil', text: 'Mendorong data pengerjaan ke Spreadsheet...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
-            try { const res = await fetch(`${GAS_URL}?action=pullFromHost`); const data = await res.json(); Swal.fire('Berhasil', data.message, 'success'); } 
-            catch(e) { Swal.fire('Error', 'Gagal membackup.', 'error'); }
-        }
 
         function downloadTemplate() {
             const ws = XLSX.utils.aoa_to_sheet([["NISN", "Username", "Nama Lengkap", "Tgl Lahir (YYYY-MM-DD)", "Password", "Asal Madrasah"]]);
@@ -677,7 +665,7 @@
         async function loadSoalAdmin() {
             const kode = document.getElementById('adminSoalSelect').value;
             const tbody = document.querySelector('#tabelSoalAdmin tbody'); tbody.innerHTML = '<tr><td colspan="5" align="center">Memuat...</td></tr>';
-            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode}) });
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode, role: 'admin'}) });
             const data = await res.json(); tbody.innerHTML = '';
             if(!data.soal || data.soal.length === 0) { tbody.innerHTML = '<tr><td colspan="5" align="center">Soal kosong.</td></tr>'; return; }
             
@@ -695,20 +683,28 @@
             const pKunci = document.getElementById('petunjukKunci');
             if(tipe === 'PGS') pKunci.textContent = "(Misal: A)";
             else if(tipe === 'MCMA') pKunci.textContent = "(Misal: A, B)";
-            else if(tipe === 'KATEGORI') pKunci.textContent = "(Misal: A:Benar, B:Salah, C:Benar)";
+            else if(tipe === 'KATEGORI') pKunci.textContent = "(Misal: {\"A\":\"Benar\", \"B\":\"Salah\", \"C\":\"Benar\"})";
         }
 
         function bukaModalTambahSoal() {
             document.getElementById('formSoalMode').value = 'tambah';
             document.getElementById('modalSoalTitle').textContent = 'Tambah Soal Baru';
             document.getElementById('formSoalId').value = '';
-            
-            CKEDITOR.instances.formSoalTeks.setData('');
-            CKEDITOR.instances.formSoalOpsiA.setData(''); CKEDITOR.instances.formSoalOpsiB.setData('');
-            CKEDITOR.instances.formSoalOpsiC.setData(''); CKEDITOR.instances.formSoalOpsiD.setData('');
-            
             document.getElementById('formSoalKunci').value = '';
+            
+            // 1. Tulis Data (Kosongkan) ke Textarea SEBELUM memanggil editor
+            document.getElementById('formSoalTeks').value = '';
+            document.getElementById('formSoalOpsiA').value = '';
+            document.getElementById('formSoalOpsiB').value = '';
+            document.getElementById('formSoalOpsiC').value = '';
+            document.getElementById('formSoalOpsiD').value = '';
+
+            // 2. Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
+            
+            // 3. Jalankan Inisialisasi CKEditor setelah Modal Tampil agar tidak hilang
+            initCKEditor();
+            
             gantiPetunjukSoal();
         }
 
@@ -719,15 +715,21 @@
             document.getElementById('formSoalId').value = s.id; 
             document.getElementById('formSoalKode').value = kode;
             document.getElementById('formSoalTipe').value = s.tipe;
-            
-            CKEDITOR.instances.formSoalTeks.setData(s.soal);
-            CKEDITOR.instances.formSoalOpsiA.setData(s.opsi[0] || '');
-            CKEDITOR.instances.formSoalOpsiB.setData(s.opsi[1] || '');
-            CKEDITOR.instances.formSoalOpsiC.setData(s.opsi[2] || '');
-            CKEDITOR.instances.formSoalOpsiD.setData(s.opsi[3] || '');
-            
             document.getElementById('formSoalKunci').value = s.jawabanBenarStr;
+            
+            // 1. Tulis Data (Sesuai Soal) ke Textarea SEBELUM memanggil editor
+            document.getElementById('formSoalTeks').value = s.soal;
+            document.getElementById('formSoalOpsiA').value = s.opsi[0] || '';
+            document.getElementById('formSoalOpsiB').value = s.opsi[1] || '';
+            document.getElementById('formSoalOpsiC').value = s.opsi[2] || '';
+            document.getElementById('formSoalOpsiD').value = s.opsi[3] || '';
+
+            // 2. Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
+
+            // 3. Jalankan Inisialisasi CKEditor setelah Modal Tampil agar tidak hilang
+            initCKEditor();
+            
             gantiPetunjukSoal();
         }
 
@@ -785,18 +787,9 @@
         }
 
         function downloadRekapExcelAdmin() {
-            if(!dataLaporanAdmin || dataLaporanAdmin.length === 0) { Swal.fire('Info', 'Tidak ada data untuk diunduh.', 'info'); return; }
-            Swal.fire({ title: 'Membuat File Excel...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
-            
-            let excelData = [];
-            dataLaporanAdmin.forEach(d => {
-                let rowData = { "NISN": d.nisn, "Nama Peserta": d.nama_lengkap, "Asal Madrasah": d.madrasah, "Kode Ujian": d.kode_ujian, "Skor Akhir": d.skor, "Waktu Penyelesaian": d.waktu_selesai };
-                let jwb = {}; try { jwb = JSON.parse(d.jawaban_json); } catch(e){}
-                for(const key in jwb) { rowData[`Soal ${key}`] = typeof jwb[key] === 'object' ? JSON.stringify(jwb[key]) : jwb[key]; }
-                excelData.push(rowData);
-            });
-            const ws = XLSX.utils.json_to_sheet(excelData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Rekap Hasil");
-            XLSX.writeFile(wb, "Rekap_CBT_Admin.xlsx"); Swal.close();
+            const madrasah = document.getElementById('filterMadrasahAdmin').value;
+            const kode = document.getElementById('filterUjianAdmin').value;
+            window.open(`${API_URL}?action=export_excel&role_req=admin&madrasah=${madrasah}&kode=${kode}`, "_blank");
         }
 
         async function muatPengaturanAkses() {
@@ -858,7 +851,7 @@
             const tbody = document.querySelector('#tabelSiswaGuru tbody'); tbody.innerHTML = '<tr><td colspan="4" align="center">Memuat...</td></tr>';
             const res = await fetch(`${API_URL}?action=get_peserta_guru`, { method: 'POST', body: JSON.stringify({madrasah: globalProfile.madrasah}) });
             const data = await res.json(); tbody.innerHTML = '';
-            if(data.data.length === 0) tbody.innerHTML = '<tr><td colspan="4" align="center">Belum ada data siswa.</td></tr>';
+            if(!data || !data.data || data.data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" align="center">Belum ada data siswa.</td></tr>'; return; }
             data.data.forEach(d => {
                 const btn = `<button class="btn-custom btn-secondary" style="margin:0; padding:4px 8px; font-size:0.8rem;" onclick="bukaModalEditSiswa(${d.id}, '${d.username}', '${d.nama_lengkap}', '${d.password}')">✏️ Edit Saja</button>`;
                 tbody.innerHTML += `<tr><td>${d.username}</td><td>${d.nama_lengkap}</td><td>${d.password}</td><td>${btn}</td></tr>`;
@@ -873,7 +866,9 @@
         async function cetakKartu() {
             const p = await getPesertaGuru();
             let html = `<html><head><title>Kartu Login Ujian</title><style>@media print { @page { size: A4 portrait; margin: 10mm; } } body{font-family:'Segoe UI', Arial; background:#fff; margin:0;} .container{display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;} .card{width:48%; height:45mm; box-sizing:border-box; border:2px solid #00796b; padding:10px; margin-bottom:5mm; border-radius:8px; position:relative; background-color:#e0f2f1 !important; -webkit-print-color-adjust: exact;} h3{margin:0 0 5px 0; text-align:center; border-bottom: 2px solid #00796b; padding-bottom:5px; color:#004d40; text-transform:uppercase; font-size:12px;} .foto{position:absolute; right:10px; top:35px; width:50px; height:65px; border:1px solid #aaa; background:#fff; text-align:center; line-height:65px; font-size:10px; color:#aaa;} p{margin:4px 0; font-size:11px; color:#333;} .val{font-size:13px; font-weight:bold; color:#000;}</style></head><body><div class="container">`;
-            p.data.forEach(d => { html += `<div class="card"><h3>Kartu Tanda Peserta CBT<br><span style="font-size:9px; color:#555">KKGMI SURABAYA 10 & 11</span></h3><div style="width:75%"><p>Nama : <span class="val">${d.nama_lengkap.substring(0, 20)}</span></p><p>Asal : <span class="val">${d.madrasah}</span></p><p>Username : <span class="val">${d.username}</span></p><p>Password : <span class="val">${d.password}</span></p></div><div class="foto">Foto 3x4</div></div>`; });
+            if (p.data) {
+                p.data.forEach(d => { html += `<div class="card"><h3>Kartu Tanda Peserta CBT<br><span style="font-size:9px; color:#555">KKGMI SURABAYA 10 & 11</span></h3><div style="width:75%"><p>Nama : <span class="val">${d.nama_lengkap.substring(0, 20)}</span></p><p>Asal : <span class="val">${d.madrasah}</span></p><p>Username : <span class="val">${d.username}</span></p><p>Password : <span class="val">${d.password}</span></p></div><div class="foto">Foto 3x4</div></div>`; });
+            }
             html += `</div></body></html>`; 
             const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
             setTimeout(() => { w.print(); }, 500); // Tanpa loading screen agar lebih cepat
@@ -882,7 +877,9 @@
         async function cetakDaftarHadir() {
             const p = await getPesertaGuru(); const eSel = document.getElementById('guruKodeUjianSelect'); const judul = eSel.options[eSel.selectedIndex]?.text || '';
             let html = `<html><head><title>Daftar Hadir</title><style>body{font-family:Arial;} table{width:100%; border-collapse:collapse; margin-top:20px;} th,td{border:1px solid #000; padding:10px;} th{background:#e0e0e0} h2{text-align:center; margin-bottom:5px; text-transform:uppercase;} .kop{text-align:center; border-bottom:3px solid #000; padding-bottom:10px; margin-bottom:20px;} .kop h2{margin:0; font-size:20px;} .kop p{margin:2px; font-size:14px;}</style></head><body><div class="kop"><h2>KELOMPOK KERJA GURU MADRASAH IBTIDAIYAH (KKGMI)</h2><p>SURABAYA WILAYAH 10 DAN 11</p></div><h2>DAFTAR HADIR PESERTA UJIAN</h2><p style="text-align:center;"><b>Madrasah:</b> ${globalProfile.madrasah} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Mata Pelajaran:</b> ${judul}</p><table><tr><th width="5%">No</th><th width="20%">NISN/Username</th><th width="50%">Nama Lengkap</th><th width="25%">Tanda Tangan</th></tr>`;
-            p.data.forEach((d, i) => { html += `<tr><td align="center">${i+1}</td><td align="center">${d.username}</td><td>${d.nama_lengkap}</td><td>${i+1}. </td></tr>`; });
+            if (p.data) {
+                p.data.forEach((d, i) => { html += `<tr><td align="center">${i+1}</td><td align="center">${d.username}</td><td>${d.nama_lengkap}</td><td>${i+1}. </td></tr>`; });
+            }
             html += `</table></body></html>`; 
             const w = window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
             setTimeout(() => { w.print(); }, 500);
@@ -901,7 +898,7 @@
             if(!uji || uji.allow_download != 1) { Swal.fire('Akses Ditutup', 'Panitia/Admin belum membuka akses cetak PDF untuk mapel ini.', 'info'); return; }
             
             Swal.fire({ title: 'Menyusun Naskah...', didOpen: () => { Swal.showLoading(); }});
-            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode}) });
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode, role: 'guru'}) });
             const data = await res.json();
             
             let html = `<html><head><title>Naskah Soal - ${kode}</title>
@@ -947,17 +944,7 @@
         }
 
         function downloadRekapExcelGuru() {
-            if(!dataLaporanGuru || dataLaporanGuru.length === 0) { Swal.fire('Info', 'Tidak ada data untuk diunduh.', 'info'); return; }
-            Swal.fire({ title: 'Membuat File Excel...', didOpen: () => { Swal.showLoading(); }});
-            let excelData = [];
-            dataLaporanGuru.forEach(d => {
-                let rowData = { "NISN": d.nisn, "Nama Peserta": d.nama_lengkap, "Asal Madrasah": d.madrasah, "Kode Ujian": d.kode_ujian, "Skor Akhir": d.skor, "Waktu Selesai": d.waktu_selesai };
-                let jwb = {}; try { jwb = JSON.parse(d.jawaban_json); } catch(e){}
-                for(const key in jwb) { rowData[`Soal ${key}`] = typeof jwb[key] === 'object' ? JSON.stringify(jwb[key]) : jwb[key]; }
-                excelData.push(rowData);
-            });
-            const ws = XLSX.utils.json_to_sheet(excelData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Rekap Ujian Guru");
-            XLSX.writeFile(wb, "Rekap_CBT_Guru.xlsx"); Swal.close();
+            window.open(`${API_URL}?action=export_excel&role_req=guru&madrasah=${globalProfile.madrasah}&kode=ALL`, "_blank");
         }
 
         // --- UJIAN PESERTA ---
@@ -965,7 +952,7 @@
             globalProfile.kodeUjian = kodeUjian;
             document.getElementById('loginScreen').innerHTML = "<div style='text-align:center; padding:50px;'><h2 style='color:var(--primary)'>Mempersiapkan Lembar Soal...</h2></div>";
 
-            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kodeUjian}) });
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kodeUjian, role: 'peserta'}) });
             const data = await res.json();
             
             if(data.status === 'ok'){
@@ -996,8 +983,14 @@
                     updateTimerUI(); 
                     if(detikTersisa <= 0) { clearInterval(timerId); submitKuis(true); } 
                 }, 1000);
-                pingId = setInterval(() => { fetch(`${API_URL}?action=ping_monitoring`, { method: 'POST', body: JSON.stringify({nisn: globalProfile.username, nama: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kode: kodeUjian}) }); }, 60000);
+                
+                // Ping interval diperpanjang jadi 5 menit (300000 ms) agar DB tidak hang
+                pingId = setInterval(() => { sendPing(); }, 300000);
             }
+        }
+        
+        function sendPing() {
+            fetch(`${API_URL}?action=ping_monitoring`, { method: 'POST', body: JSON.stringify({nisn: globalProfile.username, nama: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kode: globalProfile.kodeUjian}) });
         }
 
         function updateTimerUI() {
@@ -1015,6 +1008,7 @@
         function tampilkanSoal(idx) {
             currentSoal = idx; 
             localStorage.setItem('cbt_nav_' + globalProfile.kodeUjian, currentSoal);
+            sendPing(); // Ping monitoring ter-trigger hanya saat siswa beraktivitas pindah soal
             
             const soal = soalData[idx];
             document.getElementById('nomorSoalDisplay').textContent = `Soal No. ${idx + 1} / ${soalData.length}`;
@@ -1084,18 +1078,14 @@
             clearInterval(timerId); clearInterval(pingId);
             Swal.fire({ title: 'Mengamankan Jawaban...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
             
-            let totalScore = 0;
-            soalData.forEach((soal, i) => {
-                const ansS = jawabanSiswa[i]; const ansK = soal.jawabanBenar;
-                if (!ansS || Object.keys(ansS).length === 0) return;
-                if (soal.tipe === 'PGS' && ansK.includes(Object.keys(ansS)[0])) totalScore += 1;
-                else if (soal.tipe === 'MCMA') { let m = 0, w = 0; Object.keys(ansS).forEach(k => { if (ansK.includes(k)) m++; else w++; }); if (ansK.length > 0) totalScore += Math.max(0, (m - w) / ansK.length); } 
-                else if (soal.tipe === 'KATEGORI') { let c = 0; for (const k in ansK) { if (ansS[k] === ansK[k]) c++; } if (Object.keys(ansK).length > 0) totalScore += c / Object.keys(ansK).length; }
-            });
             const finalObjek = {};
-            soalData.forEach((soal, i) => { const j = jawabanSiswa[i]; if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j); });
+            soalData.forEach((soal, i) => { 
+                const j = jawabanSiswa[i]; 
+                if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j); 
+            });
 
-            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, skor: (totalScore / soalData.length) * 100, jawabanPeserta: finalObjek };
+            // PENILAIAN 100% DI SERVER (Server-Side Scoring). JS hanya kirim JSON Jawaban Siswa.
+            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, jawabanPeserta: finalObjek };
             try {
                 await fetch(`${API_URL}?action=submit_jawaban`, { method: 'POST', body: JSON.stringify(payload) });
                 
