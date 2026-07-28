@@ -431,33 +431,6 @@
             location.reload();
         }
 
-        // FUNGSI INISIALISASI CKEDITOR HANYA SEKALI TANPA DESTROY
-        function initCKEditor() {
-            const tb = [
-                { name: 'document', items: [ 'Source' ] },
-                { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
-                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
-                { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-                { name: 'insert', items: [ 'Image', 'Table', 'Mathjax', 'SpecialChar' ] },
-                { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
-                { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
-            ];
-
-            const editors = ['formSoalTeks', 'formSoalOpsiA', 'formSoalOpsiB', 'formSoalOpsiC', 'formSoalOpsiD'];
-            
-            editors.forEach(id => {
-                if (!CKEDITOR.instances[id]) {
-                    CKEDITOR.replace(id, { 
-                        height: (id === 'formSoalTeks' ? 150 : 80), 
-                        toolbar: tb,
-                        allowedContent: true,
-                        extraPlugins: 'mathjax,base64image,pastefromword', 
-                        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
-                    });
-                }
-            });
-        }
-
         function insertImage(fileInput, editorId) {
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
@@ -715,22 +688,49 @@
             document.getElementById('formSoalId').value = '';
             document.getElementById('formSoalKunci').value = '';
             
+            // Set value default textareas
+            document.getElementById('formSoalTeks').value = '';
+            document.getElementById('formSoalOpsiA').value = '';
+            document.getElementById('formSoalOpsiB').value = '';
+            document.getElementById('formSoalOpsiC').value = '';
+            document.getElementById('formSoalOpsiD').value = '';
+
             document.getElementById('modalFormSoal').style.display = 'flex';
             
+            // JALANKAN INISIALISASI CKEDITOR SEKALI SAJA KETIKA DIBUKA
             if (!isEditorReady) {
-                initCKEditor();
+                const tb = [
+                    { name: 'document', items: [ 'Source' ] },
+                    { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                    { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
+                    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                    { name: 'insert', items: [ 'Image', 'Table', 'Mathjax', 'SpecialChar' ] },
+                    { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+                    { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
+                ];
+                const editors = ['formSoalTeks', 'formSoalOpsiA', 'formSoalOpsiB', 'formSoalOpsiC', 'formSoalOpsiD'];
+                editors.forEach(id => {
+                    CKEDITOR.replace(id, { 
+                        height: (id === 'formSoalTeks' ? 150 : 80), 
+                        toolbar: tb,
+                        allowedContent: true,
+                        extraPlugins: 'mathjax', 
+                        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
+                    });
+                    // Set Data aman ketika instance baru saja ready (pertama kali dibuka)
+                    CKEDITOR.instances[id].on('instanceReady', function() {
+                        this.setData('');
+                    });
+                });
                 isEditorReady = true;
+            } else {
+                // Modal dibuka untuk kedua kalinya, cukup SetData
+                CKEDITOR.instances.formSoalTeks.setData('');
+                CKEDITOR.instances.formSoalOpsiA.setData('');
+                CKEDITOR.instances.formSoalOpsiB.setData('');
+                CKEDITOR.instances.formSoalOpsiC.setData('');
+                CKEDITOR.instances.formSoalOpsiD.setData('');
             }
-
-            setTimeout(() => {
-                if(CKEDITOR.instances.formSoalTeks) {
-                    CKEDITOR.instances.formSoalTeks.setData('');
-                    CKEDITOR.instances.formSoalOpsiA.setData('');
-                    CKEDITOR.instances.formSoalOpsiB.setData('');
-                    CKEDITOR.instances.formSoalOpsiC.setData('');
-                    CKEDITOR.instances.formSoalOpsiD.setData('');
-                }
-            }, 300);
             
             gantiPetunjukSoal();
         }
@@ -744,22 +744,50 @@
             document.getElementById('formSoalTipe').value = s.tipe;
             document.getElementById('formSoalKunci').value = s.jawabanBenarStr;
 
+            document.getElementById('formSoalTeks').value = s.soal;
+            document.getElementById('formSoalOpsiA').value = s.opsi[0] || '';
+            document.getElementById('formSoalOpsiB').value = s.opsi[1] || '';
+            document.getElementById('formSoalOpsiC').value = s.opsi[2] || '';
+            document.getElementById('formSoalOpsiD').value = s.opsi[3] || '';
+
             document.getElementById('modalFormSoal').style.display = 'flex';
 
             if (!isEditorReady) {
-                initCKEditor();
+                const tb = [
+                    { name: 'document', items: [ 'Source' ] },
+                    { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                    { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
+                    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                    { name: 'insert', items: [ 'Image', 'Table', 'Mathjax', 'SpecialChar' ] },
+                    { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+                    { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
+                ];
+                const editors = ['formSoalTeks', 'formSoalOpsiA', 'formSoalOpsiB', 'formSoalOpsiC', 'formSoalOpsiD'];
+                editors.forEach(id => {
+                    CKEDITOR.replace(id, { 
+                        height: (id === 'formSoalTeks' ? 150 : 80), 
+                        toolbar: tb,
+                        allowedContent: true,
+                        extraPlugins: 'mathjax', 
+                        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
+                    });
+                });
+                
+                // Gunakan callback on ready agar tidak crash di awal
+                CKEDITOR.instances.formSoalTeks.on('instanceReady', function() { this.setData(s.soal); });
+                CKEDITOR.instances.formSoalOpsiA.on('instanceReady', function() { this.setData(s.opsi[0] || ''); });
+                CKEDITOR.instances.formSoalOpsiB.on('instanceReady', function() { this.setData(s.opsi[1] || ''); });
+                CKEDITOR.instances.formSoalOpsiC.on('instanceReady', function() { this.setData(s.opsi[2] || ''); });
+                CKEDITOR.instances.formSoalOpsiD.on('instanceReady', function() { this.setData(s.opsi[3] || ''); });
+                
                 isEditorReady = true;
+            } else {
+                CKEDITOR.instances.formSoalTeks.setData(s.soal);
+                CKEDITOR.instances.formSoalOpsiA.setData(s.opsi[0] || '');
+                CKEDITOR.instances.formSoalOpsiB.setData(s.opsi[1] || '');
+                CKEDITOR.instances.formSoalOpsiC.setData(s.opsi[2] || '');
+                CKEDITOR.instances.formSoalOpsiD.setData(s.opsi[3] || '');
             }
-
-            setTimeout(() => {
-                if(CKEDITOR.instances.formSoalTeks) {
-                    CKEDITOR.instances.formSoalTeks.setData(s.soal);
-                    CKEDITOR.instances.formSoalOpsiA.setData(s.opsi[0] || '');
-                    CKEDITOR.instances.formSoalOpsiB.setData(s.opsi[1] || '');
-                    CKEDITOR.instances.formSoalOpsiC.setData(s.opsi[2] || '');
-                    CKEDITOR.instances.formSoalOpsiD.setData(s.opsi[3] || '');
-                }
-            }, 300);
             
             gantiPetunjukSoal();
         }
