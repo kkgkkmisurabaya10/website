@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- CKEditor Full untuk Rumus & Gambar -->
     <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
@@ -160,9 +161,9 @@
             </div>
             
             <div id="admin_sync">
-                <h3 style="color:var(--primary); margin-top: 0;">Sinkronisasi Master Data Spreadsheet ↔ Hosting</h3>
+                <h3 style="color:var(--primary); margin-top: 0;">Sinkronisasi Data Spreadsheet ↔ Hosting</h3>
                 <button class="btn-custom" onclick="adminSyncToHosting()" style="padding: 15px; font-size: 1.05rem;">📥 1. Tarik Master Data ke Hosting</button>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">* Backup hasil ujian langsung gunakan menu Rekap CSV/Excel di bawah.</p>
+                <button class="btn-custom btn-secondary" onclick="adminPushToSheet()" style="padding: 15px; font-size: 1.05rem;">📤 2. Backup Hasil Pengerjaan ke Sheet</button>
             </div>
 
             <div id="admin_peserta" style="display: none;">
@@ -265,17 +266,18 @@
                 </div>
             </div>
 
-            <label style="margin-bottom:2px;">Teks Soal <span style="font-weight:normal; color:#666;">(Bisa Copy-Paste dari Word / Gambar via Icon Image / Rumus $math$)</span>:</label>
+            <label style="margin-bottom:2px;">Teks Soal <span style="font-weight:normal; color:#666;">(Bisa Copy-Paste dari Word / Gambar / Rumus $math$)</span>:</label>
+            <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalTeks')" style="padding:0; border:none; background:transparent;"></div>
             <textarea id="formSoalTeks" name="formSoalTeks"></textarea>
             
             <div id="opsiContainer" style="margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 6px; border: 1px solid #ddd;">
-                <label style="margin-top:0; margin-bottom:2px;">Opsi A:</label> 
+                <label style="margin-top:0; margin-bottom:2px;">Opsi A:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiA')" style="padding:0; border:none; background:transparent;"></div>
                 <textarea id="formSoalOpsiA" name="formSoalOpsiA"></textarea><br>
-                <label style="margin-top:0; margin-bottom:2px;">Opsi B:</label> 
+                <label style="margin-top:0; margin-bottom:2px;">Opsi B:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiB')" style="padding:0; border:none; background:transparent;"></div>
                 <textarea id="formSoalOpsiB" name="formSoalOpsiB"></textarea><br>
-                <label style="margin-top:0; margin-bottom:2px;">Opsi C:</label> 
+                <label style="margin-top:0; margin-bottom:2px;">Opsi C:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiC')" style="padding:0; border:none; background:transparent;"></div>
                 <textarea id="formSoalOpsiC" name="formSoalOpsiC"></textarea><br>
-                <label style="margin-top:0; margin-bottom:2px;">Opsi D:</label> 
+                <label style="margin-top:0; margin-bottom:2px;">Opsi D:</label> <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalOpsiD')" style="padding:0; border:none; background:transparent;"></div>
                 <textarea id="formSoalOpsiD" name="formSoalOpsiD"></textarea>
             </div>
             
@@ -393,12 +395,13 @@
     <footer class="footer">Support by Belajar Inovasi (MadrasahHebat)</footer>
 
     <script>
-        const API_URL = 'https://cbt-belajar-inovasi.my.id/tka/api.php'; 
+        const API_URL = 'https://mibaiturrahmangubeng.sch.id/tka/api.php'; 
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbxFRgRkDYyuqt9McsFt9633sFvx20s_376hthFkIutmZw4r5Q_IYMxShP5JUthOOI-4qg/exec';
         
         let soalData = [], jawabanSiswa = [], currentSoal = 0, detikTersisa, timerId, pingId;
         let globalProfile = {}; let daftarUjianGlobal = []; let dataLaporanAdmin = []; let dataLaporanGuru = [];
         let isSubmitting = false; let cheatCount = 0;
+        let lastPingTime = 0; 
 
         document.addEventListener('DOMContentLoaded', () => { 
             initAntiCheatSiswa();
@@ -425,7 +428,7 @@
             location.reload();
         }
 
-        // FUNGSI BARU: Inisialisasi ulang CKEditor setiap Modal Dibuka
+        // FUNGSI RENDER ULANG CKEDITOR YANG BUG FREE (MENGHANCURKAN & MERENDER ULANG KETIKA DIPANGGIL)
         function initCKEditor() {
             const tb = [
                 { name: 'document', items: [ 'Source' ] },
@@ -445,11 +448,22 @@
                     height: (id === 'formSoalTeks' ? 150 : 80), 
                     toolbar: tb,
                     allowedContent: true,
-                    extraPlugins: 'mathjax,uploadimage', 
-                    uploadUrl: API_URL + '?action=upload_image',
+                    extraPlugins: 'mathjax,base64image,pastefromword', 
                     mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML'
                 });
             });
+        }
+
+        function insertImage(fileInput, editorId) {
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgHtml = `<img src="${e.target.result}" style="max-width:100%; height:auto;" />`;
+                    CKEDITOR.instances[editorId].insertHtml(imgHtml);
+                    fileInput.value = ""; 
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
         }
 
         function initAntiCheatSiswa() {
@@ -617,6 +631,11 @@
                 if(data.status==='error') Swal.fire('Gagal', data.message, 'error'); else { Swal.fire('Berhasil', 'Sinkronisasi Master Sukses', 'success'); muatDashboardAdmin();}
             } catch(e) { Swal.fire('Error', 'Gagal menghubungi Apps Script', 'error'); }
         }
+        async function adminPushToSheet() {
+            Swal.fire({ title: 'Backup Hasil', text: 'Mendorong data pengerjaan ke Spreadsheet...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+            try { const res = await fetch(`${GAS_URL}?action=pullFromHost`); const data = await res.json(); Swal.fire('Berhasil', data.message, 'success'); } 
+            catch(e) { Swal.fire('Error', 'Gagal membackup.', 'error'); }
+        }
 
         function downloadTemplate() {
             const ws = XLSX.utils.aoa_to_sheet([["NISN", "Username", "Nama Lengkap", "Tgl Lahir (YYYY-MM-DD)", "Password", "Asal Madrasah"]]);
@@ -665,11 +684,11 @@
         async function loadSoalAdmin() {
             const kode = document.getElementById('adminSoalSelect').value;
             const tbody = document.querySelector('#tabelSoalAdmin tbody'); tbody.innerHTML = '<tr><td colspan="5" align="center">Memuat...</td></tr>';
-            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode, role: 'admin'}) });
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode}) });
             const data = await res.json(); tbody.innerHTML = '';
             if(!data.soal || data.soal.length === 0) { tbody.innerHTML = '<tr><td colspan="5" align="center">Soal kosong.</td></tr>'; return; }
             
-            window.adminSoalList = data.soal; // Simpan di global untuk modal Edit
+            window.adminSoalList = data.soal; 
             
             data.soal.forEach((s, i) => {
                 const hapusHtml = s.soal.replace(/<[^>]*>?/gm, ''); 
@@ -683,7 +702,7 @@
             const pKunci = document.getElementById('petunjukKunci');
             if(tipe === 'PGS') pKunci.textContent = "(Misal: A)";
             else if(tipe === 'MCMA') pKunci.textContent = "(Misal: A, B)";
-            else if(tipe === 'KATEGORI') pKunci.textContent = "(Misal: {\"A\":\"Benar\", \"B\":\"Salah\", \"C\":\"Benar\"})";
+            else if(tipe === 'KATEGORI') pKunci.textContent = "(Misal: A:Benar, B:Salah, C:Benar)";
         }
 
         function bukaModalTambahSoal() {
@@ -692,19 +711,16 @@
             document.getElementById('formSoalId').value = '';
             document.getElementById('formSoalKunci').value = '';
             
-            // 1. Tulis Data (Kosongkan) ke Textarea SEBELUM memanggil editor
             document.getElementById('formSoalTeks').value = '';
             document.getElementById('formSoalOpsiA').value = '';
             document.getElementById('formSoalOpsiB').value = '';
             document.getElementById('formSoalOpsiC').value = '';
             document.getElementById('formSoalOpsiD').value = '';
 
-            // 2. Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
             
-            // 3. Jalankan Inisialisasi CKEditor setelah Modal Tampil agar tidak hilang
+            // Panggil init CKEditor SELETAH textarea terisi dan div tampil
             initCKEditor();
-            
             gantiPetunjukSoal();
         }
 
@@ -717,19 +733,17 @@
             document.getElementById('formSoalTipe').value = s.tipe;
             document.getElementById('formSoalKunci').value = s.jawabanBenarStr;
             
-            // 1. Tulis Data (Sesuai Soal) ke Textarea SEBELUM memanggil editor
+            // Tulis Teks ke Dalam Tag Textarea Dulu, sebelum Modal & CKEditor bekerja
             document.getElementById('formSoalTeks').value = s.soal;
             document.getElementById('formSoalOpsiA').value = s.opsi[0] || '';
             document.getElementById('formSoalOpsiB').value = s.opsi[1] || '';
             document.getElementById('formSoalOpsiC').value = s.opsi[2] || '';
             document.getElementById('formSoalOpsiD').value = s.opsi[3] || '';
 
-            // 2. Tampilkan Modal Terlebih Dahulu
             document.getElementById('modalFormSoal').style.display = 'flex';
 
-            // 3. Jalankan Inisialisasi CKEditor setelah Modal Tampil agar tidak hilang
+            // Panggil init CKEditor SELETAH textarea terisi dan div tampil
             initCKEditor();
-            
             gantiPetunjukSoal();
         }
 
@@ -787,9 +801,18 @@
         }
 
         function downloadRekapExcelAdmin() {
-            const madrasah = document.getElementById('filterMadrasahAdmin').value;
-            const kode = document.getElementById('filterUjianAdmin').value;
-            window.open(`${API_URL}?action=export_excel&role_req=admin&madrasah=${madrasah}&kode=${kode}`, "_blank");
+            if(!dataLaporanAdmin || dataLaporanAdmin.length === 0) { Swal.fire('Info', 'Tidak ada data untuk diunduh.', 'info'); return; }
+            Swal.fire({ title: 'Membuat File Excel...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+            
+            let excelData = [];
+            dataLaporanAdmin.forEach(d => {
+                let rowData = { "NISN": d.nisn, "Nama Peserta": d.nama_lengkap, "Asal Madrasah": d.madrasah, "Kode Ujian": d.kode_ujian, "Skor Akhir": d.skor, "Waktu Penyelesaian": d.waktu_selesai };
+                let jwb = {}; try { jwb = JSON.parse(d.jawaban_json); } catch(e){}
+                for(const key in jwb) { rowData[`Soal ${key}`] = typeof jwb[key] === 'object' ? JSON.stringify(jwb[key]) : jwb[key]; }
+                excelData.push(rowData);
+            });
+            const ws = XLSX.utils.json_to_sheet(excelData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Rekap Hasil");
+            XLSX.writeFile(wb, "Rekap_CBT_Admin.xlsx"); Swal.close();
         }
 
         async function muatPengaturanAkses() {
@@ -898,7 +921,7 @@
             if(!uji || uji.allow_download != 1) { Swal.fire('Akses Ditutup', 'Panitia/Admin belum membuka akses cetak PDF untuk mapel ini.', 'info'); return; }
             
             Swal.fire({ title: 'Menyusun Naskah...', didOpen: () => { Swal.showLoading(); }});
-            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode, role: 'guru'}) });
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kode}) });
             const data = await res.json();
             
             let html = `<html><head><title>Naskah Soal - ${kode}</title>
@@ -944,7 +967,27 @@
         }
 
         function downloadRekapExcelGuru() {
-            window.open(`${API_URL}?action=export_excel&role_req=guru&madrasah=${globalProfile.madrasah}&kode=ALL`, "_blank");
+            if(!dataLaporanGuru || dataLaporanGuru.length === 0) { Swal.fire('Info', 'Tidak ada data untuk diunduh.', 'info'); return; }
+            Swal.fire({ title: 'Membuat File Excel...', didOpen: () => { Swal.showLoading(); }});
+            let excelData = [];
+            dataLaporanGuru.forEach(d => {
+                let rowData = { "NISN": d.nisn, "Nama Peserta": d.nama_lengkap, "Asal Madrasah": d.madrasah, "Kode Ujian": d.kode_ujian, "Skor Akhir": d.skor, "Waktu Selesai": d.waktu_selesai };
+                let jwb = {}; try { jwb = JSON.parse(d.jawaban_json); } catch(e){}
+                for(const key in jwb) { rowData[`Soal ${key}`] = typeof jwb[key] === 'object' ? JSON.stringify(jwb[key]) : jwb[key]; }
+                excelData.push(rowData);
+            });
+            const ws = XLSX.utils.json_to_sheet(excelData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Rekap Ujian Guru");
+            XLSX.writeFile(wb, "Rekap_CBT_Guru.xlsx"); Swal.close();
+        }
+
+        // --- SISTEM THROTTLING PING ---
+        function sendPing() {
+            const now = Date.now();
+            // Batasi agar ping hanya terkirim min setiap 10 detik meski diklik cepat, menjaga server tetap ringan
+            if (now - lastPingTime > 10000) { 
+                lastPingTime = now;
+                fetch(`${API_URL}?action=ping_monitoring`, { method: 'POST', body: JSON.stringify({nisn: globalProfile.username, nama: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kode: globalProfile.kodeUjian}) }).catch(e=>{});
+            }
         }
 
         // --- UJIAN PESERTA ---
@@ -952,7 +995,7 @@
             globalProfile.kodeUjian = kodeUjian;
             document.getElementById('loginScreen').innerHTML = "<div style='text-align:center; padding:50px;'><h2 style='color:var(--primary)'>Mempersiapkan Lembar Soal...</h2></div>";
 
-            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kodeUjian, role: 'peserta'}) });
+            const res = await fetch(`${API_URL}?action=get_soal`, { method: 'POST', body: JSON.stringify({kode_ujian: kodeUjian}) });
             const data = await res.json();
             
             if(data.status === 'ok'){
@@ -977,20 +1020,18 @@
                 const el = document.documentElement; if (el.requestFullscreen) el.requestFullscreen().catch(e => console.log(e));
                 
                 tampilkanSoal(currentSoal); renderNavigasi();
+                
+                // Set Interval Ping dikurangi menjadi per 5 Menit (300000 ms) sesuai request (Optimasi Server)
+                pingId = setInterval(sendPing, 300000); 
+                sendPing(); // Ping saat baru mulai
+                
                 timerId = setInterval(() => { 
                     detikTersisa--; 
                     if(detikTersisa % 5 === 0) localStorage.setItem('cbt_time_' + kodeUjian, detikTersisa);
                     updateTimerUI(); 
                     if(detikTersisa <= 0) { clearInterval(timerId); submitKuis(true); } 
                 }, 1000);
-                
-                // Ping interval diperpanjang jadi 5 menit (300000 ms) agar DB tidak hang
-                pingId = setInterval(() => { sendPing(); }, 300000);
             }
-        }
-        
-        function sendPing() {
-            fetch(`${API_URL}?action=ping_monitoring`, { method: 'POST', body: JSON.stringify({nisn: globalProfile.username, nama: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kode: globalProfile.kodeUjian}) });
         }
 
         function updateTimerUI() {
@@ -1008,7 +1049,9 @@
         function tampilkanSoal(idx) {
             currentSoal = idx; 
             localStorage.setItem('cbt_nav_' + globalProfile.kodeUjian, currentSoal);
-            sendPing(); // Ping monitoring ter-trigger hanya saat siswa beraktivitas pindah soal
+            
+            // Trigger ping saat peserta berpindah soal
+            sendPing();
             
             const soal = soalData[idx];
             document.getElementById('nomorSoalDisplay').textContent = `Soal No. ${idx + 1} / ${soalData.length}`;
@@ -1078,25 +1121,43 @@
             clearInterval(timerId); clearInterval(pingId);
             Swal.fire({ title: 'Mengamankan Jawaban...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
             
-            const finalObjek = {};
-            soalData.forEach((soal, i) => { 
-                const j = jawabanSiswa[i]; 
-                if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j); 
+            let totalScore = 0;
+            soalData.forEach((soal, i) => {
+                const ansS = jawabanSiswa[i]; const ansK = soal.jawabanBenar;
+                if (!ansS || Object.keys(ansS).length === 0) return;
+                if (soal.tipe === 'PGS' && ansK.includes(Object.keys(ansS)[0])) totalScore += 1;
+                else if (soal.tipe === 'MCMA') { let m = 0, w = 0; Object.keys(ansS).forEach(k => { if (ansK.includes(k)) m++; else w++; }); if (ansK.length > 0) totalScore += Math.max(0, (m - w) / ansK.length); } 
+                else if (soal.tipe === 'KATEGORI') { let c = 0; for (const k in ansK) { if (ansS[k] === ansK[k]) c++; } if (Object.keys(ansK).length > 0) totalScore += c / Object.keys(ansK).length; }
             });
+            const finalObjek = {};
+            soalData.forEach((soal, i) => { const j = jawabanSiswa[i]; if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j); });
 
-            // PENILAIAN 100% DI SERVER (Server-Side Scoring). JS hanya kirim JSON Jawaban Siswa.
-            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, jawabanPeserta: finalObjek };
+            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, skor: (totalScore / soalData.length) * 100, jawabanPeserta: finalObjek };
+            
             try {
-                await fetch(`${API_URL}?action=submit_jawaban`, { method: 'POST', body: JSON.stringify(payload) });
-                
-                // Hapus sesi storage
-                localStorage.removeItem('cbt_ans_' + globalProfile.kodeUjian);
-                localStorage.removeItem('cbt_time_' + globalProfile.kodeUjian);
-                localStorage.removeItem('cbt_nav_' + globalProfile.kodeUjian);
-                
-                document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:6rem; margin:0;'>🎉</h1><h2 style='color:#2e7d32; font-size:2.5rem; margin-top:10px;'>Ujian Selesai!</h2><p style='color:#555; font-size:1.2rem; margin-top:5px;'>Jawaban Anda telah direkam oleh sistem.</p><button onclick="logout()" style="padding:10px 20px; background:#00796b; color:white; border:none; border-radius:5px; margin-top:20px; cursor:pointer;">Keluar</button></div>`;
-                Swal.close();
-            } catch (e) { Swal.fire('Error Jaringan', 'Sistem mendeteksi kegagalan jaringan saat mengirim.', 'error'); isSubmitting = false; }
+                // USAHA 1: Kirm Ke Hosting Utama
+                const response = await fetch(`${API_URL}?action=submit_jawaban`, { method: 'POST', body: JSON.stringify(payload) });
+                const jsonRes = await response.json();
+                if(jsonRes.status !== 'success') throw new Error('API Error');
+            } catch (e) { 
+                // USAHA 2: Fallback Ke Google Sheet Jika Hosting Gagal / Down
+                try {
+                    payload.action = 'submit_jawaban_fallback';
+                    await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+                } catch(error) {
+                    Swal.fire('Error Koneksi', 'Gagal menghubungi Server Utama & Server Cadangan. Jangan tutup ujian, periksa internet Anda dan coba lagi.', 'error');
+                    isSubmitting = false;
+                    return;
+                }
+            }
+            
+            // JIKA BERHASIL (Hosting / Spreadsheet)
+            localStorage.removeItem('cbt_ans_' + globalProfile.kodeUjian);
+            localStorage.removeItem('cbt_time_' + globalProfile.kodeUjian);
+            localStorage.removeItem('cbt_nav_' + globalProfile.kodeUjian);
+            
+            document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:6rem; margin:0;'>🎉</h1><h2 style='color:#2e7d32; font-size:2.5rem; margin-top:10px;'>Ujian Selesai!</h2><p style='color:#555; font-size:1.2rem; margin-top:5px;'>Jawaban Anda telah direkam oleh sistem.</p><button onclick="logout()" style="padding:10px 20px; background:#00796b; color:white; border:none; border-radius:5px; margin-top:20px; cursor:pointer;">Keluar</button></div>`;
+            Swal.close();
         }
     </script>
 </body>
