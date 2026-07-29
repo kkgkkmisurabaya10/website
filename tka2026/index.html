@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRYOUT CBT - SERVERLESS EDITION</title>
+    <!-- Masukkan seluruh tag <style> dan file eksternal bawaan Anda di sini (tanpa diubah) -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
+    <!-- [Semua CSS lama dari Source 1 tempelkan di sini...] -->
+</head>
+<body>
+    <!-- [Semua Elemen HTML (Login Screen, Admin, Guru, dll) dari Source 1 tempelkan persis di sini tanpa diubah...] -->
+
+    <script>
+        // GANTI DENGAN URL DEPLOYMENT APLIKASI WEB APPS SCRIPT ANDA
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyFlkYo3-Eg8dYZl4T43SuHKPjTdkjN4E4CnaK24zMlIspuWivgv2jADOBGV3KXzERmqw/exec'; 
+        
+        let soalData = [], jawabanSiswa = [], currentSoal = 0, detikTersisa, timerId, pingId;
+        let globalProfile = {}; let daftarUjianGlobal = []; let dataLaporanAdmin = []; let dataLaporanGuru = [];
+        let isSubmitting = false; let cheatCount = 0; let lastPingTime = 0; 
+        let isEditorReady = false; 
+
+        // Fungsi fetch pembantu khusus Apps Script untuk mencegah Limitasi CORS Parameter
+        async function fetchGAS(payload) {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            return await response.json();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            initAntiCheatSiswa();
+            checkSession(); 
+        });
+
+        function checkSession() {
+            const session = localStorage.getItem('cbt_session_11');
+            if(session) {
+                globalProfile = JSON.parse(session);
+                loadDaftarUjian().then(() => {
+                    if(globalProfile.role === 'admin') { showAdmin(); muatPengaturanAkses(); muatDashboardAdmin(); muatHasilAdmin(); muatPesertaAdmin(); }
+                    else if(globalProfile.role === 'guru') { showGuru(); muatDashboardGuru(); cetakHasil(); muatSiswaGuru(); }
+                    else { loadSoalPeserta(globalProfile.kodeUjian, true); }
+                });
+            } else {
+                toggleLoginFields(); 
+                loadDaftarUjian(); 
+            }
+        }
+        
+        // ... (Fungsi UI: logout, insertImage, initAntiCheatSiswa, togglePasswordVisibility, toggleLoginFields, showAdmin, switchAdminTab, showGuru, switchGuruTab persis seperti semula) ...
+
+        async function loadDaftarUjian() {
+            try {
+                const data = await fetchGAS({ action: 'get_ujian' });
+                const sel = document.getElementById('kodeUjianSelect'); const selGuru = document.getElementById('guruKodeUjianSelect');
+                const formSoalKode = document.getElementById('formSoalKode'); const selAdmin = document.getElementById('adminSoalSelect');
+                const filterAdmin = document.getElementById('filterUjianAdmin');
+                
+                if(sel) sel.innerHTML = ''; if(selGuru) selGuru.innerHTML = ''; if(selAdmin) selAdmin.innerHTML = ''; if(formSoalKode) formSoalKode.innerHTML = '';
+                if(filterAdmin) filterAdmin.innerHTML = '<option value="ALL">Semua Ujian</option>';
+
+                if(data.status === 'ok' && data.daftar.length > 0){
+                    daftarUjianGlobal = data.daftar;
+                    data.daftar.forEach(u => { 
+                        if(sel) sel.innerHTML += `<option value="${u.kode_ujian}">${u.judul}</option>`; 
+                        if(selGuru) selGuru.innerHTML += `<option value="${u.kode_ujian}">${u.judul}</option>`;
+                        if(selAdmin) selAdmin.innerHTML += `<option value="${u.kode_ujian}">${u.judul}</option>`;
+                        if(formSoalKode) formSoalKode.innerHTML += `<option value="${u.kode_ujian}">${u.judul}</option>`;
+                        if(filterAdmin) filterAdmin.innerHTML += `<option value="${u.kode_ujian}">${u.judul}</option>`;
+                    });
+                } else { if(sel) sel.innerHTML = '<option value="">(Tidak ada ujian)</option>'; }
+            } catch (e) {}
+        }
+
+        async function prosesLogin() {
+            const role = document.getElementById('roleSelect').value;
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+
+            if (!username || !password) { Swal.fire('Gagal', 'Username & Password wajib diisi!', 'error'); return; }
+            let payload = { action: 'login', role: role, username: username, password: password };
+
+            if(role === 'peserta'){
+                payload.tgl_lahir = document.getElementById('tanggalLahirInput').value;
+                payload.kodeUjian = document.getElementById('kodeUjianSelect').value;
+                if (!payload.tgl_lahir || !payload.kodeUjian) { Swal.fire('Gagal', 'Pilih Ujian & Isi Tanggal Lahir!', 'error'); return; }
+            }
+
+            document.getElementById('btnMulaiUjian').textContent = "MEMPROSES Otorisasi...";
+            try {
+                const data = await fetchGAS(payload);
+                if (data.status === 'ok') {
+                    globalProfile = data.data;
+                    if(role === 'peserta') globalProfile.kodeUjian = payload.kodeUjian;
+                    localStorage.setItem('cbt_session_11', JSON.stringify(globalProfile));
+                    if (role === 'admin') { showAdmin(); muatPengaturanAkses(); muatDashboardAdmin(); muatHasilAdmin(); muatPesertaAdmin(); }
+                    else if (role === 'guru') { showGuru(); muatDashboardGuru(); cetakHasil(); muatSiswaGuru(); }
+                    else loadSoalPeserta(payload.kodeUjian, false);
+                } else { Swal.fire('Akses Ditolak', data.message, 'warning'); }
+            } catch (e) { Swal.fire('Error', 'Gagal terhubung ke server.', 'error'); }
+            document.getElementById('btnMulaiUjian').textContent = "MASUK PORTAL";
+        }
+
+        // ===============================================
+        // MENGGANTI SEMUA fetch() MENJADI fetchGAS()
+        // ===============================================
+        
+        async function muatDashboardAdmin() {
+            try {
+                const data = await fetchGAS({ action: 'get_dashboard_admin' });
+                if(data.status === 'ok') { /* logik render html sama seperti original */ }
+            } catch(e){}
+        }
+
+        async function muatPesertaAdmin() {
+            const madrasah = document.getElementById('filterSiswaAdmin').value;
+            const tbody = document.querySelector('#tabelSiswaAdmin tbody'); tbody.innerHTML = '<tr><td colspan="5" align="center">Memuat data...</td></tr>';
+            try {
+                const data = await fetchGAS({ action: 'get_peserta_all', madrasah: madrasah });
+                tbody.innerHTML = '';
+                // ... render tabel 
+            } catch (e) {}
+        }
+
+        // ... Terapkan pola `fetchGAS({ action: 'nama_aksi', param1: value1 })` 
+        // ke semua fungsi: muatHasilAdmin(), muatMonitoring(), simpanJadwal(), dll.
+
+        // FUNGSI PENTING: Pengumpulan Soal
+        async function prosesKirimFinal() {
+            clearInterval(timerId); clearInterval(pingId);
+            Swal.fire({ title: 'Mengamankan Jawaban...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+            
+            // ... kalkulasi nilai persis seperti kode Anda ... 
+            
+            const payload = { 
+                action: 'submit_jawaban', 
+                nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, 
+                madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, 
+                skor: (totalScore / soalData.length) * 100, 
+                jawabanPeserta: finalObjek 
+            };
+            
+            try {
+                // HANYA BUTUH 1 TEMBAKAN KARENA KINI MENGGUNAKAN SERVERLESS GOOGLE
+                const jsonRes = await fetchGAS(payload);
+                if(jsonRes.status !== 'success') throw new Error('API Error');
+            } catch (e) { 
+                Swal.fire('Error Koneksi', 'Gagal menghubungi Server Database Sheets.', 'error');
+                isSubmitting = false; return;
+            }
+            
+            localStorage.removeItem('cbt_ans_' + globalProfile.kodeUjian);
+            localStorage.removeItem('cbt_time_' + globalProfile.kodeUjian);
+            localStorage.removeItem('cbt_nav_' + globalProfile.kodeUjian);
+            
+            document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:6rem; margin:0;'>🎉</h1><h2 style='color:#2e7d32; font-size:2.5rem; margin-top:10px;'>Ujian Selesai!</h2><p style='color:#555; font-size:1.2rem; margin-top:5px;'>Jawaban Anda telah direkam oleh sistem Google Sheets.</p><button onclick="logout()" style="padding:10px 20px; background:#00796b; color:white; border:none; border-radius:5px; margin-top:20px; cursor:pointer;">Keluar</button></div>`;
+            Swal.close();
+        }
+
+        // PING MONITORING OTOMATIS
+        function sendPing() {
+            const now = Date.now();
+            if (now - lastPingTime > 10000) { 
+                lastPingTime = now;
+                fetchGAS({
+                    action: 'ping_monitoring', 
+                    nisn: globalProfile.username, nama: globalProfile.nama_lengkap, 
+                    madrasah: globalProfile.madrasah, kode: globalProfile.kodeUjian
+                }).catch(e=>{});
+            }
+        }
+    </script>
+</body>
+</html>
