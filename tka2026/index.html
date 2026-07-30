@@ -14,6 +14,7 @@
     
     <!-- CKEditor Full untuk Rumus & Gambar -->
     <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
+
     <style>
         :root { --primary: #00796b; --primary-dark: #004d40; --accent: #1976d2; --danger: #d32f2f; --bg: #f4f7f6; --text: #333;}
         * { box-sizing: border-box; }
@@ -26,6 +27,7 @@
         .login-box { background: white; padding: 45px 30px 30px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; position: relative; margin: auto; border-top: 4px solid var(--primary); }
         .login-logo { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 5px; }
         .login-logo img { height: 100%; width: 100%; object-fit: contain; border-radius: 50%; }
+
         label { font-weight: 500; display: block; margin-top: 15px; margin-bottom: 5px; color: #444; font-size: 0.9rem;}
         input[type="text"], input[type="password"], input[type="date"], select, input[type="number"], input[type="file"], input[type="datetime-local"] { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; background: #f9fbfd; font-family: inherit;}
         input:focus, select:focus { border-color: var(--primary); outline: none; background: white;}
@@ -51,6 +53,7 @@
         .stat-card { background: #fff; border: 1px solid #e0e0e0; border-left: 5px solid var(--primary); padding: 15px; border-radius: 8px; flex: 1; min-width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .stat-card h4 { margin: 0 0 5px 0; color: #666; font-size: 0.85rem; text-transform: uppercase; }
         .stat-card h2 { margin: 0; color: var(--primary); font-size: 1.8rem; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; border-radius: 4px; overflow: hidden; }
         table, th, td { border: 1px solid #e0e0e0; }
         th, td { padding: 12px; text-align: left; }
@@ -65,7 +68,7 @@
         /* MODAL KHUSUS EDITOR */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
         .modal-content { background-color: #fff; padding: 30px; border-radius: 8px; width: 95%; max-width: 1000px; max-height: 95vh; overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        
+
         /* UJIAN LAYOUT (Menarik) */
         .main-container { display: flex; flex-grow: 1; padding: 20px; gap: 20px; max-width: 1300px; width: 100%; margin: auto; }
         .content-area { flex: 3; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); display: flex; flex-direction: column; border-top: 5px solid var(--primary);}
@@ -96,6 +99,7 @@
         .nav-buttons { display: flex; justify-content: space-between; gap: 15px; margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px;}
         .nav-buttons button { padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;}
         .nav-buttons button:hover { transform: translateY(-2px); }
+
         .soal-image img { max-width: 100%; height: auto; border-radius: 8px; }
         
         .footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 15px 20px; font-size: 0.85rem; width: 100%; margin-top: auto; }
@@ -115,12 +119,14 @@
                 <option value="guru">👨‍🏫 Guru / Pengawas</option>
                 <option value="admin">⚙️ Administrator</option>
             </select>
+
             <div id="pesertaFields">
                 <label>Pilih Ujian</label>
                 <select id="kodeUjianSelect" required><option>Memuat Ujian...</option></select>
                 <label>Tanggal Lahir</label>
                 <input type="date" id="tanggalLahirInput">
             </div>
+
             <label>Username / NISN</label>
             <input type="text" id="usernameInput" placeholder="Masukkan Username">
             
@@ -129,10 +135,11 @@
                 <input type="password" id="passwordInput" placeholder="Masukkan Password">
                 <span class="toggle-password" onclick="togglePasswordVisibility('passwordInput')">👁️</span>
             </div>
+
             <button id="btnMulaiUjian" class="btn-custom" onclick="prosesLogin()">MASUK PORTAL</button>
         </div>
     </div>
-    
+
     <!-- PANEL ADMIN -->
     <div id="adminScreen" class="dashboard-screen" style="display: none;">
         <div class="header-info" style="width:100%; max-width: 1200px; border-radius: 6px;">
@@ -155,20 +162,15 @@
             
             <div id="admin_sync">
                 <h3 style="color:var(--primary); margin-top: 0;">Status Server (Sistem Serverless)</h3>
-                <div style="background: #e8f5e9; padding: 20px; border-left: 5px solid #4caf50; border-radius: 6px; margin-bottom: 20px;">
+                <div style="background: #e8f5e9; padding: 20px; border-left: 5px solid #4caf50; border-radius: 6px;">
                     <p style="margin: 0; font-weight: bold; color: #2e7d32;">✅ Serverless Cloud Database Aktif</p>
-                    <p style="margin: 5px 0 0 0; color: #555;">Seluruh data sinkron secara real-time langsung ke Google Spreadsheet. Aplikasi ini juga telah dilengkapi sistem Coba Ulang Otomatis anti-crash untuk 10.000 user.</p>
-                </div>
-                <div style="background: #fff3e0; padding: 20px; border-left: 5px solid #ef6c00; border-radius: 6px;">
-                    <p style="margin: 0; font-weight: bold; color: #ef6c00;">🔄 Reset Memori / Cache</p>
-                    <p style="margin: 5px 0 15px 0; color: #555;">Jika Anda mengedit soal, kunci jawaban, atau data akun di Excel, klik tombol di bawah ini agar perubahannya segera berlaku di aplikasi siswa.</p>
-                    <button class="btn-custom btn-warning" onclick="resetCacheSistemAdmin()" style="width:auto; margin:0;">Bersihkan Cache Aplikasi</button>
+                    <p style="margin: 5px 0 0 0; color: #555;">Seluruh data sinkron secara real-time langsung ke Google Spreadsheet. Tidak diperlukan lagi proses Tarik/Push Master Manual ke Hosting luar.</p>
                 </div>
             </div>
-            
+
             <div id="admin_peserta" style="display: none;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-                    <h3 style="color:var(--primary); margin: 0;">Daftar Akun Siswa</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="color:var(--primary); margin: 0;">Daftar Akun Siswa Keseluruhan</h3>
                     <button class="btn-custom btn-warning" onclick="downloadTemplate()" style="width:auto; margin:0;">📥 Format Upload Excel</button>
                 </div>
                 <div style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 6px; background: #fafafa; margin-bottom:15px;">
@@ -184,16 +186,16 @@
                     <table id="tabelSiswaAdmin"><thead><tr><th>NISN</th><th>Nama Peserta</th><th>Password</th><th>Asal Madrasah</th><th>Aksi</th></tr></thead><tbody></tbody></table>
                 </div>
             </div>
-            
+
             <div id="admin_jadwal" style="display: none;">
                 <h3 style="color:var(--primary); margin-top: 0;">Buat / Update Jadwal Ujian</h3>
-                <div style="background: #fafafa; padding: 20px; border: 1px solid #e0e0e0; border-radius: 6px; overflow-x: auto;">
-                    <div style="display:flex; gap:10px; margin-bottom:10px; min-width:600px;">
+                <div style="background: #fafafa; padding: 20px; border: 1px solid #e0e0e0; border-radius: 6px;">
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
                         <div style="flex:1"><label>Kode Ujian</label><input type="text" id="jdw_kode"></div>
                         <div style="flex:2"><label>Judul Ujian</label><input type="text" id="jdw_judul"></div>
                         <div style="flex:1"><label>Nama Sheet Soal</label><input type="text" id="jdw_sheet"></div>
                     </div>
-                    <div style="display:flex; gap:10px; margin-bottom:10px; min-width:600px;">
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
                         <div style="flex:1"><label>Mulai</label><input type="datetime-local" id="jdw_mulai"></div>
                         <div style="flex:1"><label>Selesai</label><input type="datetime-local" id="jdw_selesai"></div>
                         <div style="flex:1"><label>Durasi (Menit)</label><input type="number" id="jdw_durasi" value="90"></div>
@@ -202,9 +204,9 @@
                     <button class="btn-custom" onclick="simpanJadwal()" style="max-width: 200px;">Simpan Jadwal</button>
                 </div>
             </div>
-            
+
             <div id="admin_soal" style="display: none;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h3 style="color:var(--primary); margin: 0;">Bank Soal Ujian</h3>
                     <button class="btn-custom" style="width:auto; margin:0;" onclick="bukaModalTambahSoal()">+ Tambah Soal Baru</button>
                 </div>
@@ -219,17 +221,17 @@
                     </table>
                 </div>
             </div>
-            
+
             <div id="admin_monitor" style="display: none;">
-                <button class="btn-custom btn-secondary" onclick="muatMonitoring('ALL')" style="width:auto; margin-bottom:10px;">🔄 Refresh Live</button>
+                <button class="btn-custom btn-secondary" onclick="muatMonitoring('ALL')" style="width:auto; margin-bottom:10px;">🔄 Refresh</button>
                 <div style="overflow-x:auto;">
                     <table id="tabelMonitorAdmin"><thead><tr><th>NISN</th><th>Nama Peserta</th><th>Asal Madrasah</th><th>Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead><tbody></tbody></table>
                 </div>
             </div>
-            
+
             <div id="admin_hasil" style="display: none;">
                 <h3 style="color:var(--primary); margin-top: 0;">Hasil Ujian & Reset Pengerjaan</h3>
-                <div style="display:flex; gap:10px; align-items:flex-end; margin-bottom: 15px; flex-wrap:wrap;">
+                <div style="display:flex; gap:10px; align-items:flex-end; margin-bottom: 15px;">
                     <div><label style="margin:0">Madrasah:</label><select id="filterMadrasahAdmin" style="width: 200px;"><option value="ALL">Semua Madrasah</option></select></div>
                     <div><label style="margin:0">Ujian:</label><select id="filterUjianAdmin" style="width: 200px;"><option value="ALL">Semua Ujian</option></select></div>
                     <button class="btn-custom" style="margin:0; width:100px;" onclick="muatHasilAdmin()">Terapkan</button>
@@ -239,7 +241,7 @@
                     <table id="tabelHasilAdmin"><thead><tr><th>NISN</th><th>Nama Peserta</th><th>Madrasah</th><th>Ujian</th><th>Skor</th><th>Aksi Reset</th></tr></thead><tbody></tbody></table>
                 </div>
             </div>
-            
+
             <div id="admin_pengaturan" style="display: none;">
                 <div style="overflow-x:auto;">
                     <table id="tabelPengaturanAdmin"><thead><tr><th>Kode Ujian</th><th>Judul Ujian</th><th>Akses Download PDF Guru</th></tr></thead><tbody></tbody></table>
@@ -247,7 +249,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- MODAL EDITOR RICH TEXT -->
     <div id="modalFormSoal" class="modal">
         <div class="modal-content">
@@ -255,18 +257,17 @@
             <input type="hidden" id="formSoalMode"> 
             <input type="hidden" id="formSoalId">
             
-            <div style="display:flex; gap:15px; flex-wrap:wrap;">
-                <div style="flex:1; min-width: 250px;"><label>Kode Ujian (Target):</label><select id="formSoalKode"></select></div>
-                <div style="flex:1; min-width: 250px;"><label>Tipe Soal:</label>
+            <div style="display:flex; gap:15px;">
+                <div style="flex:1"><label>Kode Ujian (Target):</label><select id="formSoalKode"></select></div>
+                <div style="flex:1"><label>Tipe Soal:</label>
                     <select id="formSoalTipe" onchange="gantiPetunjukSoal()">
                         <option value="PGS">Pilihan Ganda (A, B, C, D)</option>
                         <option value="MCMA">Pilihan Kompleks (Banyak Jawaban)</option>
                         <option value="KATEGORI">Kategori (Benar / Salah)</option>
-                        <option value="SURVEY">Survey Lingkungan / Karakter (Tanpa Nilai)</option>
                     </select>
                 </div>
             </div>
-            
+
             <label style="margin-bottom:2px;">Teks Soal <span style="font-weight:normal; color:#666;">(Bisa Copy-Paste dari Word / Gambar / Rumus $math$)</span>:</label>
             <div class="img-insert-btn"><input type="file" accept="image/*" onchange="insertImage(this, 'formSoalTeks')" style="padding:0; border:none; background:transparent;"></div>
             <textarea id="formSoalTeks" name="formSoalTeks"></textarea>
@@ -282,10 +283,8 @@
                 <textarea id="formSoalOpsiD" name="formSoalOpsiD"></textarea>
             </div>
             
-            <div id="kunciContainer">
-                <label>Kunci Jawaban <span id="petunjukKunci" style="font-weight:normal; color:var(--danger);">(Misal: A)</span>:</label>
-                <input type="text" id="formSoalKunci" placeholder="Ketik kunci jawaban" style="font-size: 1.1rem; font-weight:bold;">
-            </div>
+            <label>Kunci Jawaban <span id="petunjukKunci" style="font-weight:normal; color:var(--danger);">(Misal: A)</span>:</label>
+            <input type="text" id="formSoalKunci" placeholder="Ketik kunci jawaban" style="font-size: 1.1rem; font-weight:bold;">
             
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                 <button class="btn-custom btn-secondary" style="margin:0; width:120px;" onclick="document.getElementById('modalFormSoal').style.display='none'">Tutup</button>
@@ -293,7 +292,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- MODAL EDIT SISWA -->
     <div id="modalEditSiswa" class="modal">
         <div class="modal-content" style="max-width: 400px;">
@@ -309,7 +308,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- PANEL GURU -->
     <div id="guruScreen" class="dashboard-screen" style="display: none;">
         <div class="header-info" style="width:100%; max-width: 1200px; border-radius: 6px;">
@@ -322,6 +321,7 @@
                 <div class="stat-card"><h4>Siswa Selesai</h4><h2 id="grTotSelesai" style="color:#4caf50;">-</h2></div>
                 <div class="stat-card"><h4>Siswa Belum</h4><h2 id="grTotBelum" style="color:var(--danger);">-</h2></div>
             </div>
+
             <div class="menu-tabs">
                 <button onclick="switchGuruTab('administrasi')" id="tabG_administrasi" class="active">🖨️ Cetak Administrasi</button>
                 <button onclick="switchGuruTab('siswa')" id="tabG_siswa">👥 Kelola Siswa</button>
@@ -340,14 +340,17 @@
                     <button class="btn-custom btn-danger" style="width:auto; margin:0; flex-grow: 1;" onclick="guruDownloadSoal()">📥 Cetak Naskah Soal (PDF)</button>
                 </div>
             </div>
+
             <div id="guru_siswa" style="display: none;">
                 <h3 style="color:var(--primary); margin-top: 0;">Data Akun Siswa Madrasah</h3>
                 <div style="overflow-x:auto;"><table id="tabelSiswaGuru"><thead><tr><th>NISN/User</th><th>Nama Lengkap</th><th>Password</th><th>Aksi</th></tr></thead><tbody></tbody></table></div>
             </div>
+
             <div id="guru_monitorG" style="display: none;">
                 <button class="btn-custom btn-secondary" onclick="muatMonitoring(globalProfile.madrasah)" style="width:auto; margin-bottom:10px;">🔄 Refresh Live</button>
                 <div style="overflow-x:auto;"><table id="tabelMonitorGuru"><thead><tr><th>Nama Peserta</th><th>Mapel Ujian</th><th>Status</th><th>Terakhir Aktif</th></tr></thead><tbody></tbody></table></div>
             </div>
+
             <div id="guru_hasilG" style="display: none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                     <h3 style="color:var(--primary); margin:0;">Hasil & Rekapitulasi</h3>
@@ -360,15 +363,15 @@
             </div>
         </div>
     </div>
-    
+
     <!-- LAYAR UJIAN SISWA -->
     <div id="ujianScreen" style="display: none; flex-direction: column; flex-grow: 1;">
         <div class="header-info" style="border-radius: 0 0 15px 15px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
             <div class="header-logo"><h4 id="judulUjianDisplay" style="margin: 0; font-size: 1.3rem;"></h4></div>
             <div style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;"><p style="margin: 0; font-size:1rem;">Peserta: <strong id="namaPesertaDisplay"></strong></p></div>
         </div>
-        <div class="main-container" style="flex-wrap: wrap;">
-            <div class="content-area" style="min-width: 300px;">
+        <div class="main-container">
+            <div class="content-area">
                 <h3 id="nomorSoalDisplay" style="margin-top: 0; color: var(--accent); border-bottom:2px solid #f0f0f0; padding-bottom:15px; font-size: 1.4rem;"></h3>
                 <div id="soalBox" class="soal-image" style="flex-grow: 1; margin-bottom: 30px; font-size: 1.15rem; line-height: 1.7; color: #222;"></div>
                 <div class="nav-buttons">
@@ -378,7 +381,7 @@
                     <button id="finishUjian" style="display: none; background:var(--danger); box-shadow: 0 4px 6px rgba(211,47,47,0.3);" onclick="submitKuis()">SELESAI & KIRIM JAWABAN</button>
                 </div>
             </div>
-            <div class="sidebar-area" style="min-width: 250px;">
+            <div class="sidebar-area">
                 <div class="timer-box">
                     <h3 style="margin:0; color:#555; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Sisa Waktu Pengerjaan</h3>
                     <div id="timerDisplay">--:--</div>
@@ -392,16 +395,16 @@
     </div>
     
     <footer class="footer">Support by Belajar Inovasi (MadrasahHebat)</footer>
-    
+
     <script>
-        // GANTI DENGAN URL DEPLOY ANDA
+        // MASUKKAN LINK APPS SCRIPT ANDA DI SINI
         const API_URL = 'https://script.google.com/macros/s/AKfycbyFlkYo3-Eg8dYZl4T43SuHKPjTdkjN4E4CnaK24zMlIspuWivgv2jADOBGV3KXzERmqw/exec'; 
         
         let soalData = [], jawabanSiswa = [], currentSoal = 0, detikTersisa, timerId, pingId;
         let globalProfile = {}; let daftarUjianGlobal = []; let dataLaporanAdmin = []; let dataLaporanGuru = [];
         let isSubmitting = false; let cheatCount = 0; let lastPingTime = 0; 
         let isEditorReady = false; 
-        
+
         async function fetchGAS(payload) {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -415,7 +418,7 @@
             initAntiCheatSiswa();
             checkSession(); 
         });
-        
+
         function checkSession() {
             const session = localStorage.getItem('cbt_session_11');
             if(session) {
@@ -430,7 +433,7 @@
                 loadDaftarUjian(); 
             }
         }
-        
+
         function logout() {
             localStorage.removeItem('cbt_session_11');
             location.reload();
@@ -455,13 +458,14 @@
                     if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'U')) e.preventDefault();
                 }
             });
+
             window.addEventListener('blur', () => {
                 if(document.getElementById('ujianScreen').style.display === 'flex' && !isSubmitting) {
                     cheatCount++;
                     if(cheatCount >= 3) {
                         Swal.fire({title: 'Pelanggaran Maksimal!', text: 'Anda keluar dari halaman ujian 3x. Ujian Anda diakhiri otomatis.', icon: 'error', allowOutsideClick: false, confirmButtonText: 'Tutup'}).then(()=>{ submitKuis(true); });
                     } else {
-                        Swal.fire({title: 'Peringatan Pelanggaran!', text: `Anda terdeteksi meninggalkan tab halaman ujian. Peringatan ke-${cheatCount} dari 3. Jika mencapai 3x, jawaban akan otomatis terkirim.`, icon: 'warning', confirmButtonText: 'Saya Mengerti'});
+                        Swal.fire({title: 'Peringatan Pelanggaran!', text: `Anda terdeteksi meninggalkan halaman ujian. Peringatan ke-${cheatCount} dari 3. Jika 3x ujian akan tertutup otomatis.`, icon: 'warning', confirmButtonText: 'Saya Mengerti'});
                     }
                 }
             });
@@ -486,6 +490,7 @@
                 
                 if(sel) sel.innerHTML = ''; if(selGuru) selGuru.innerHTML = ''; if(selAdmin) selAdmin.innerHTML = ''; if(formSoalKode) formSoalKode.innerHTML = '';
                 if(filterAdmin) filterAdmin.innerHTML = '<option value="ALL">Semua Ujian</option>';
+
                 if(data.status === 'ok' && data.daftar.length > 0){
                     daftarUjianGlobal = data.daftar;
                     data.daftar.forEach(u => { 
@@ -503,13 +508,16 @@
             const role = document.getElementById('roleSelect').value;
             const username = document.getElementById('usernameInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
+
             if (!username || !password) { Swal.fire('Gagal', 'Username & Password wajib diisi!', 'error'); return; }
             let payload = { action: 'login', role: role, username: username, password: password };
+
             if(role === 'peserta'){
                 payload.tgl_lahir = document.getElementById('tanggalLahirInput').value;
                 payload.kodeUjian = document.getElementById('kodeUjianSelect').value;
                 if (!payload.tgl_lahir || !payload.kodeUjian) { Swal.fire('Gagal', 'Pilih Ujian & Isi Tanggal Lahir!', 'error'); return; }
             }
+
             document.getElementById('btnMulaiUjian').textContent = "MEMPROSES Otorisasi...";
             try {
                 const data = await fetchGAS(payload);
@@ -523,16 +531,6 @@
                 } else { Swal.fire('Akses Ditolak', data.message, 'warning'); }
             } catch (e) { Swal.fire('Error', 'Gagal terhubung ke server.', 'error'); }
             document.getElementById('btnMulaiUjian').textContent = "MASUK PORTAL";
-        }
-        
-        // --- FITUR ADMIN: RESET CACHE ---
-        async function resetCacheSistemAdmin() {
-            Swal.fire({ title: 'Mereset Data Server...', text: 'Ini akan memaksa sistem membaca ulang soal & data terbaru dari Excel.', didOpen: () => { Swal.showLoading(); }});
-            try {
-                const data = await fetchGAS({ action: 'clear_cache' });
-                if(data.status === 'success') Swal.fire('Berhasil', data.msg, 'success');
-                else Swal.fire('Gagal', 'Terjadi kesalahan sistem.', 'error');
-            } catch(e) { Swal.fire('Error', 'Gagal menghubungi server.', 'error'); }
         }
 
         // --- DASHBOARD ADMIN ---
@@ -559,7 +557,6 @@
         }
 
         function showAdmin() { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('adminScreen').style.display = 'flex'; }
-        
         function switchAdminTab(tab) {
             ['sync', 'peserta', 'jadwal', 'soal', 'monitor', 'hasil', 'pengaturan'].forEach(t => {
                 document.getElementById(`admin_${t}`).style.display = 'none'; document.getElementById(`tab_${t}`).classList.remove('active');
@@ -660,22 +657,17 @@
             
             data.soal.forEach((s, i) => {
                 const hapusHtml = s.soal.replace(/<[^>]*>?/gm, ''); 
-                let kunciTampil = s.tipe === 'SURVEY' ? 'N/A' : s.jawabanBenarStr;
                 const btn = `<button class="btn-custom btn-secondary" style="margin:0; padding:6px 12px; font-size:0.85rem;" onclick="bukaModalEditSoal(${i}, '${kode}')">📝 Edit Soal</button>`;
-                tbody.innerHTML += `<tr><td>${s.id}</td><td>${hapusHtml.substring(0, 50)}...</td><td>${s.tipe}</td><td><strong style="color:var(--danger)">${kunciTampil}</strong></td><td>${btn}</td></tr>`;
+                tbody.innerHTML += `<tr><td>${s.id}</td><td>${hapusHtml.substring(0, 50)}...</td><td>${s.tipe}</td><td><strong style="color:var(--danger)">${s.jawabanBenarStr}</strong></td><td>${btn}</td></tr>`;
             });
         }
 
         function gantiPetunjukSoal() {
             const tipe = document.getElementById('formSoalTipe').value;
             const pKunci = document.getElementById('petunjukKunci');
-            const kCont = document.getElementById('kunciContainer');
-            
-            kCont.style.display = 'block';
             if(tipe === 'PGS') pKunci.textContent = "(Misal: A)";
             else if(tipe === 'MCMA') pKunci.textContent = "(Misal: A, B)";
             else if(tipe === 'KATEGORI') pKunci.textContent = "(Misal: A:Benar, B:Salah, C:Benar)";
-            else if(tipe === 'SURVEY') kCont.style.display = 'none'; // Sembunyikan field kunci jawaban
         }
 
         function bukaModalTambahSoal() {
@@ -689,6 +681,7 @@
             document.getElementById('formSoalOpsiB').value = '';
             document.getElementById('formSoalOpsiC').value = '';
             document.getElementById('formSoalOpsiD').value = '';
+
             document.getElementById('modalFormSoal').style.display = 'flex';
             
             if (!isEditorReady) {
@@ -730,14 +723,16 @@
             document.getElementById('formSoalId').value = s.id; 
             document.getElementById('formSoalKode').value = kode;
             document.getElementById('formSoalTipe').value = s.tipe;
-            document.getElementById('formSoalKunci').value = (s.tipe === 'SURVEY') ? '' : s.jawabanBenarStr;
+            document.getElementById('formSoalKunci').value = s.jawabanBenarStr;
+
             document.getElementById('formSoalTeks').value = s.soal;
             document.getElementById('formSoalOpsiA').value = s.opsi[0] || '';
             document.getElementById('formSoalOpsiB').value = s.opsi[1] || '';
             document.getElementById('formSoalOpsiC').value = s.opsi[2] || '';
             document.getElementById('formSoalOpsiD').value = s.opsi[3] || '';
+
             document.getElementById('modalFormSoal').style.display = 'flex';
-            
+
             if (!isEditorReady) {
                 const tb = [
                     { name: 'document', items: [ 'Source' ] },
@@ -788,7 +783,7 @@
             
             Swal.fire({ title: 'Menyimpan ke Server...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
             const data = await fetchGAS(payload);
-            if(data.status === 'success') { document.getElementById('modalFormSoal').style.display = 'none'; loadSoalAdmin(); Swal.fire('Sukses', 'Data Tersimpan', 'success'); } else Swal.fire('Gagal', data.msg, 'error');
+            if(data.status === 'success') { document.getElementById('modalFormSoal').style.display = 'none'; loadSoalAdmin(); Swal.fire('Sukses', 'Data Tersimpan (Realtime)', 'success'); } else Swal.fire('Gagal', data.msg, 'error');
         }
 
         // --- MENU HASIL ADMIN ---
@@ -803,6 +798,7 @@
                 
                 const selMad = document.getElementById('filterMadrasahAdmin');
                 if(selMad.options.length <= 1) { data.list_madrasah.forEach(m => { selMad.innerHTML += `<option value="${m}">${m}</option>`; }); }
+
                 tbody.innerHTML = '';
                 if(data.data.length === 0) tbody.innerHTML = '<tr><td colspan="6" align="center">Belum ada siswa yang selesai mengerjakan.</td></tr>';
                 data.data.forEach(d => { 
@@ -847,7 +843,6 @@
                 tbody.innerHTML += `<tr><td><strong>${u.kode_ujian}</strong></td><td>${u.judul}</td><td>${btn}</td></tr>`;
             });
         }
-
         async function toggleDownload(kode, status) {
             await fetchGAS({ action: 'toggle_download', kode: kode, status: status });
             loadDaftarUjian().then(() => muatPengaturanAkses());
@@ -887,7 +882,6 @@
             document.getElementById('loginScreen').style.display = 'none'; document.getElementById('guruScreen').style.display = 'flex'; 
             document.getElementById('guruMadrasahDisplay').textContent = "🏫 " + globalProfile.madrasah;
         }
-        
         function switchGuruTab(tab) {
             ['administrasi', 'siswa', 'monitorG', 'hasilG'].forEach(t => { document.getElementById(`guru_${t}`).style.display = 'none'; document.getElementById(`tabG_${t}`).classList.remove('active'); });
             document.getElementById(`guru_${tab}`).style.display = 'block'; document.getElementById(`tabG_${tab}`).classList.add('active');
@@ -989,11 +983,10 @@
                     if(s.tipe === 'PGS') petunjuk = "Pilihlah satu jawaban yang paling tepat (A, B, C, atau D).";
                     if(s.tipe === 'MCMA') petunjuk = "Pilihlah dua atau lebih jawaban yang benar pada opsi di bawah ini.";
                     if(s.tipe === 'KATEGORI') petunjuk = "Tentukan nilai Benar atau Salah pada setiap pernyataan opsi di bawah ini.";
-                    if(s.tipe === 'SURVEY') petunjuk = "Jawablah pertanyaan berikut sesuai dengan kondisi yang sebenarnya (Tanpa Nilai).";
                     html += `<div class="petunjuk">Petunjuk Khusus: ${petunjuk}</div>`;
                 }
                 html += `<div class="soal"><table style="border:none; width:100%"><tr style="vertical-align:top"><td style="border:none; width:25px"><b>${i+1}.</b></td><td style="border:none">${s.soal}</td></tr></table>`;
-                if(s.tipe === 'PGS' || s.tipe === 'MCMA' || s.tipe === 'SURVEY') { 
+                if(s.tipe === 'PGS' || s.tipe === 'MCMA') { 
                     s.opsi.forEach((o, idx) => { if(o && o.trim() !== '') html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o}</div>`; }); 
                 } else { 
                     s.opsi.forEach((o, idx) => { if(o && o.trim() !== '') html += `<div class="opsi">${String.fromCharCode(65+idx)}. ${o} <b>( _____ / _____ )</b></div>`; }); 
@@ -1043,6 +1036,7 @@
         async function loadSoalPeserta(kodeUjian, isResume) {
             globalProfile.kodeUjian = kodeUjian;
             document.getElementById('loginScreen').innerHTML = "<div style='text-align:center; padding:50px;'><h2 style='color:var(--primary)'>Mempersiapkan Lembar Soal...</h2></div>";
+
             const data = await fetchGAS({ action: 'get_soal', kode_ujian: kodeUjian });
             
             if(data.status === 'ok'){
@@ -1059,6 +1053,7 @@
                 const savedNav = localStorage.getItem('cbt_nav_' + kodeUjian);
                 if(savedNav) currentSoal = parseInt(savedNav);
                 else currentSoal = 0;
+
                 document.getElementById('loginScreen').style.display = 'none'; document.getElementById('ujianScreen').style.display = 'flex';
                 document.getElementById('judulUjianDisplay').textContent = data.config.judul; document.getElementById('namaPesertaDisplay').textContent = globalProfile.nama_lengkap;
                 
@@ -1098,7 +1093,7 @@
             const soal = soalData[idx];
             document.getElementById('nomorSoalDisplay').textContent = `Soal No. ${idx + 1} / ${soalData.length}`;
             let html = `<div style="margin-bottom: 25px;">${soal.soal}</div>`; const jwbSiswa = jawabanSiswa[idx] || {};
-            
+
             if (soal.tipe === 'PGS' || soal.tipe === 'MCMA') {
                 const jnsInput = soal.tipe === 'PGS' ? 'radio' : 'checkbox';
                 if(soal.tipe === 'MCMA') html += `<div style="background:#e3f2fd; padding:10px 15px; border-left:4px solid #1976d2; border-radius:4px; font-size:0.9rem; margin-bottom:15px; font-weight:bold; color:#1565c0;">💡 Pilihlah dua atau lebih jawaban yang benar.</div>`;
@@ -1113,15 +1108,7 @@
                     const label = String.fromCharCode(65 + oIdx); const isB = jwbSiswa[label] === 'Benar' ? 'active' : ''; const isS = jwbSiswa[label] === 'Salah' ? 'active' : '';
                     if(opt && opt.trim() !== '') html += `<div class="opsi-kategori"><div style="flex-grow:1; display:flex;"><strong>${label}.</strong> <div style="margin-left:10px; width:100%;">${opt}</div></div><div style="display:flex; gap:8px;"><button class="btn-kategori ${isB}" onclick="simpanJawaban('${label}:Benar', ${idx}, 'KATEGORI')">Benar</button><button class="btn-kategori ${isS}" onclick="simpanJawaban('${label}:Salah', ${idx}, 'KATEGORI')">Salah</button></div></div>`;
                 });
-            } else if (soal.tipe === 'SURVEY') {
-                html += `<div style="background:#e3f2fd; padding:10px 15px; border-left:4px solid #1976d2; border-radius:4px; font-size:0.9rem; margin-bottom:15px; font-weight:bold; color:#1565c0;">💡 Survey (Tanpa Nilai): Pilih opsi yang sesuai.</div>`;
-                soal.opsi.forEach((opt, oIdx) => {
-                    const label = String.fromCharCode(65 + oIdx); const checked = jwbSiswa[label] ? 'checked' : '';
-                    const classTerpilih = jwbSiswa[label] ? 'terpilih' : '';
-                    if(opt && opt.trim() !== '') html += `<div class="opsi ${classTerpilih}" onclick="simpanJawaban('${label}', ${idx}, 'SURVEY')"><input type="radio" id="opt_${idx}_${oIdx}" ${checked}><label for="opt_${idx}_${oIdx}"><strong>${label}.</strong> <div style="margin-left:10px; width:100%;">${opt}</div></label></div>`;
-                });
             }
-            
             document.getElementById('soalBox').innerHTML = html;
             if (window.renderMathInElement) { try { renderMathInElement(document.getElementById('soalBox'), { delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false} ], throwOnError : false }); } catch (e) {} }
             
@@ -1133,7 +1120,7 @@
 
         function simpanJawaban(opsi, idx, tipe) {
             const jwb = jawabanSiswa[idx];
-            if (tipe === 'PGS' || tipe === 'SURVEY') { jawabanSiswa[idx] = {}; jawabanSiswa[idx][opsi] = true; navigasiSoal(1); } 
+            if (tipe === 'PGS') { jawabanSiswa[idx] = {}; jawabanSiswa[idx][opsi] = true; navigasiSoal(1); } 
             else if (tipe === 'MCMA') { if (jwb[opsi]) delete jwb[opsi]; else jwb[opsi] = true; tampilkanSoal(idx); } 
             else if (tipe === 'KATEGORI') { const [lbl, val] = opsi.split(':'); if (jwb[lbl] === val) delete jwb[lbl]; else jwb[lbl] = val; tampilkanSoal(idx); }
             
@@ -1169,60 +1156,35 @@
 
         async function prosesKirimFinal() {
             clearInterval(timerId); clearInterval(pingId);
-            Swal.fire({ title: 'Mengamankan Jawaban...', text: 'Membutuhkan waktu untuk menyimpan ke cloud...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+            Swal.fire({ title: 'Mengamankan Jawaban...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
             
             let totalScore = 0;
-            let soalDinilai = 0;
-
             soalData.forEach((soal, i) => {
-                if(soal.tipe === 'SURVEY') return; // Survey diabaikan dari perhitungan nilai
-                soalDinilai++;
-                
                 const ansS = jawabanSiswa[i]; const ansK = soal.jawabanBenar;
                 if (!ansS || Object.keys(ansS).length === 0) return;
                 if (soal.tipe === 'PGS' && ansK.includes(Object.keys(ansS)[0])) totalScore += 1;
                 else if (soal.tipe === 'MCMA') { let m = 0, w = 0; Object.keys(ansS).forEach(k => { if (ansK.includes(k)) m++; else w++; }); if (ansK.length > 0) totalScore += Math.max(0, (m - w) / ansK.length); } 
                 else if (soal.tipe === 'KATEGORI') { let c = 0; for (const k in ansK) { if (ansS[k] === ansK[k]) c++; } if (Object.keys(ansK).length > 0) totalScore += c / Object.keys(ansK).length; }
             });
-
             const finalObjek = {};
-            soalData.forEach((soal, i) => { const j = jawabanSiswa[i]; if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS' || soal.tipe === 'SURVEY') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j); });
-            
-            let skorAkhir = soalDinilai > 0 ? (totalScore / soalDinilai) * 100 : 0;
+            soalData.forEach((soal, i) => { const j = jawabanSiswa[i]; if (Object.keys(j).length > 0) finalObjek[soal.id] = (soal.tipe === 'PGS') ? Object.keys(j)[0] : ((soal.tipe === 'MCMA') ? Object.keys(j) : j); });
 
-            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, skor: skorAkhir.toFixed(2), jawabanPeserta: finalObjek };
+            const payload = { action: 'submit_jawaban', nisn: globalProfile.username, namaLengkap: globalProfile.nama_lengkap, madrasah: globalProfile.madrasah, kodeUjian: globalProfile.kodeUjian, skor: (totalScore / soalData.length) * 100, jawabanPeserta: finalObjek };
             
-            // SMART RETRY SYSTEM: Mencegah crash jika 10.000 user submit bareng
-            let success = false;
-            let attempt = 0;
-            
-            while(attempt < 3 && !success) {
-                try {
-                    const jsonRes = await fetchGAS(payload);
-                    if(jsonRes.status === 'success') {
-                        success = true;
-                    } else { throw new Error(jsonRes.msg || 'Gagal menyimpan'); }
-                } catch (e) {
-                    attempt++;
-                    if(attempt >= 3) {
-                        Swal.fire({
-                            title: 'Server Sangat Sibuk', 
-                            text: 'Namun jangan khawatir, jawaban Anda telah tersimpan di perangkat. Jangan tutup tab ini, silakan tekan "Kirim Jawaban" lagi dalam beberapa saat.', 
-                            icon: 'error'
-                        });
-                        isSubmitting = false;
-                        return;
-                    }
-                    // Tunggu 3 detik sebelum coba lagi
-                    await new Promise(r => setTimeout(r, 3000));
-                }
+            try {
+                const jsonRes = await fetchGAS(payload);
+                if(jsonRes.status !== 'success') throw new Error('API Error');
+            } catch (e) { 
+                Swal.fire('Error Koneksi', 'Gagal menghubungi Server Database Sheets. Jangan tutup halaman ini, periksa internet Anda dan coba lagi.', 'error');
+                isSubmitting = false;
+                return;
             }
             
             localStorage.removeItem('cbt_ans_' + globalProfile.kodeUjian);
             localStorage.removeItem('cbt_time_' + globalProfile.kodeUjian);
             localStorage.removeItem('cbt_nav_' + globalProfile.kodeUjian);
             
-            document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:6rem; margin:0;'>🎉</h1><h2 style='color:#2e7d32; font-size:2.5rem; margin-top:10px; text-align:center;'>Ujian Selesai!</h2><p style='color:#555; font-size:1.2rem; margin-top:5px; text-align:center;'>Jawaban Anda telah aman terekam oleh Server Cloud.</p><button onclick="logout()" style="padding:10px 20px; background:#00796b; color:white; border:none; border-radius:5px; margin-top:20px; cursor:pointer;">Keluar</button></div>`;
+            document.body.innerHTML = `<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#e8f5e9;'><h1 style='color:#4caf50; font-size:6rem; margin:0;'>🎉</h1><h2 style='color:#2e7d32; font-size:2.5rem; margin-top:10px;'>Ujian Selesai!</h2><p style='color:#555; font-size:1.2rem; margin-top:5px;'>Jawaban Anda telah aman terekam oleh Server Cloud.</p><button onclick="logout()" style="padding:10px 20px; background:#00796b; color:white; border:none; border-radius:5px; margin-top:20px; cursor:pointer;">Keluar</button></div>`;
             Swal.close();
         }
     </script>
