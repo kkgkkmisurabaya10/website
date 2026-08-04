@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KKGMI Surabaya 10 - Aplikasi Soal Sumatif</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700&display=swap');
+body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
+.islamic-pattern { background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M54.627 0l.83 22.092-21.26 21.26-22.092-.83L0 54.627l.83-22.092 21.26-21.26 22.092.83L60 54.627z" fill="%23e5e7eb" fill-opacity="0.4" fill-rule="evenodd"/%3E%3C/svg%3E'); }
+</style>
+</head>
+<body>
+
+<!-- AUTHENTICATION PAGE -->
+<div id="auth-page" class="min-h-screen flex items-center justify-center p-4 islamic-pattern">
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+    <div class="text-center mb-6">
+      <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hng" alt="Logo KKGMI" class="h-24 mx-auto mb-4">
+    </div>
+    <h2 class="text-2xl font-bold text-green-700 text-center">Aplikasi KKGMI</h2>
+    <p class="text-gray-500 text-sm text-center mb-4">Surabaya 10 - Upload Soal Sumatif</p>
+    
+    <div class="bg-blue-50 p-3 rounded-lg text-sm text-blue-700 text-center mb-4">
+      Bagi yang sudah memiliki akun di <strong>guruhebat</strong> silakan login. Jika belum, silakan buat akun terlebih dahulu.
+    </div>
+
+    <form id="auth-form" class="space-y-4">
+      <div id="madrasah-container" class="hidden">
+        <label class="block text-sm font-medium text-gray-700">Asal Madrasah</label>
+        <select id="madrasah" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 p-2 border">
+          <option value="">-- Pilih Madrasah --</option>
+          <option value="MIS Baiturrahman Gubeng">MIS Baiturrahman Gubeng</option>
+          <option value="MIS YAPISTHON">MIS YAPISTHON</option>
+          <option value="MIS PERSMIN">MIS PERSMIN</option>
+          <option value="MIS AL HUDA">MIS AL HUDA</option>
+          <option value="MIS AL JIHAD SURABAYA">MIS AL JIHAD SURABAYA</option>
+          <option value="MIS RADEN RAHMAT">MIS RADEN RAHMAT</option>
+          <option value="MIS AT-TAUHID">MIS AT-TAUHID</option>
+          <option value="MIS AL IKHLASH">MIS AL IKHLASH</option>
+          <option value="MIS AL KARIM">MIS AL KARIM</option>
+          <option value="MIS Baiturrahman Wonokromo">MIS Baiturrahman Wonokromo</option>
+          <option value="MIS Sunan Giri">MIS Sunan Giri</option>
+          <option value="MIS Al-Akbar">MIS Al-Akbar</option>
+          <option value="MIS AL Hidayah">MIS AL Hidayah</option>
+          <option value="MIS Muhammadiyah 5">MIS Muhammadiyah 5</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+        <input type="text" id="nama" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring p-2 border" placeholder="Ketik nama Anda">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring p-2 border" placeholder="Ketik password">
+      </div>
+      <button type="submit" id="btn-auth" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition">Masuk</button>
+    </form>
+    <div class="mt-4 text-center text-sm">
+      <a href="#" id="toggle-auth" class="text-green-600 hover:underline">Belum punya akun? Daftar sekarang</a>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page" class="hidden min-h-screen pb-10">
+  <nav class="bg-green-700 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center gap-3">
+          <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hng" alt="Logo" class="h-10 bg-white rounded-full p-1">
+          <span class="font-bold text-lg hidden sm:block">KKGMI Surabaya 10</span>
+        </div>
+        <div>
+          <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-sm font-semibold transition"><i class="fas fa-sign-out-alt mr-2"></i>Keluar</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="bg-green-50 w-full islamic-pattern py-10 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <h1 class="text-3xl font-bold text-green-800 mb-2">Assalamu'alaikum Warahmatullahi Wabarakatuh</h1>
+      <p class="text-lg text-gray-600">Ahlan wa Sahlan, <span id="user-name" class="font-semibold text-green-700"></span></p>
+      <p class="text-sm text-gray-500 mt-1">Pusat Bank Soal Sumatif KKGMI Surabaya 10</p>
+      <span id="user-role-badge" class="inline-block mt-2 px-3 py-1 bg-green-200 text-green-800 text-xs font-bold rounded-full hidden"></span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 mt-8">
+    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-6">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        <div class="w-full md:flex-1 relative">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+          <input type="text" id="search-input" onkeyup="filterFiles()" class="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500" placeholder="Cari berdasarkan nama file / mapel...">
+        </div>
+        <button id="btn-open-upload" onclick="openUploadModal()" class="hidden w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105">
+          <i class="fas fa-cloud-upload-alt mr-2"></i>Upload File
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <div>
+          <select id="filter-kelas" onchange="filterFiles()" class="w-full p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500">
+            <option value="">Semua Kelas</option>
+            <option value="Kelas 1">Kelas 1</option>
+            <option value="Kelas 2">Kelas 2</option>
+            <option value="Kelas 3">Kelas 3</option>
+            <option value="Kelas 4">Kelas 4</option>
+            <option value="Kelas 5">Kelas 5</option>
+            <option value="Kelas 6">Kelas 6</option>
+          </select>
+        </div>
+        <div>
+          <select id="filter-semester" onchange="filterFiles()" class="w-full p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500">
+            <option value="">Semua Semester</option>
+            <option value="Semester 1">Semester 1 (Ganjil)</option>
+            <option value="Semester 2">Semester 2 (Genap)</option>
+          </select>
+        </div>
+        <div>
+           <select id="filter-mapel" onchange="filterFiles()" class="w-full p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500">
+            <option value="">Semua Mapel</option>
+            <option value="Al-Quran Hadis">Al-Quran Hadis</option>
+            <option value="Akidah Akhlak">Akidah Akhlak</option>
+            <option value="Fikih">Fikih</option>
+            <option value="SKI">SKI</option>
+            <option value="Bahasa Arab">Bahasa Arab</option>
+            <option value="Tematik / Umum">Tematik / Umum</option>
+          </select>
+        </div>
+        <div>
+          <select id="filter-kategori" onchange="filterFiles()" class="w-full p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500">
+            <option value="">Semua Kategori</option>
+            <option value="Kisi-kisi">Kisi-kisi</option>
+            <option value="Soal">Soal</option>
+            <option value="Kunci Jawaban">Kunci Jawaban</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="file-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Files will be injected here -->
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div id="preview-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex justify-center items-center z-50 p-4">
+  <div class="bg-white rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl">
+    <div class="flex justify-between items-center p-4 border-b">
+      <h3 class="text-xl font-bold text-gray-800" id="preview-title">Preview File</h3>
+      <button onclick="closePreviewModal()" class="text-gray-500 hover:text-red-600 transition"><i class="fas fa-times text-2xl"></i></button>
+    </div>
+    <div class="flex-1 w-full bg-gray-100">
+      <iframe id="preview-frame" src="" class="w-full h-full border-0"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD & EDIT MODAL -->
+<div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
+  <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold text-gray-800" id="modal-title">Upload Soal</h3>
+      <button onclick="closeUploadModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <div class="space-y-4">
+      <input type="hidden" id="edit-file-id">
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nama File (Judul)</label>
+        <input type="text" id="up-filename" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Contoh: Soal Fikih Kelas 1">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+        <select id="up-kelas" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="Kelas 1">Kelas 1</option>
+          <option value="Kelas 2">Kelas 2</option>
+          <option value="Kelas 3">Kelas 3</option>
+          <option value="Kelas 4">Kelas 4</option>
+          <option value="Kelas 5">Kelas 5</option>
+          <option value="Kelas 6">Kelas 6</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+        <select id="up-semester" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="Semester 1">Semester 1</option>
+          <option value="Semester 2">Semester 2</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Mata Pelajaran</label>
+        <select id="up-mapel" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="Al-Quran Hadis">Al-Quran Hadis</option>
+            <option value="Akidah Akhlak">Akidah Akhlak</option>
+            <option value="Fikih">Fikih</option>
+            <option value="SKI">SKI</option>
+            <option value="Bahasa Arab">Bahasa Arab</option>
+            <option value="Tematik / Umum">Tematik / Umum</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori File</label>
+        <select id="up-kategori" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+          <option value="Kisi-kisi">Kisi-kisi</option>
+          <option value="Soal">Soal</option>
+          <option value="Kunci Jawaban">Kunci Jawaban</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih File (Abaikan jika hanya edit teks)</label>
+        <input type="file" id="up-file" accept=".doc, .docx, .xls, .xlsx, .pdf" class="w-full p-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+      </div>
+      <button onclick="processUpload()" id="btn-submit-upload" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition mt-4 shadow-md">Simpan File</button>
+    </div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+// GANTI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
+const API_URL = 'https://script.google.com/macros/s/AKfycbxiWzi9mD1LJefr2WgMmXkL9wdH1f_BmyiZ14FFNGswUer-gpAApylwSOXOsFWwC_st/exec'; 
+
+let isLoginMode = true;
+let currentUser = null;
+let globalFiles = [];
+let isKoordinator = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedSession = localStorage.getItem('kkgmi_session_soal');
+  if (savedSession) {
+    try {
+      currentUser = JSON.parse(savedSession);
+      if (currentUser && currentUser.nama) showDashboard();
+    } catch (error) { localStorage.removeItem('kkgmi_session_soal'); }
+  }
+});
+
+document.getElementById('toggle-auth').addEventListener('click', (e) => {
+  e.preventDefault();
+  isLoginMode = !isLoginMode;
+  document.getElementById('madrasah-container').style.display = isLoginMode ? 'none' : 'block';
+  document.getElementById('btn-auth').innerText = isLoginMode ? 'Masuk' : 'Daftar';
+  document.getElementById('toggle-auth').innerText = isLoginMode ? 'Belum punya akun? Daftar sekarang' : 'Sudah punya akun? Masuk';
+});
+
+document.getElementById('auth-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nama = document.getElementById('nama').value;
+  const password = document.getElementById('password').value;
+  const madrasah = document.getElementById('madrasah').value;
+
+  if(!isLoginMode && !madrasah) return Swal.fire('Oops', 'Pilih madrasah terlebih dahulu!', 'warning');
+  
+  const payload = { action: isLoginMode ? 'login' : 'register', nama, password, madrasah };
+  
+  Swal.fire({ title: 'Mohon Tunggu', text: 'Memproses data...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  
+  try {
+    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type': 'text/plain; charset=utf-8'} });
+    const data = await res.json();
+    if (data.status === 'success') {
+      if (isLoginMode) {
+        currentUser = data.user;
+        localStorage.setItem('kkgmi_session_soal', JSON.stringify(currentUser));
+        Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Login sukses!', timer: 1500, showConfirmButton: false });
+        setTimeout(showDashboard, 1000);
+      } else {
+        Swal.fire('Berhasil', 'Akun terdaftar, silakan Masuk!', 'success');
+        document.getElementById('toggle-auth').click();
+      }
+    } else { Swal.fire('Gagal', data.message, 'error'); }
+  } catch (err) { Swal.fire('Error', 'Koneksi ke server gagal', 'error'); }
+});
+
+function showDashboard() {
+  document.getElementById('auth-page').classList.add('hidden');
+  document.getElementById('dashboard-page').classList.remove('hidden');
+  document.getElementById('user-name').innerText = currentUser.nama;
+  
+  // Hak Akses Koordinator / Penanggung Jawab
+  isKoordinator = (currentUser.role === 'koordinator' || currentUser.role === 'penanggungjawab');
+  
+  if (isKoordinator) {
+    document.getElementById('user-role-badge').innerText = currentUser.role.toUpperCase();
+    document.getElementById('user-role-badge').classList.remove('hidden');
+    document.getElementById('btn-open-upload').classList.remove('hidden');
+  }
+  
+  loadFiles();
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('kkgmi_session_soal');
+  document.getElementById('dashboard-page').classList.add('hidden');
+  document.getElementById('auth-page').classList.remove('hidden');
+  document.getElementById('auth-form').reset();
+}
+
+async function loadFiles() {
+  document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-green-600 mb-3"></i><p>Memuat soal...</p></div>';
+  try {
+    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFiles' }) });
+    const data = await res.json();
+    if(data.status === 'success') {
+      globalFiles = data.files;
+      renderFiles(globalFiles);
+    }
+  } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full">Gagal memuat file.</p>'; }
+}
+
+function renderFiles(files) {
+  const grid = document.getElementById('file-grid');
+  grid.innerHTML = '';
+  
+  if(files.length === 0) {
+    grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10">Tidak ada file yang cocok dengan filter pencarian.</div>';
+    return;
+  }
+  
+  files.forEach(file => {
+    const ext = file.filename.split('.').pop().toLowerCase();
+    let icon = 'fa-file-alt text-gray-500';
+    if(['pdf'].includes(ext)) icon = 'fa-file-pdf text-red-500';
+    else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
+    else if(['doc', 'docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
+    
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${file.id}`;
+    
+    // Admin buttons (Edit & Hapus) hanya untuk koordinator/penanggungjawab
+    let adminControls = '';
+    if (isKoordinator) {
+      const escapedFilename = file.filename.replace(/'/g, "\\'");
+      adminControls = `
+        <button onclick="openEditModal('${file.id}', '${escapedFilename}', '${file.kelas}', '${file.semester}', '${file.mapel}', '${file.kategori}')" class="bg-yellow-100 text-yellow-700 px-3 py-2 rounded-lg hover:bg-yellow-200 transition" title="Edit/Perbaharui"><i class="fas fa-edit"></i></button>
+        <button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-lg hover:bg-red-100 transition" title="Hapus"><i class="fas fa-trash"></i></button>
+      `;
+    }
+
+    grid.innerHTML += `
+      <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 flex flex-col">
+        <div class="flex items-start gap-4 mb-3">
+          <i class="fas ${icon} text-4xl"></i>
+          <div class="flex-1">
+            <h4 class="font-bold text-gray-800 text-sm line-clamp-2" title="${file.filename}">${file.filename}</h4>
+            <div class="flex flex-wrap gap-1 mt-2">
+              <span class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-bold">${file.kelas}</span>
+              <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded">${file.mapel}</span>
+              <span class="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded">${file.kategori}</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-xs text-gray-500 mb-4 border-t pt-2">
+          <p><i class="fas fa-calendar mr-1"></i> ${file.semester}</p>
+          <p><i class="fas fa-user mr-1"></i> ${file.uploader} | ${file.time}</p>
+        </div>
+        <div class="mt-auto flex gap-2">
+          <button onclick="openPreview('${file.id}', '${file.filename.replace(/'/g, "\\'")}')" class="flex-1 bg-blue-50 text-blue-700 text-center py-2 rounded-lg font-semibold hover:bg-blue-100 transition text-sm"><i class="fas fa-eye mr-1"></i> Lihat</button>
+          <a href="${downloadUrl}" class="flex-1 bg-green-50 text-green-700 text-center py-2 rounded-lg font-semibold hover:bg-green-100 transition text-sm block"><i class="fas fa-download mr-1"></i> Unduh</a>
+          ${adminControls}
+        </div>
+      </div>
+    `;
+  });
+}
+
+function openPreview(fileId, filename) {
+  document.getElementById('preview-title').innerText = filename;
+  document.getElementById('preview-frame').src = `https://drive.google.com/file/d/${fileId}/preview`;
+  document.getElementById('preview-modal').classList.remove('hidden');
+}
+
+function closePreviewModal() {
+  document.getElementById('preview-modal').classList.add('hidden');
+  document.getElementById('preview-frame').src = '';
+}
+
+function filterFiles() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const fKelas = document.getElementById('filter-kelas').value.toLowerCase();
+  const fSemester = document.getElementById('filter-semester').value.toLowerCase();
+  const fMapel = document.getElementById('filter-mapel').value.toLowerCase();
+  const fKategori = document.getElementById('filter-kategori').value.toLowerCase();
+  
+  const filtered = globalFiles.filter(f => {
+    return (f.filename.toLowerCase().includes(query) || f.mapel.toLowerCase().includes(query)) &&
+           (fKelas === '' || f.kelas.toLowerCase() === fKelas) &&
+           (fSemester === '' || f.semester.toLowerCase() === fSemester) &&
+           (fMapel === '' || f.mapel.toLowerCase() === fMapel) &&
+           (fKategori === '' || f.kategori.toLowerCase() === fKategori);
+  });
+  renderFiles(filtered);
+}
+
+function openUploadModal() {
+  document.getElementById('modal-title').innerText = "Upload Soal Baru";
+  document.getElementById('edit-file-id').value = "";
+  document.getElementById('up-filename').value = "";
+  document.getElementById('up-file').value = "";
+  document.getElementById('upload-modal').classList.remove('hidden');
+}
+
+function openEditModal(id, filename, kelas, semester, mapel, kategori) {
+  document.getElementById('modal-title').innerText = "Perbaharui File";
+  document.getElementById('edit-file-id').value = id;
+  document.getElementById('up-filename').value = filename;
+  document.getElementById('up-kelas').value = kelas;
+  document.getElementById('up-semester').value = semester;
+  document.getElementById('up-mapel').value = mapel;
+  document.getElementById('up-kategori').value = kategori;
+  document.getElementById('up-file').value = ""; // Dikosongkan agar milih file baru
+  document.getElementById('upload-modal').classList.remove('hidden');
+}
+
+function closeUploadModal() {
+  document.getElementById('upload-modal').classList.add('hidden');
+}
+
+function processUpload() {
+  const fileId = document.getElementById('edit-file-id').value;
+  const judul = document.getElementById('up-filename').value;
+  const kelas = document.getElementById('up-kelas').value;
+  const semester = document.getElementById('up-semester').value;
+  const mapel = document.getElementById('up-mapel').value;
+  const kategori = document.getElementById('up-kategori').value;
+  const fileInput = document.getElementById('up-file').files[0];
+  
+  if(!judul || !kelas || !semester || !mapel || !kategori) return Swal.fire('Warning', 'Lengkapi semua isian!', 'warning');
+  
+  // Jika upload baru wajib ada file
+  if(!fileId && !fileInput) return Swal.fire('Warning', 'File wajib dilampirkan!', 'warning');
+  
+  if(fileInput && fileInput.size > 10*1024*1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
+
+  const processData = (base64Data, finalName, mimeType) => {
+    Swal.fire({ title: 'Menyimpan...', text: 'Memproses ke database...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    
+    const actionType = fileId ? 'update' : 'upload';
+    const payload = {
+      action: actionType,
+      fileId: fileId,
+      base64: base64Data,
+      filename: finalName,
+      mimeType: mimeType,
+      kelas: kelas,
+      semester: semester,
+      mapel: mapel,
+      kategori: kategori,
+      uploader: currentUser.nama
+    };
+
+    fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type': 'text/plain; charset=utf-8'} })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === 'success') {
+          Swal.fire({ icon: 'success', title: 'Berhasil', text: data.message, timer: 2000, showConfirmButton: false });
+          closeUploadModal();
+          loadFiles();
+        } else { Swal.fire('Gagal', data.message, 'error'); }
+      }).catch(() => Swal.fire('Error', 'Gagal memproses file', 'error'));
+  };
+
+  if (fileInput) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const base64Data = e.target.result.split(',')[1];
+      const finalName = judul + '.' + fileInput.name.split('.').pop();
+      processData(base64Data, finalName, fileInput.type);
+    };
+    reader.readAsDataURL(fileInput);
+  } else {
+    // Mode edit tapi tidak mengubah file fisik (hanya metadata judul, dll)
+    processData(null, judul, null);
+  }
+}
+
+async function deleteFile(fileId) {
+  const confirm = await Swal.fire({ title: 'Yakin hapus file ini?', text: "File akan dihapus permanen", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!' });
+  if(confirm.isConfirmed) {
+    Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    try {
+      const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', fileId: fileId, uploader: currentUser.nama }), headers: {'Content-Type': 'text/plain; charset=utf-8'} });
+      const data = await res.json();
+      if(data.status === 'success') {
+        Swal.fire({ icon: 'success', title: 'Terhapus!', timer: 1500, showConfirmButton: false });
+        loadFiles();
+      } else { Swal.fire('Gagal', data.message, 'error'); }
+    } catch(e) { Swal.fire('Error', 'Gagal menghapus file', 'error'); }
+  }
+}
+</script>
+</body>
+</html>
