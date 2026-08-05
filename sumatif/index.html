@@ -94,6 +94,25 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
   </div>
 
   <div class="max-w-7xl mx-auto px-4 mt-8">
+    
+    <!-- DASHBOARD PANTAUAN PROGRES -->
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-6">
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-5">
+        <h3 class="text-lg font-bold text-gray-800 mb-2 sm:mb-0"><i class="fas fa-chart-pie text-green-600 mr-2"></i>Pantauan Progres Upload</h3>
+        <div class="flex items-center gap-2">
+          <label class="text-sm text-gray-600 font-medium">Pilih Semester:</label>
+          <select id="stat-semester-filter" onchange="updateStatsUI()" class="p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500 bg-gray-50">
+            <option value="Semester 1">Semester 1 (Ganjil)</option>
+            <option value="Semester 2">Semester 2 (Genap)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="dashboard-stats-grid">
+        <!-- Card stats dirender disini via JS -->
+      </div>
+    </div>
+
+    <!-- PENCARIAN & FILTER FILE -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-6">
       <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <div class="w-full md:flex-1 relative">
@@ -150,6 +169,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
       </div>
     </div>
 
+    <!-- FILE GRID -->
     <div id="file-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- File akan dimuat di sini -->
     </div>
@@ -232,12 +252,13 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
 
 <!-- JAVASCRIPT LOGIC -->
 <script>
-// MASUKKAN URL DEPLOYMENT APPS SCRIPT ANDA DI SINI
+// PASTIKAN ANDA MENGGANTI URL DI BAWAH INI DENGAN LINK DEPLOYMENT YANG BARU DIBUAT!
 const API_URL = 'https://script.google.com/macros/s/AKfycbxiWzi9mD1LJefr2WgMmXkL9wdH1f_BmyiZ14FFNGswUer-gpAApylwSOXOsFWwC_st/exec'; 
 
 let isLoginMode = true;
 let currentUser = null;
 let globalFiles = [];
+let globalStats = null;
 let isHasAdminAccess = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -294,15 +315,8 @@ function showDashboard() {
   
   isHasAdminAccess = (currentUser.role === 'koordinator' || currentUser.role === 'penanggungjawab');
   
-  if (isHasAdminAccess) {
+  if (isHasAdminAccess || currentUser.role === 'guru') {
     document.getElementById('user-role-badge').innerText = 'Akses: ' + currentUser.role.toUpperCase();
-    document.getElementById('user-role-badge').classList.remove('hidden');
-    document.getElementById('btn-open-upload').classList.remove('hidden'); 
-  } else if (currentUser.role === 'guru') {
-    // Guru juga butuh upload kan? Munculkan tombolnya juga. 
-    // Fitur permintaan sebelumnya bilang "jika bukan kordinator tidak bisa lihat file yang bukan hasil kirimannya"
-    // Namun guru tetap butuh tombol upload untuk upload hasil kiriman mereka.
-    document.getElementById('user-role-badge').innerText = 'Akses: GURU';
     document.getElementById('user-role-badge').classList.remove('hidden');
     document.getElementById('btn-open-upload').classList.remove('hidden'); 
   }
@@ -319,24 +333,44 @@ function logout() {
 }
 
 async function loadFiles() {
-  document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-green-600 mb-3"></i><p>Memuat database soal...</p></div>';
+  document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-green-600 mb-3"></i><p>Memuat database soal dan pantauan...</p></div>';
   try {
-    // Mengirim identitas agar server mereturn file sesuai role-nya
-    const payload = { 
-      action: 'getFiles',
-      nama: currentUser.nama,
-      role: currentUser.role
-    };
+    const payload = { action: 'getFiles', nama: currentUser.nama, role: currentUser.role };
     
     const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
     const data = await res.json();
+    
     if(data.status === 'success') {
       globalFiles = data.files;
+      globalStats = data.stats; // Menangkap data pantauan dari server
+      
       renderFiles(globalFiles);
+      updateStatsUI(); // Memperbarui tampilan dashboard pantauan
     } else {
       document.getElementById('file-grid').innerHTML = `<p class="text-red-500 text-center col-span-full">Gagal: ${data.message}</p>`;
     }
   } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full">Gagal memuat file.</p>'; }
+}
+
+function updateStatsUI() {
+  const grid = document.getElementById('dashboard-stats-grid');
+  if (!globalStats) return;
+
+  const selectedSemester = document.getElementById('stat-semester-filter').value;
+  const semesterData = globalStats[selectedSemester] || {};
+  const classes = ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6'];
+
+  grid.innerHTML = '';
+  classes.forEach(cls => {
+    const count = semesterData[cls] || 0;
+    grid.innerHTML += `
+      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center border border-green-200 shadow-sm transition hover:shadow-md">
+        <div class="text-sm font-semibold text-green-800">${cls}</div>
+        <div class="text-3xl font-bold text-green-600 mt-1">${count}</div>
+        <div class="text-[10px] font-medium text-green-700 uppercase tracking-wider mt-1">Dokumen</div>
+      </div>
+    `;
+  });
 }
 
 function renderFiles(files) {
@@ -358,7 +392,6 @@ function renderFiles(files) {
     const downloadUrl = `https://drive.google.com/uc?export=download&id=${file.id}`;
     
     let adminControls = '';
-    // Jika dia kordinator/pj, atau file tersebut adalah miliknya sendiri (guru)
     if (isHasAdminAccess || file.uploader === currentUser.nama) {
       const escapedFilename = file.filename.replace(/'/g, "\\'");
       adminControls = `
