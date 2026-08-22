@@ -284,8 +284,13 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
   const nama = document.getElementById('nama').value;
   const password = document.getElementById('password').value;
   const madrasah = document.getElementById('madrasah').value;
+  const btnAuth = document.getElementById('btn-auth');
 
   if(!isLoginMode && !madrasah) return Swal.fire('Oops', 'Pilih madrasah terlebih dahulu!', 'warning');
+  
+  // Disable form button to prevent multiple submissions
+  btnAuth.disabled = true;
+  btnAuth.classList.add('opacity-50', 'cursor-not-allowed');
   
   const payload = { action: isLoginMode ? 'login' : 'register', nama, password, madrasah };
   
@@ -305,7 +310,13 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         document.getElementById('toggle-auth').click();
       }
     } else { Swal.fire('Gagal', data.message, 'error'); }
-  } catch (err) { Swal.fire('Error', 'Koneksi ke server gagal. Pastikan link API URL sudah benar.', 'error'); }
+  } catch (err) { 
+    Swal.fire('Error', 'Koneksi ke server gagal. Pastikan link API URL sudah benar.', 'error'); 
+  } finally {
+    // Restore button functionality
+    btnAuth.disabled = false;
+    btnAuth.classList.remove('opacity-50', 'cursor-not-allowed');
+  }
 });
 
 function showDashboard() {
@@ -342,10 +353,10 @@ async function loadFiles() {
     
     if(data.status === 'success') {
       globalFiles = data.files;
-      globalStats = data.stats; // Menangkap data pantauan dari server
+      globalStats = data.stats; 
       
       renderFiles(globalFiles);
-      updateStatsUI(); // Memperbarui tampilan dashboard pantauan
+      updateStatsUI(); 
     } else {
       document.getElementById('file-grid').innerHTML = `<p class="text-red-500 text-center col-span-full">Gagal: ${data.message}</p>`;
     }
@@ -363,14 +374,30 @@ function updateStatsUI() {
   grid.innerHTML = '';
   classes.forEach(cls => {
     const count = semesterData[cls] || 0;
+    // Update interaktif onclick untuk filter data (Referensi UI image_009462.png)
     grid.innerHTML += `
-      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center border border-green-200 shadow-sm transition hover:shadow-md">
+      <div onclick="filterByStat('${cls}', '${selectedSemester}')" class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center border border-green-200 shadow-sm transition hover:shadow-md hover:bg-green-100 cursor-pointer hover:scale-105 transform duration-200">
         <div class="text-sm font-semibold text-green-800">${cls}</div>
         <div class="text-3xl font-bold text-green-600 mt-1">${count}</div>
         <div class="text-[10px] font-medium text-green-700 uppercase tracking-wider mt-1">Dokumen</div>
       </div>
     `;
   });
+}
+
+function filterByStat(kelas, semester) {
+  document.getElementById('filter-kelas').value = kelas;
+  document.getElementById('filter-semester').value = semester;
+  
+  // Reset other filters
+  document.getElementById('filter-mapel').value = "";
+  document.getElementById('filter-kategori').value = "";
+  document.getElementById('search-input').value = "";
+  
+  filterFiles();
+  
+  // Scroll softly to the search input area to see results
+  document.getElementById('search-input').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function renderFiles(files) {
@@ -489,12 +516,18 @@ function processUpload() {
   const mapel = document.getElementById('up-mapel').value;
   const kategori = document.getElementById('up-kategori').value;
   const fileInput = document.getElementById('up-file').files[0];
+  const btnSubmit = document.getElementById('btn-submit-upload');
   
   if(!judul || !kelas || !semester || !mapel || !kategori) return Swal.fire('Warning', 'Lengkapi semua info folder!', 'warning');
   
   if(!fileId && !fileInput) return Swal.fire('Warning', 'File wajib dilampirkan jika upload baru!', 'warning');
   
   if(fileInput && fileInput.size > 10*1024*1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
+
+  // Disable submission button during processing
+  btnSubmit.disabled = true;
+  btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+  btnSubmit.innerText = 'Menyimpan Data...';
 
   const processData = (base64Data, finalName, mimeType) => {
     Swal.fire({ title: 'Menyimpan Data...', text: 'Tunggu sebentar...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
@@ -520,7 +553,14 @@ function processUpload() {
           closeUploadModal();
           loadFiles();
         } else { Swal.fire('Gagal', data.message, 'error'); }
-      }).catch(() => Swal.fire('Error', 'Gagal memproses ke server API', 'error'));
+      }).catch(() => {
+        Swal.fire('Error', 'Gagal memproses ke server API', 'error');
+      }).finally(() => {
+        // Release the button state back to normal
+        btnSubmit.disabled = false;
+        btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+        btnSubmit.innerText = 'Simpan File';
+      });
   };
 
   if (fileInput) {
