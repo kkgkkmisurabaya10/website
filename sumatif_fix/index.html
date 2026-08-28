@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KKGMI Surabaya 10 - Aplikasi Soal Sumatif</title>
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc">
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- FontAwesome -->
@@ -14,7 +16,6 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700&display=swap');
 body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
 .islamic-pattern { background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M54.627 0l.83 22.092-21.26 21.26-22.092-.83L0 54.627l.83-22.092 21.26-21.26 22.092.83L60 54.627z" fill="%23e5e7eb" fill-opacity="0.4" fill-rule="evenodd"/%3E%3C/svg%3E'); }
-/* Tambahan untuk scrollbar modal */
 #checklist-content::-webkit-scrollbar { width: 6px; }
 #checklist-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
 #checklist-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
@@ -107,9 +108,11 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
           <div class="flex items-center gap-2 w-full sm:w-auto">
             <label class="text-sm text-gray-600 font-medium whitespace-nowrap">Ujian:</label>
             <select id="stat-jenis-filter" onchange="updateStatsUI()" class="w-full sm:w-auto p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500 bg-gray-50">
-              <option value="STS">STS</option>
-              <option value="SAS">SAS</option>
-              <option value="SAT">SAT</option>
+              <option value="STS 1 2026/2027">STS 1 2026/2027</option>
+              <option value="SAS 2026/2027">SAS 2026/2027</option>
+              <option value="STS 2 2026/2027">STS 2 2026/2027</option>
+              <option value="SAT 2026/2027">SAT 2026/2027</option>
+              <option value="UM 2026/2027">UM 2026/2027</option>
             </select>
           </div>
           <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -161,9 +164,11 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
           <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Jenis Ujian</label>
           <select id="filter-jenis" onchange="filterFiles()" class="w-full p-2 border rounded-xl text-sm focus:outline-none focus:border-green-500">
             <option value="">Semua Ujian</option>
-            <option value="STS">STS</option>
-            <option value="SAS">SAS</option>
-            <option value="SAT">SAT</option>
+            <option value="STS 1 2026/2027">STS 1 2026/2027</option>
+            <option value="SAS 2026/2027">SAS 2026/2027</option>
+            <option value="STS 2 2026/2027">STS 2 2026/2027</option>
+            <option value="SAT 2026/2027">SAT 2026/2027</option>
+            <option value="UM 2026/2027">UM 2026/2027</option>
           </select>
         </div>
         <div>
@@ -216,18 +221,18 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
   </div>
 </div>
 
-<!-- CHECKLIST MODAL -->
+<!-- CHECKLIST MODAL (DENGAN REKAP LENGKAP MAPEL & KATEGORI) -->
 <div id="checklist-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
-  <div class="bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl h-[80vh] flex flex-col">
+  <div class="bg-white rounded-2xl w-full max-w-3xl p-6 shadow-2xl h-[85vh] flex flex-col">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
-      <h3 class="text-lg md:text-xl font-bold text-gray-800" id="checklist-title">Daftar Dokumen</h3>
+      <h3 class="text-lg md:text-xl font-bold text-gray-800" id="checklist-title">Status Kelengkapan</h3>
       <button onclick="closeChecklistModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
     </div>
     <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="checklist-content">
-      <!-- Checklist item di-render disini -->
+      <!-- Checklist item di-render disini via Javascript -->
     </div>
     <div class="mt-4 pt-4 border-t text-right">
-        <button onclick="closeChecklistModal()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-bold hover:bg-gray-300 transition">Tutup</button>
+        <button onclick="closeChecklistModal()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-bold hover:bg-gray-300 transition">Tutup Pengecekan</button>
     </div>
   </div>
 </div>
@@ -260,9 +265,11 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Folder Jenis Ujian</label>
         <select id="up-jenis" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-          <option value="STS">STS</option>
-          <option value="SAS">SAS</option>
-          <option value="SAT">SAT</option>
+          <option value="STS 1 2026/2027">STS 1 2026/2027</option>
+          <option value="SAS 2026/2027">SAS 2026/2027</option>
+          <option value="STS 2 2026/2027">STS 2 2026/2027</option>
+          <option value="SAT 2026/2027">SAT 2026/2027</option>
+          <option value="UM 2026/2027">UM 2026/2027</option>
         </select>
       </div>
       <div>
@@ -302,6 +309,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
 
 <!-- JAVASCRIPT LOGIC -->
 <script>
+// PASTIKAN ANDA MENGGANTI URL DI BAWAH INI DENGAN LINK DEPLOYMENT YANG BARU DIBUAT!
 const API_URL = 'https://script.google.com/macros/s/AKfycbwaVYKsN171kwTAtTeCR3LyR4ckiZ13-FeCjlZ7wjrfucOptLKg6OEoLai-iPlfq68_/exec'; 
 
 let isLoginMode = true;
@@ -435,7 +443,6 @@ function updateStatsUI() {
       `;
     });
   } else {
-    // Mode Fokus Kelas: Tampilkan detail setiap mapel (12 Mapel)
     const daftarMapel = ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"];
     
     daftarMapel.forEach(mapel => {
@@ -451,9 +458,10 @@ function updateStatsUI() {
   }
 }
 
+// Logika Pembaruan untuk menampilkan Kelengkapan Mapel (Centang Hijau & Silang Merah)
 function showChecklistModal(kelas, jenis, mapelFilter) {
   const titleExtra = mapelFilter === 'Semua Mapel' ? '' : ` - ${mapelFilter}`;
-  document.getElementById('checklist-title').innerText = `Daftar Dokumen - ${kelas} (${jenis})${titleExtra}`;
+  document.getElementById('checklist-title').innerText = `Pantauan Detail - ${kelas} (${jenis})${titleExtra}`;
   
   const content = document.getElementById('checklist-content');
   content.innerHTML = '';
@@ -463,32 +471,81 @@ function showChecklistModal(kelas, jenis, mapelFilter) {
      filesList = globalAllFileTitles[jenis][kelas];
   }
   
-  // Jika difilter spesifik satu mapel
-  if (mapelFilter !== 'Semua Mapel') {
-      filesList = filesList.filter(f => f.mapel === mapelFilter);
-  }
+  const daftarMapel = ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"];
+  const targetMapels = mapelFilter === 'Semua Mapel' ? daftarMapel : [mapelFilter];
   
-  if(filesList.length === 0) {
-     content.innerHTML = '<div class="text-center text-gray-500 py-10"><i class="fas fa-folder-open text-4xl text-gray-300 mb-3 block"></i>Belum ada dokumen yang diunggah.</div>';
-  } else {
-     filesList.forEach((file) => {
-        content.innerHTML += `
-          <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 hover:bg-green-50 hover:border-green-200 transition">
-            <div class="mt-1">
-              <i class="fas fa-check-circle text-green-500 text-lg"></i>
+  let totalMissing = 0;
+  let htmlContent = '';
+
+  targetMapels.forEach(mapel => {
+      const filesForMapel = filesList.filter(f => f.mapel === mapel);
+      
+      const hasSoal = filesForMapel.some(f => f.kategori.toLowerCase() === 'soal');
+      const hasKisi = filesForMapel.some(f => f.kategori.toLowerCase() === 'kisi-kisi');
+      const hasKunci = filesForMapel.some(f => f.kategori.toLowerCase() === 'kunci jawaban');
+      
+      let missingInMapel = 0;
+      if(!hasSoal) missingInMapel++;
+      if(!hasKisi) missingInMapel++;
+      if(!hasKunci) missingInMapel++;
+      totalMissing += missingInMapel;
+
+      const getIcon = (isExist) => isExist ? '<i class="fas fa-check-circle text-green-500 text-lg"></i>' : '<i class="fas fa-times-circle text-red-500 text-lg"></i>';
+      const getBg = (isExist) => isExist ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+      const getText = (isExist) => isExist ? 'text-green-700' : 'text-red-600 font-semibold';
+
+      let fileDetails = '';
+      filesForMapel.forEach(f => {
+          fileDetails += `<div class="text-xs text-gray-500 ml-2 py-1 flex items-center"><i class="fas fa-file-alt mr-2 text-gray-400"></i> <span class="truncate mr-1">${f.filename}</span> <span class="bg-gray-200 px-1 rounded-sm text-[10px] ml-auto shrink-0">${f.uploader}</span></div>`;
+      });
+
+      htmlContent += `
+          <div class="border rounded-xl p-4 mb-3 bg-white shadow-sm border-gray-100">
+            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2"><i class="fas fa-book-open text-blue-500 mr-2"></i>${mapel}</h4>
+            <div class="grid grid-cols-3 gap-2 mb-2">
+                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 p-2 rounded-lg border ${getBg(hasSoal)} text-center md:text-left">
+                    ${getIcon(hasSoal)}
+                    <span class="text-xs ${getText(hasSoal)}">Soal</span>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 p-2 rounded-lg border ${getBg(hasKisi)} text-center md:text-left">
+                    ${getIcon(hasKisi)}
+                    <span class="text-xs ${getText(hasKisi)}">Kisi-kisi</span>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 p-2 rounded-lg border ${getBg(hasKunci)} text-center md:text-left">
+                    ${getIcon(hasKunci)}
+                    <span class="text-xs ${getText(hasKunci)}">Kunci Jawaban</span>
+                </div>
             </div>
-            <div class="flex-1">
-              <h4 class="font-semibold text-gray-800 text-sm">${file.filename}</h4>
-              <p class="text-xs text-gray-500 mt-1">
-                <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-medium">${file.mapel}</span> 
-                • Diunggah oleh: ${file.uploader}
-              </p>
-            </div>
+            ${fileDetails ? `<div class="mt-3 pt-2 border-t border-dashed border-gray-200 bg-gray-50 rounded-lg p-2">${fileDetails}</div>` : '<div class="mt-2 text-xs text-red-400 italic text-center">Belum ada file diunggah sama sekali.</div>'}
           </div>
-        `;
-     });
+      `;
+  });
+
+  // Notifikasi Denyut Merah paling atas
+  let topNotif = '';
+  if (totalMissing > 0) {
+      topNotif = `
+        <div class="bg-red-100 text-red-700 p-4 rounded-xl animate-pulse border border-red-300 shadow-md flex items-center mb-5">
+            <i class="fas fa-exclamation-triangle text-2xl mr-4"></i>
+            <div>
+                <div class="text-sm font-bold uppercase tracking-wide">Peringatan Kelengkapan</div>
+                <div class="text-xs font-semibold mt-1">Masih ada ${totalMissing} dokumen yang belum diunggah (Silang Merah).</div>
+            </div>
+        </div>
+      `;
+  } else {
+      topNotif = `
+        <div class="bg-green-100 text-green-700 p-4 rounded-xl border border-green-300 shadow-sm flex items-center mb-5">
+            <i class="fas fa-check-double text-2xl mr-4"></i>
+            <div>
+                <div class="text-sm font-bold uppercase tracking-wide">Semua Lengkap!</div>
+                <div class="text-xs font-semibold mt-1">Seluruh dokumen (Soal, Kisi-kisi, Kunci Jawaban) untuk ${mapelFilter === 'Semua Mapel' ? 'kelas ini' : 'mapel ini'} telah lengkap.</div>
+            </div>
+        </div>
+      `;
   }
-  
+
+  content.innerHTML = topNotif + htmlContent;
   document.getElementById('checklist-modal').classList.remove('hidden');
 }
 
@@ -537,7 +594,7 @@ function renderFiles(files) {
           </div>
         </div>
         <div class="text-xs text-gray-500 mb-4 border-t pt-2">
-          <p><i class="fas fa-calendar mr-1"></i> Ujian ${file.jenis}</p>
+          <p><i class="fas fa-calendar mr-1"></i> ${file.jenis}</p>
           <p><i class="fas fa-user mr-1"></i> ${file.uploader} | ${file.time}</p>
         </div>
         <div class="mt-auto flex gap-2">
@@ -634,7 +691,7 @@ function processUpload() {
       filename: finalName,
       mimeType: mimeType,
       kelas: kelas,
-      jenis: jenis, // Data pengganti "semester"
+      jenis: jenis, 
       mapel: mapel,
       kategori: kategori,
       uploader: currentUser.nama
