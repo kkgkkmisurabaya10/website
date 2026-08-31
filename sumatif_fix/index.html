@@ -199,18 +199,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
     </div>
   </div>
 </div>
-<!-- PREVIEW MODAL -->
-<div id="preview-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex justify-center items-center z-50 p-4">
-  <div class="bg-white rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl">
-    <div class="flex justify-between items-center p-4 border-b">
-      <h3 class="text-xl font-bold text-gray-800" id="preview-title">Preview File</h3>
-      <button onclick="closePreviewModal()" class="text-gray-500 hover:text-red-600 transition"><i class="fas fa-times text-2xl"></i></button>
-    </div>
-    <div class="flex-1 w-full bg-gray-100">
-      <iframe id="preview-frame" src="" class="w-full h-full border-0"></iframe>
-    </div>
-  </div>
-</div>
+
 <!-- CHECKLIST MODAL (DENGAN REKAP LENGKAP MAPEL & KATEGORI) -->
 <div id="checklist-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
   <div class="bg-white rounded-2xl w-full max-w-3xl p-6 shadow-2xl h-[85vh] flex flex-col">
@@ -226,6 +215,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
     </div>
   </div>
 </div>
+
 <!-- UPLOAD & EDIT MODAL -->
 <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
   <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl h-auto max-h-[90vh] overflow-y-auto">
@@ -279,7 +269,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
         </select>
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Folder Kategori File</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori File</label>
         <select id="up-kategori" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
           <option value="Kisi-kisi">Kisi-kisi</option>
           <option value="Soal">Soal</option>
@@ -297,7 +287,6 @@ body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
 </div>
 <!-- JAVASCRIPT LOGIC -->
 <script>
-// PASTIKAN ANDA MENGGANTI URL DI BAWAH INI DENGAN LINK DEPLOYMENT YANG BARU DIBUAT!
 const API_URL = 'https://script.google.com/macros/s/AKfycbwaVYKsN171kwTAtTeCR3LyR4ckiZ13-FeCjlZ7wjrfucOptLKg6OEoLai-iPlfq68_/exec'; 
 let isLoginMode = true;
 let currentUser = null;
@@ -305,6 +294,7 @@ let globalFiles = [];
 let globalStats = null;
 let globalAllFileTitles = null; 
 let isHasAdminAccess = false; 
+
 document.addEventListener('DOMContentLoaded', () => {
   const savedSession = localStorage.getItem('kkgmi_session_sumatif');
   if (savedSession) {
@@ -314,6 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) { localStorage.removeItem('kkgmi_session_sumatif'); }
   }
 });
+
 document.getElementById('toggle-auth').addEventListener('click', (e) => {
   e.preventDefault();
   isLoginMode = !isLoginMode;
@@ -321,6 +312,7 @@ document.getElementById('toggle-auth').addEventListener('click', (e) => {
   document.getElementById('btn-auth').innerText = isLoginMode ? 'Masuk' : 'Daftar';
   document.getElementById('toggle-auth').innerText = isLoginMode ? 'Belum punya akun? Daftar sekarang' : 'Sudah punya akun? Masuk';
 });
+
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const nama = document.getElementById('nama').value;
@@ -357,6 +349,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
     btnAuth.classList.remove('opacity-50', 'cursor-not-allowed');
   }
 });
+
 function showDashboard() {
   document.getElementById('auth-page').classList.add('hidden');
   document.getElementById('dashboard-page').classList.remove('hidden');
@@ -372,6 +365,7 @@ function showDashboard() {
   
   loadFiles();
 }
+
 function logout() {
   currentUser = null;
   localStorage.removeItem('kkgmi_session_sumatif');
@@ -379,6 +373,7 @@ function logout() {
   document.getElementById('auth-page').classList.remove('hidden');
   document.getElementById('auth-form').reset();
 }
+
 async function loadFiles() {
   document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-green-600 mb-3"></i><p>Memuat database soal dan pantauan...</p></div>';
   try {
@@ -399,6 +394,7 @@ async function loadFiles() {
     }
   } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full">Gagal memuat file.</p>'; }
 }
+
 function updateStatsUI() {
   const grid = document.getElementById('dashboard-stats-grid');
   if (!globalStats) return;
@@ -434,7 +430,7 @@ function updateStatsUI() {
     });
   }
 }
-// Logika Pembaruan untuk menampilkan Kelengkapan Mapel (Centang Hijau & Silang Merah)
+
 function showChecklistModal(kelas, jenis, mapelFilter) {
   const titleExtra = mapelFilter === 'Semua Mapel' ? '' : ` - ${mapelFilter}`;
   document.getElementById('checklist-title').innerText = `Pantauan Detail - ${kelas} (${jenis})${titleExtra}`;
@@ -492,7 +488,7 @@ function showChecklistModal(kelas, jenis, mapelFilter) {
           </div>
       `;
   });
-  // Notifikasi Denyut Merah paling atas
+
   let topNotif = '';
   if (totalMissing > 0) {
       topNotif = `
@@ -518,9 +514,11 @@ function showChecklistModal(kelas, jenis, mapelFilter) {
   content.innerHTML = topNotif + htmlContent;
   document.getElementById('checklist-modal').classList.remove('hidden');
 }
+
 function closeChecklistModal() {
   document.getElementById('checklist-modal').classList.add('hidden');
 }
+
 function renderFiles(files) {
   const grid = document.getElementById('file-grid');
   grid.innerHTML = '';
@@ -537,14 +535,12 @@ function renderFiles(files) {
     else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
     else if(['doc', 'docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
     
-    const downloadUrl = `https://drive.google.com/uc?export=download&id=${file.id}`;
-    
     let adminControls = '';
     if (isHasAdminAccess || file.uploader === currentUser.nama) {
       const escapedFilename = file.filename.replace(/'/g, "\\'");
       adminControls = `
-        <button onclick="openEditModal('${file.id}', '${escapedFilename}', '${file.kelas}', '${file.jenis}', '${file.mapel}', '${file.kategori}')" class="bg-yellow-100 text-yellow-700 px-3 py-2 rounded-lg hover:bg-yellow-200 transition" title="Perbaharui Info/File"><i class="fas fa-edit"></i></button>
-        <button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-lg hover:bg-red-100 transition" title="Hapus"><i class="fas fa-trash"></i></button>
+        <button onclick="openEditModal('${file.id}', '${escapedFilename}', '${file.kelas}', '${file.jenis}', '${file.mapel}', '${file.kategori}')" class="bg-yellow-100 text-yellow-700 px-3 py-2 rounded-lg hover:bg-yellow-200 transition flex items-center justify-center" title="Perbaharui Info/File"><i class="fas fa-edit mr-1"></i> Edit</button>
+        <button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-lg hover:bg-red-100 transition flex items-center justify-center" title="Hapus"><i class="fas fa-trash mr-1"></i> Hapus</button>
       `;
     }
     grid.innerHTML += `
@@ -565,23 +561,13 @@ function renderFiles(files) {
           <p><i class="fas fa-user mr-1"></i> ${file.uploader} | ${file.time}</p>
         </div>
         <div class="mt-auto flex gap-2">
-          <button onclick="openPreview('${file.id}', '${file.filename.replace(/'/g, "\\'")}')" class="flex-1 bg-blue-50 text-blue-700 text-center py-2 rounded-lg font-semibold hover:bg-blue-100 transition text-sm"><i class="fas fa-eye mr-1"></i> Lihat</button>
-          <a href="${downloadUrl}" class="flex-1 bg-green-50 text-green-700 text-center py-2 rounded-lg font-semibold hover:bg-green-100 transition text-sm block"><i class="fas fa-download mr-1"></i> Unduh</a>
           ${adminControls}
         </div>
       </div>
     `;
   });
 }
-function openPreview(fileId, filename) {
-  document.getElementById('preview-title').innerText = filename;
-  document.getElementById('preview-frame').src = `https://drive.google.com/file/d/${fileId}/preview`;
-  document.getElementById('preview-modal').classList.remove('hidden');
-}
-function closePreviewModal() {
-  document.getElementById('preview-modal').classList.add('hidden');
-  document.getElementById('preview-frame').src = '';
-}
+
 function filterFiles() {
   const query = document.getElementById('search-input').value.toLowerCase();
   const fKelas = document.getElementById('filter-kelas').value.toLowerCase();
@@ -598,6 +584,7 @@ function filterFiles() {
   });
   renderFiles(filtered);
 }
+
 function openUploadModal() {
   document.getElementById('modal-title').innerText = "Upload Dokumen Baru";
   document.getElementById('edit-file-id').value = "";
@@ -606,6 +593,7 @@ function openUploadModal() {
   document.getElementById('edit-help-text').classList.add('hidden');
   document.getElementById('upload-modal').classList.remove('hidden');
 }
+
 function openEditModal(id, filename, kelas, jenis, mapel, kategori) {
   document.getElementById('modal-title').innerText = "Perbaharui Data Dokumen";
   document.getElementById('edit-file-id').value = id;
@@ -618,9 +606,11 @@ function openEditModal(id, filename, kelas, jenis, mapel, kategori) {
   document.getElementById('edit-help-text').classList.remove('hidden');
   document.getElementById('upload-modal').classList.remove('hidden');
 }
+
 function closeUploadModal() {
   document.getElementById('upload-modal').classList.add('hidden');
 }
+
 function processUpload() {
   const fileId = document.getElementById('edit-file-id').value;
   const judul = document.getElementById('up-filename').value;
@@ -636,9 +626,11 @@ function processUpload() {
   if(!fileId && !fileInput) return Swal.fire('Warning', 'File wajib dilampirkan jika upload baru!', 'warning');
   
   if(fileInput && fileInput.size > 10*1024*1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
+  
   btnSubmit.disabled = true;
   btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
   btnSubmit.innerText = 'Menyimpan Data...';
+  
   const processData = (base64Data, finalName, mimeType) => {
     Swal.fire({ title: 'Menyimpan Data...', text: 'Tunggu sebentar...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     
@@ -670,6 +662,7 @@ function processUpload() {
         btnSubmit.innerText = 'Simpan File';
       });
   };
+  
   if (fileInput) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -682,6 +675,7 @@ function processUpload() {
     processData(null, judul, null);
   }
 }
+
 async function deleteFile(fileId) {
   const confirm = await Swal.fire({ title: 'Yakin hapus dokumen ini?', text: "Proses ini tidak dapat dibatalkan.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!' });
   if(confirm.isConfirmed) {
