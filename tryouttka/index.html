@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tryout TKA - KKG MI Surabaya</title>
+    
+    <!-- Meta tags opsional untuk mempercantik link saat dibagikan ke WhatsApp -->
+    <meta property="og:title" content="Tryout TKA CBT - KKG MI Surabaya">
+    <meta property="og:description" content="Aplikasi Ujian Berbasis Komputer Resmi MIS Baiturrahman Gubeng">
+    
+    <style>
+        /* CSS ini sangat penting agar aplikasi memenuhi layar tanpa batas/garis putih */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Mencegah munculnya scroll ganda (scroll dari iframe + scroll dari web induk) */
+            background-color: #1e3a8a; /* Warna background cadangan sebelum web Vercel termuat */
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* Menghilangkan garis tepi bawaan iframe */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Di sinilah keajaibannya terjadi. Link Vercel Anda dipanggil di sini -->
+    <iframe 
+        src="https://cbt-git-main-suwantobelajar-8021.vercel.app/index.html" 
+        allowfullscreen="true" 
+        allow="clipboard-read; clipboard-write"
+        title="Aplikasi CBT KKG MI Surabaya">
+    </iframe>
+
+</body>
+</html>
