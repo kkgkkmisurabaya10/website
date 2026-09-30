@@ -2,41 +2,35 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pendaftaran Tryout TKA - KKG MI Surabaya</title>
     
-    <!-- Meta tags opsional untuk mempercantik link saat dibagikan ke WhatsApp -->
+    <!-- Meta tags untuk WhatsApp preview -->
     <meta property="og:title" content="Pendaftaran Tryout TKA CBT - KKG MI Surabaya">
     <meta property="og:description" content="Aplikasi Ujian Berbasis Komputer Resmi MIS Baiturrahman Gubeng">
     
+    <!-- Redirect otomatis ke link Vercel setelah 1 detik -->
+    <meta http-equiv="refresh" content="0;url=https://daftar-wanto1.vercel.app/">
+    
     <style>
-        /* CSS ini sangat penting agar aplikasi memenuhi layar tanpa batas/garis putih */
-        html, body {
+        body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* Mencegah munculnya scroll ganda (scroll dari iframe + scroll dari web induk) */
-            background-color: #1e3a8a; /* Warna background cadangan sebelum web Vercel termuat */
-        }
-        
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none; /* Menghilangkan garis tepi bawaan iframe */
-            display: block;
+            background-color: #1e3a8a;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-
-    <!-- Di sinilah keajaibannya terjadi. Link Vercel Anda dipanggil di sini -->
-    <iframe 
-        src="https://daftar-wanto1.vercel.app/" 
-        allowfullscreen="true" 
-        allow="clipboard-read; clipboard-write"
-        title="Aplikasi CBT KKG MI Surabaya">
-    </iframe>
-
+    <div>
+        <h2>Mengarahkan ke Aplikasi Pendaftaran CBT...</h2>
+        <p>Jika Anda tidak otomatis diarahkan, silakan klik <a href="https://daftar-wanto1.vercel.app/" style="color: #60a5fa;">di sini</a>.</p>
+    </div>
 </body>
 </html>
