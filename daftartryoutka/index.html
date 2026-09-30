@@ -9,28 +9,48 @@
     <meta property="og:title" content="Pendaftaran Tryout TKA CBT - KKG MI Surabaya">
     <meta property="og:description" content="Aplikasi Ujian Berbasis Komputer Resmi MIS Baiturrahman Gubeng">
     
-    <!-- Redirect otomatis ke link Vercel setelah 1 detik -->
-    <meta http-equiv="refresh" content="0;url=https://daftar-wanto1.vercel.app/">
-    
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #1e3a8a;
+            background-color: #1e3a8a; /* Warna biru gelap */
             color: white;
             font-family: sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             text-align: center;
         }
+        /* Animasi Loading Muter */
+        .loader {
+            border: 6px solid #ffffff33; /* Transparan */
+            border-top: 6px solid #ffffff; /* Putih solid */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div>
-        <h2>Mengarahkan ke Aplikasi Pendaftaran CBT...</h2>
-        <p>Jika Anda tidak otomatis diarahkan, silakan klik <a href="https://daftar-wanto1.vercel.app/" style="color: #60a5fa;">di sini</a>.</p>
-    </div>
+    
+    <div class="loader"></div>
+    <h2>Memuat Aplikasi CBT...</h2>
+    <p style="font-size: 14px; opacity: 0.8;">Mohon tunggu sebentar.</p>
+
+    <script>
+        // Mengalihkan secara otomatis dalam 1 detik (1000 milidetik)
+        // Menggunakan "replace" agar pengunjung tidak bisa menekan tombol "Back" ke halaman ini
+        setTimeout(function() {
+            window.location.replace("https://daftar-wanto1.vercel.app/");
+        }, 1000);
+    </script>
 </body>
 </html>
