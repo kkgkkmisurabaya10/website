@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Tryout TKA - KKG MI Surabaya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard CBT - KKG MI Surabaya</title>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #f3f4f6;
@@ -15,10 +15,11 @@
 </head>
 <body>
 
-    <!-- Tambahan atribut sandbox akan mencegah web Vercel mengubah link di address bar -->
+    <!-- Atribut sandbox diatur dengan hati-hati untuk mengizinkan login -->
     <iframe 
+        id="cbtFrame"
         src="https://daftar-wanto1.vercel.app/" 
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"
         title="Aplikasi CBT KKG MI Surabaya">
     </iframe>
 
