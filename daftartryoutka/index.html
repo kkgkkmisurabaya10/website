@@ -2,34 +2,252 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pendaftaran Tryout TKA - KKG MI Surabaya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try Out Akbar KKGMI Surabaya 10</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnqlalu" type="image/x-icon">
+    
+    <!-- Google Fonts for playful look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
     <style>
-        html, body {
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100dvh; /* Menggunakan dvh agar pas di layar HP (tidak tertutup bar URL browser) */
-            overflow: hidden; 
-            background-color: #f4f7f4;
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4; /* Light green background */
         }
-        iframe {
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-            display: block;
+        
+        /* Strong Heartbeat Animation for Main CTA */
+        @keyframes strongHeartbeat {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            15% { transform: scale(1.15); box-shadow: 0 0 20px 10px rgba(239, 68, 68, 0.5); }
+            30% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            45% { transform: scale(1.15); box-shadow: 0 0 20px 10px rgba(239, 68, 68, 0.5); }
+            60% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        .animate-strong-heartbeat {
+            animation: strongHeartbeat 2s infinite;
+        }
+
+        .text-stroke {
+            -webkit-text-stroke: 2px white;
+            text-stroke: 2px white;
+            color: #2563eb; /* Tailwind blue-600 */
+        }
+        
+        .text-stroke-red {
+            -webkit-text-stroke: 2px white;
+            text-stroke: 2px white;
+            color: #dc2626; /* Tailwind red-600 */
         }
     </style>
 </head>
-<body>
+<body class="antialiased text-gray-800">
 
-    <!-- Atribut sandbox dioptimalkan: allow-same-origin memastikan login sukses, allow-popups memastikan WA dan Download bisa terbuka -->
-    <iframe 
-        src="https://daftar-wanto1.vercel.app/" 
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-        title="Portal Tryout TKA KKGMI Surabaya 10"
-        allowfullscreen>
-    </iframe>
+    <!-- Header Section -->
+    <header class="bg-green-700 text-white text-center py-4 px-4 shadow-md border-b-4 border-yellow-400">
+        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center">
+            <h1 class="font-black text-lg md:text-2xl leading-tight">
+                KELOMPOK KERJA GURU MADRASAH IBTIDAIYAH<br>
+                (KKGMI) SURABAYA 10
+            </h1>
+            <p class="text-sm md:text-base mt-2 font-semibold text-green-100">
+                Sekretariat: Jl Jojoran I No 77 Surabaya
+            </p>
+            <p class="text-sm md:text-base text-green-100">
+                Email: kkgmi10surabaya@gmail.com | Website: kkgmisurabaya10.com
+            </p>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-blue-100 py-12 px-4 overflow-hidden border-b-8 border-white">
+        <!-- Decorative background elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
+            <div class="absolute top-10 left-10 w-32 h-32 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-10 w-32 h-32 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <h2 class="text-xl md:text-3xl font-black text-blue-900 mb-2 uppercase tracking-wide">
+                Mempersembahkan
+            </h2>
+            <h3 class="text-5xl md:text-7xl font-black mb-4 uppercase drop-shadow-xl text-stroke">
+                Try Out Akbar
+            </h3>
+            <h4 class="text-3xl md:text-5xl font-black mb-6 uppercase drop-shadow-lg text-stroke-red bg-white inline-block px-6 py-2 rounded-full transform -rotate-1 shadow-lg">
+                Berbasis CBT Online
+            </h4>
+            
+            <p class="text-xl md:text-2xl text-green-800 font-bold mb-6 mt-4">
+                Siapkan Generasi Emas, Raih Nilai TKA Terbaik!<br>
+                <span class="text-red-600 text-2xl md:text-3xl font-black block mt-2">Mari Bergabung!</span>
+            </p>
+
+            <!-- Price Badge -->
+            <div class="my-8">
+                <div class="inline-block bg-red-600 text-white rounded-3xl px-8 py-4 shadow-[0_10px_0_0_#991b1b] transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                    <span class="block text-xl font-bold mb-1">Hanya</span>
+                    <span class="block text-4xl md:text-6xl font-black drop-shadow-md">Rp.15.000</span>
+                </div>
+            </div>
+
+            <!-- Main CTA Button with Heartbeat Animation -->
+            <div class="mt-12 mb-8">
+                <a href="https://daftartryoutka-kkgmisurabaya10.vercel.app/" 
+                   target="_blank"
+                   class="animate-strong-heartbeat inline-block bg-yellow-400 hover:bg-yellow-300 text-red-700 font-black text-3xl md:text-4xl py-5 px-12 rounded-full border-4 border-white shadow-[0_8px_0_0_#b45309] hover:shadow-[0_4px_0_0_#b45309] hover:translate-y-1 transition-all">
+                   DAFTAR SEKARANG
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Sections (Grid) -->
+    <section class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Fasilitas Card -->
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-t-8 border-green-500 relative overflow-hidden">
+                <div class="bg-green-500 text-white text-center py-3 px-6 rounded-b-3xl absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5 shadow-md">
+                    <h3 class="font-black text-xl"><i class="fas fa-clipboard-list mr-2"></i> Dapatkan Fasilitas</h3>
+                </div>
+                <div class="mt-16 space-y-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-3 mt-1"></i>
+                        <p class="font-bold text-lg text-gray-700">4 kali kesempatan Try Out Online</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-3 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-gray-500 text-sm uppercase tracking-wide">Mata Pelajaran Utama:</p>
+                            <p class="font-black text-lg text-blue-800">Matematika & Bahasa Indonesia</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-3 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-gray-500 text-sm uppercase tracking-wide">Materi Tambahan:</p>
+                            <p class="font-bold text-lg text-gray-700">Survei Karakter dan Survei Lingkungan Belajar</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-3 mt-1"></i>
+                        <p class="font-bold text-lg text-gray-700">Simulasi ujian senyata mungkin</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-3 mt-1"></i>
+                        <p class="font-bold text-lg text-gray-700">Sertifikat</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jadwal Card -->
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-t-8 border-blue-500 relative overflow-hidden">
+                <div class="bg-blue-500 text-white text-center py-3 px-6 rounded-b-3xl absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5 shadow-md">
+                    <h3 class="font-black text-xl"><i class="fas fa-calendar-alt mr-2"></i> Catat Jadwalnya</h3>
+                </div>
+                <div class="mt-16 space-y-3">
+                    <div class="flex items-center justify-between bg-blue-50 rounded-lg p-3 border-l-4 border-blue-500">
+                        <span class="font-black text-blue-800 bg-blue-200 px-3 py-1 rounded-md">Try Out I</span>
+                        <span class="font-bold text-gray-700">17 November 2026</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-green-50 rounded-lg p-3 border-l-4 border-green-500">
+                        <span class="font-black text-green-800 bg-green-200 px-3 py-1 rounded-md">Try Out II</span>
+                        <span class="font-bold text-gray-700">25 Januari 2027</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-yellow-50 rounded-lg p-3 border-l-4 border-yellow-500">
+                        <span class="font-black text-yellow-800 bg-yellow-200 px-3 py-1 rounded-md">Try Out III</span>
+                        <span class="font-bold text-gray-700">22 Februari 2027</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-purple-50 rounded-lg p-3 border-l-4 border-purple-500">
+                        <span class="font-black text-purple-800 bg-purple-200 px-3 py-1 rounded-md">Try Out IV</span>
+                        <span class="font-bold text-gray-700">5 April 2027</span>
+                    </div>
+                    
+                    <div class="mt-6 bg-red-100 border-2 border-red-400 rounded-xl p-4 text-center">
+                        <h4 class="font-black text-red-600 mb-1"><i class="fas fa-bullhorn"></i> PENDAFTARAN</h4>
+                        <p class="font-bold text-sm text-gray-800">
+                            Mulai 1 Oktober 2026<br>
+                            sampai kuota terpenuhi
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Person Card -->
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-t-8 border-green-700 relative overflow-hidden">
+                <div class="bg-green-700 text-white text-center py-3 px-6 rounded-b-3xl absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5 shadow-md">
+                    <h3 class="font-black text-xl"><i class="fas fa-phone-alt mr-2"></i> Contact Person</h3>
+                </div>
+                <div class="mt-16 space-y-4">
+                    <p class="text-center font-bold text-gray-600 text-sm mb-4">Hubungi kami untuk informasi lebih lanjut:</p>
+                    
+                    <!-- WA Buttons -->
+                    <a href="https://wa.me/628138913534" target="_blank" class="flex items-center justify-between bg-[#25D366] hover:bg-[#1ebd5b] text-white py-3 px-5 rounded-xl shadow-md transition-transform hover:scale-105">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-user-circle text-2xl opacity-80"></i>
+                            <span class="font-bold text-lg">Pak Wolyono</span>
+                        </div>
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </a>
+                    
+                    <a href="https://wa.me/6282143880282" target="_blank" class="flex items-center justify-between bg-[#25D366] hover:bg-[#1ebd5b] text-white py-3 px-5 rounded-xl shadow-md transition-transform hover:scale-105">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-user-circle text-2xl opacity-80"></i>
+                            <span class="font-bold text-lg">Bu Lilik</span>
+                        </div>
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </a>
+                    
+                    <a href="https://wa.me/628563466620" target="_blank" class="flex items-center justify-between bg-[#25D366] hover:bg-[#1ebd5b] text-white py-3 px-5 rounded-xl shadow-md transition-transform hover:scale-105">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-user-circle text-2xl opacity-80"></i>
+                            <span class="font-bold text-lg">Bu Rina</span>
+                        </div>
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </a>
+                    
+                    <a href="https://wa.me/6285895283075" target="_blank" class="flex items-center justify-between bg-[#25D366] hover:bg-[#1ebd5b] text-white py-3 px-5 rounded-xl shadow-md transition-transform hover:scale-105">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-user-circle text-2xl opacity-80"></i>
+                            <span class="font-bold text-lg">Pak Wanto</span>
+                        </div>
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-green-700 text-white text-center py-8 px-4 mt-8">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-xl md:text-2xl font-black mb-2 flex items-center justify-center gap-3">
+                <i class="fas fa-seedling text-yellow-400"></i>
+                Bersama Kita Wujudkan
+                <i class="fas fa-seedling text-yellow-400"></i>
+            </h2>
+            <h3 class="text-2xl md:text-3xl font-black text-yellow-300 drop-shadow-md">
+                Generasi Cerdas, Berkarakter, dan Berprestasi
+            </h3>
+            <p class="mt-6 text-sm text-green-200 opacity-80">
+                &copy; 2026 KKGMI Surabaya 10. All rights reserved.
+            </p>
+        </div>
+    </footer>
 
 </body>
 </html>
