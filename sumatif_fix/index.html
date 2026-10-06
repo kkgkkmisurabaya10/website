@@ -17,9 +17,9 @@
 body { 
   font-family: 'Poppins', sans-serif; 
 }
-#checklist-content::-webkit-scrollbar, #modal-template-links::-webkit-scrollbar { width: 6px; }
-#checklist-content::-webkit-scrollbar-track, #modal-template-links::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
-#checklist-content::-webkit-scrollbar-thumb, #modal-template-links::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+#checklist-content::-webkit-scrollbar { width: 6px; }
+#checklist-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+#checklist-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
 </style>
 </head>
 <body class="min-h-screen relative text-gray-800">
@@ -143,7 +143,34 @@ body {
       </div>
     </div>
 
-    <!-- PENCARIAN & FILTER FILE -->
+    <!-- AREA UNDUH TEMPLATE (DI ATAS PENCARIAN & TOMBOL UPLOAD) -->
+    <div class="bg-white/90 p-5 rounded-3xl shadow-lg border border-white/50 mb-6 backdrop-blur-md flex flex-col md:flex-row items-center gap-4 justify-between">
+      <div class="flex items-center gap-3 w-full md:w-1/3">
+        <div class="bg-indigo-100 p-3 rounded-full text-indigo-600 shadow-inner">
+          <i class="fas fa-file-download text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-black text-indigo-900 uppercase tracking-wider">Unduh Template</h3>
+          <p class="text-[10px] text-gray-500 font-medium">Pilih fase untuk menampilkan berkas</p>
+        </div>
+      </div>
+      
+      <div class="w-full md:w-1/3">
+        <select id="dashboard-template-fase" onchange="showDashboardTemplates()" class="w-full p-3 border border-indigo-200 bg-white rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-bold text-indigo-800 cursor-pointer shadow-sm">
+          <option value="">-- Pilih Fase Pembelajaran --</option>
+          <option value="Fase A">Fase A (Kelas 1 & 2)</option>
+          <option value="Fase B">Fase B (Kelas 3 & 4)</option>
+          <option value="Fase C">Fase C (Kelas 5 & 6)</option>
+        </select>
+      </div>
+      
+      <!-- Container untuk 3 Tombol Template -->
+      <div id="dashboard-template-links" class="w-full md:w-1/3 flex flex-col sm:flex-row gap-2 hidden justify-end">
+        <!-- Dirender melalui JS saat dropdown dipilih -->
+      </div>
+    </div>
+
+    <!-- PENCARIAN & FILTER FILE (TOMBOL UPLOAD ADA DI SINI) -->
     <div class="bg-white/90 p-5 rounded-3xl shadow-lg border border-white/50 mb-6 backdrop-blur-md">
       <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-5 border-b border-gray-100 pb-4">
         <div class="w-full md:flex-1 relative">
@@ -239,9 +266,9 @@ body {
   </div>
 </div>
 
-<!-- UPLOAD & EDIT MODAL (TERMASUK UNDUH TEMPLATE) -->
+<!-- UPLOAD & EDIT MODAL -->
 <div id="upload-modal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
-  <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl h-auto max-h-[95vh] overflow-y-auto border border-emerald-100">
+  <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl h-auto max-h-[90vh] overflow-y-auto border border-emerald-100">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
       <h3 class="text-lg font-bold text-emerald-900" id="modal-title">Upload Soal</h3>
       <button onclick="closeUploadModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
@@ -314,20 +341,6 @@ body {
         <input type="file" id="up-file" accept=".doc, .docx, .xls, .xlsx, .pdf" class="w-full p-2 border rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
       </div>
 
-      <!-- AREA UNDUH TEMPLATE (DI BAWAH KOLOM UPLOAD) -->
-      <div class="mt-4 p-4 bg-indigo-50/60 rounded-2xl border border-indigo-100">
-        <label class="block text-xs font-black text-indigo-900 uppercase mb-2"><i class="fas fa-file-download mr-1"></i> Unduh Template Perangkat</label>
-        <select id="up-template-fase" onchange="showTemplatesModal()" class="w-full p-2.5 border border-indigo-200 bg-white rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-bold text-indigo-800 mb-3 cursor-pointer">
-          <option value="">-- Pilih Fase untuk melihat template --</option>
-          <option value="Fase A">Fase A (Kelas 1 & 2)</option>
-          <option value="Fase B">Fase B (Kelas 3 & 4)</option>
-          <option value="Fase C">Fase C (Kelas 5 & 6)</option>
-        </select>
-        <div id="modal-template-links" class="flex flex-col gap-2 hidden max-h-40 overflow-y-auto pr-1">
-          <!-- Rendered via JS -->
-        </div>
-      </div>
-
       <button onclick="processUpload()" id="btn-submit-upload" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 rounded-xl transition mt-2 shadow-md text-sm">Simpan File</button>
     </div>
   </div>
@@ -340,7 +353,7 @@ let currentUser = null;
 let globalFiles = [];
 let globalStats = null;
 let globalAllFileTitles = null; 
-let globalTemplates = []; // Menyimpan data template
+let globalTemplates = [];
 let isHasAdminAccess = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -434,7 +447,7 @@ async function loadFiles() {
       globalFiles = data.files;
       globalStats = data.stats; 
       globalAllFileTitles = data.allFileTitles; 
-      globalTemplates = data.templates || []; // Mengambil data templates
+      globalTemplates = data.templates || []; 
       
       renderFiles(globalFiles);
       updateStatsUI(); 
@@ -654,10 +667,10 @@ function filterFiles() {
   renderFiles(filtered);
 }
 
-// LOGIKA MENAMPILKAN TEMPLATE (BARU)
-function showTemplatesModal() {
-  const fase = document.getElementById('up-template-fase').value;
-  const container = document.getElementById('modal-template-links');
+// FUNGSI BARU TAMPILKAN TEMPLATE DI DASHBOARD
+function showDashboardTemplates() {
+  const fase = document.getElementById('dashboard-template-fase').value;
+  const container = document.getElementById('dashboard-template-links');
   
   if (!fase) {
     container.classList.add('hidden');
@@ -670,29 +683,20 @@ function showTemplatesModal() {
   const filtered = globalTemplates.filter(t => t.fase.toLowerCase() === fase.toLowerCase());
   
   if (filtered.length === 0) {
-    container.innerHTML = '<p class="text-[10px] text-red-500 italic p-2 bg-white rounded-lg border border-red-200">Template belum tersedia di sistem.</p>';
+    container.innerHTML = '<p class="text-[10px] text-red-500 italic p-2 w-full text-center bg-white rounded-lg border border-red-200">Template belum tersedia di sistem.</p>';
     return;
   }
   
   filtered.forEach(t => {
-    // Tentukan icon berdasarkan nama/kategori template
     let icon = 'fa-file-word text-blue-500';
     if(t.kategori.toLowerCase().includes('kunci') || t.nama.toLowerCase().includes('xlsx')) {
       icon = 'fa-file-excel text-green-500';
     }
     
     container.innerHTML += `
-      <a href="${t.url}" target="_blank" class="flex items-center justify-between bg-white p-3 rounded-xl border border-indigo-100 hover:bg-indigo-50 hover:border-indigo-300 transition text-xs font-bold text-gray-700 decoration-none shadow-sm gap-3">
-        <div class="flex items-center gap-3 min-w-0">
-          <i class="fas ${icon} text-xl w-6 text-center"></i>
-          <div class="min-w-0">
-             <p class="truncate text-indigo-900">${t.nama}</p>
-             <p class="text-[9px] text-gray-500 uppercase tracking-wider">${t.kategori}</p>
-          </div>
-        </div>
-        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-700 shrink-0">
-           <i class="fas fa-download"></i>
-        </div>
+      <a href="${t.url}" target="_blank" class="flex-1 flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 py-2.5 px-3 rounded-xl transition text-[10px] font-bold text-indigo-900 shadow-sm truncate" title="${t.nama}">
+        <i class="fas ${icon} text-sm"></i>
+        <span>${t.kategori}</span>
       </a>
     `;
   });
@@ -704,8 +708,6 @@ function openUploadModal() {
   document.getElementById('up-filename').value = "";
   document.getElementById('up-status-telaah').value = "Sebelum Telaah";
   document.getElementById('up-file').value = "";
-  document.getElementById('up-template-fase').value = ""; // Reset form template
-  document.getElementById('modal-template-links').classList.add('hidden');
   document.getElementById('edit-help-text').classList.add('hidden');
   document.getElementById('upload-modal').classList.remove('hidden');
 }
@@ -720,8 +722,6 @@ function openEditModal(id, filename, kelas, jenis, statusTelaah, mapel, kategori
   document.getElementById('up-mapel').value = mapel;
   document.getElementById('up-kategori').value = kategori;
   document.getElementById('up-file').value = ""; 
-  document.getElementById('up-template-fase').value = ""; // Reset form template
-  document.getElementById('modal-template-links').classList.add('hidden');
   document.getElementById('edit-help-text').classList.remove('hidden');
   document.getElementById('upload-modal').classList.remove('hidden');
 }
