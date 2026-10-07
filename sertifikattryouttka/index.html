@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Hasil TKA - KKGMI Surabaya 10</title>
-    <!-- Favicon -->
+    <!-- Favicon Logo Anda -->
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" type="image/png">
     
     <!-- Bootstrap 5 -->
@@ -14,36 +14,38 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #f4f7f6;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
         }
 
-        /* --- STYLING LANDING PAGE (SPLIT SCREEN) --- */
+        /* --- LANDING PAGE (SPLIT SCREEN) --- */
         .login-wrapper {
             min-height: 100vh;
             display: flex;
         }
         .info-side {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #18482a 0%, #2e7d32 100%); /* Warna Hijau MI */
             color: white;
-            flex: 1;
+            flex: 1.2;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px;
+            padding: 50px;
             text-align: center;
         }
         .info-side img {
-            width: 150px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            width: 160px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
         }
+        .info-side h1 { font-weight: 700; font-size: 2.2rem; margin-bottom: 10px; }
+        .info-side p { font-size: 1.1rem; opacity: 0.9; }
+        
         .form-side {
             flex: 1;
             display: flex;
@@ -52,176 +54,178 @@
             background: white;
             padding: 40px;
         }
-        .form-container {
-            width: 100%;
-            max-width: 400px;
-        }
-        .form-container h2 {
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
+        .form-container { width: 100%; max-width: 380px; }
+        .form-container h2 { font-weight: 700; color: #333; margin-bottom: 5px; }
 
-        /* Responsive untuk Mobile */
         @media (max-width: 768px) {
             .login-wrapper { flex-direction: column; }
             .info-side { padding: 40px 20px; }
         }
 
-        /* --- STYLING DASHBOARD --- */
+        /* --- DASHBOARD --- */
         .dashboard-header {
             background: white;
             padding: 15px 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 30px;
         }
-        .table-custom {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            overflow: hidden;
+        .card-custom {
+            background: white; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: none;
         }
 
-        /* --- DESAIN PDF KERTAS A4 (FIX 1 LEMBAR) --- */
+        /* --- LAYOUT SERTIFIKAT A4 (ANTI NUMPUK) --- */
         #print-wrapper { display: none; }
         
         .cert-page {
             width: 210mm;
-            height: 297mm; /* Fix 1 lembar A4 */
+            height: 297mm;
             padding: 10mm;
             background: #fff;
             box-sizing: border-box;
             font-family: 'Times New Roman', Times, serif;
             color: #000;
-            overflow: hidden; /* Mencegah konten meluber ke halaman 2 */
-            position: relative;
         }
         
         .cert-border {
             border: 4px double #1a3b5c;
-            padding: 12mm 15mm;
-            height: 277mm; /* 297 - (10*2) */
-            position: relative;
+            padding: 10mm 15mm;
+            height: 100%;
             box-sizing: border-box;
+            /* Flexbox murni agar TTD terdorong ke bawah tabel dengan rapi */
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header Sertifikat (Logo Tanpa Border) */
-        .cert-header { text-align: center; margin-bottom: 15px; }
-        .cert-header img { width: 120px; margin-bottom: 10px; } /* Border logo dihilangkan */
+        .cert-header { text-align: center; margin-bottom: 10px; }
+        .cert-header img { width: 110px; margin-bottom: 10px; }
         
-        /* Tabel Sertifikat - Rapi dan Presisi */
+        .cert-body { flex-grow: 1; } /* Mendorong footer ke bawah */
+        
         .cert-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            font-size: 11pt;
+            width: 100%; border-collapse: collapse;
+            margin-top: 15px; margin-bottom: 15px; font-size: 11pt;
         }
         .cert-table th, .cert-table td {
-            border: 1px solid #000;
-            padding: 8px 5px;
-            text-align: center;
-            vertical-align: middle;
+            border: 1px solid #000; padding: 6px 5px;
+            text-align: center; vertical-align: middle;
         }
         .cert-table th { background-color: #e2e8f0 !important; font-weight: bold; }
         .cert-table td:nth-child(2) { text-align: left; padding-left: 10px; }
-        .cert-table .footer-row td { font-weight: bold; }
-        .cert-table .footer-bg { background-color: #e2e8f0 !important; }
+        .cert-table .footer-bg { background-color: #e2e8f0 !important; font-weight: bold; }
 
-        /* Tanda Tangan & QR Code Layout (Fix di bawah) */
+        /* Footer (QR Code & Tanda Tangan) */
         .cert-footer {
-            width: 100%;
-            position: absolute;
-            bottom: 25mm; /* Jarak dari bawah */
-            left: 0;
-            padding: 0 25mm; /* Margin kiri kanan */
-            box-sizing: border-box;
             display: flex;
-            justify-content: space-between; /* QR di kiri, TTD di kanan */
+            justify-content: space-between;
             align-items: flex-end;
+            padding-top: 15px;
+            margin-bottom: 10px;
         }
-        
         .qr-section { text-align: center; }
-        .qr-container img { width: 80px; height: 80px; margin: 0 auto; }
-        .qr-text { font-size: 10px; font-family: monospace; margin-top: 5px; }
+        .qr-container img { width: 85px; height: 85px; margin: 0 auto; }
         
         .ttd-section { text-align: center; width: 250px; }
         .ttd-section p { margin: 2px 0; font-size: 11pt; }
         .ttd-image { 
-            height: 80px; 
-            margin: 5px 0;
-            /* Mix blend mode untuk stempel transparan */
-            mix-blend-mode: multiply; 
-            object-fit: contain;
+            height: 90px; margin: 5px 0;
+            mix-blend-mode: multiply; object-fit: contain;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. HALAMAN LOGIN (SPLIT SCREEN) -->
+    <!-- 1. HALAMAN LOGIN -->
     <div id="login-page" class="login-wrapper">
         <div class="info-side">
             <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo KKGMI">
-            <h2>Sertifikat Hasil Tryout TKA</h2>
+            <h1>PORTAL SERTIFIKAT TKA</h1>
             <p>Kelompok Kerja Guru Madrasah Ibtidaiyah (KKGMI)<br>Kota Surabaya 10</p>
-            <p class="small mt-3 opacity-75">Tahun Ajaran 2026/2027</p>
+            <span class="badge bg-light text-dark mt-3 px-3 py-2">Tahun Ajaran 2026/2027</span>
         </div>
         <div class="form-side">
             <div class="form-container">
                 <h2>Selamat Datang</h2>
-                <p class="text-muted mb-4">Silakan masuk menggunakan akun Guru atau Admin.</p>
+                <p class="text-muted mb-4 small">Masuk sebagai Admin atau Guru Sekolah.</p>
                 
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="username" placeholder="Username">
-                    <label for="username">Username</label>
+                    <label>Username</label>
                 </div>
                 <div class="form-floating mb-4">
                     <input type="password" class="form-control" id="password" placeholder="Password">
-                    <label for="password">Password</label>
+                    <label>Password</label>
                 </div>
-                <button class="btn btn-primary w-100 py-3 fw-bold" onclick="loginAction()" id="btnLogin" style="border-radius: 8px;">MASUK APLIKASI</button>
+                <button class="btn btn-success w-100 py-3 fw-bold shadow-sm" onclick="loginAction()" id="btnLogin">MASUK APLIKASI</button>
                 <div id="login-alert" class="alert alert-danger mt-3 d-none"></div>
             </div>
         </div>
     </div>
 
-    <!-- 2. DASHBOARD GURU/ADMIN -->
+    <!-- 2. DASHBOARD -->
     <div id="dashboard-page" class="d-none" style="min-height: 100vh;">
         <div class="dashboard-header">
             <div>
-                <h4 class="fw-bold m-0 text-primary">Portal Sertifikat TKA</h4>
+                <h5 class="fw-bold m-0 text-success">Dashboard TKA</h5>
                 <p class="text-muted m-0 small" id="user-info">Login sebagai: -</p>
             </div>
-            <button class="btn btn-danger btn-sm px-4 rounded-pill" onclick="logoutAction()">Logout</button>
+            <button class="btn btn-outline-danger btn-sm px-4 rounded-pill fw-bold" onclick="logoutAction()">Keluar</button>
         </div>
 
         <div class="container">
-            <div class="table-custom p-4">
-                <div class="d-flex justify-content-between mb-4 align-items-center">
-                    <div>
-                        <h5 class="fw-bold m-0">Daftar Siswa</h5>
-                        <small class="text-muted" id="school-name">Asal Sekolah</small>
-                    </div>
-                    <button class="btn btn-success fw-bold px-4" onclick="downloadPDF(null)">⬇ Cetak Semua Sertifikat</button>
-                </div>
+            <div class="row">
                 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Siswa</th>
-                                <th>Asal Sekolah</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="student-table-body">
-                            <tr><td colspan="4" class="text-center text-muted py-5">Memuat data dari server...</td></tr>
-                        </tbody>
-                    </table>
+                <!-- MENU ADMIN KHUSUS (Disembunyikan otomatis jika login sebagai Guru) -->
+                <div class="col-md-4 mb-4 d-none" id="admin-settings">
+                    <div class="card-custom p-4 border border-success">
+                        <h6 class="fw-bold text-success mb-3">Pengaturan Sertifikat (Khusus Admin)</h6>
+                        <small class="text-muted d-block mb-3">Tanda tangan ini akan muncul di semua sertifikat siswa otomatis.</small>
+                        
+                        <label class="small fw-bold">Nama Ketua KKGMI</label>
+                        <input type="text" id="ketuaNama" class="form-control form-control-sm mb-2" placeholder="Cth: Ahmad, S.Pd">
+                        
+                        <label class="small fw-bold">NIP Ketua</label>
+                        <input type="text" id="ketuaNip" class="form-control form-control-sm mb-3" placeholder="Cth: 19801010...">
+                        
+                        <label class="small fw-bold">Upload TTD & Stempel (Disarankan PNG tanpa background)</label>
+                        <input type="file" id="ttdUpload" class="form-control form-control-sm mb-2" accept="image/*">
+                        
+                        <div class="text-center bg-light border rounded p-2 mb-3">
+                            <img id="ttdPreview" src="" class="img-fluid d-none" style="max-height: 80px;">
+                        </div>
+                        
+                        <button class="btn btn-success btn-sm w-100 fw-bold" onclick="saveAdminSettings()" id="btnSaveSet">Simpan Pengaturan</button>
+                    </div>
+                </div>
+
+                <!-- TABEL DATA SISWA -->
+                <div class="col-md-12" id="table-container">
+                    <div class="card-custom p-4">
+                        <div class="d-flex justify-content-between mb-4 align-items-center">
+                            <div>
+                                <h5 class="fw-bold m-0">Daftar Siswa</h5>
+                                <small class="text-muted" id="school-name">Asal Sekolah</small>
+                            </div>
+                            <button class="btn btn-primary fw-bold shadow-sm" onclick="downloadPDF(null)">Unduh Semua Sertifikat</button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Siswa</th>
+                                        <th>Asal Sekolah</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-table-body">
+                                    <tr><td colspan="4" class="text-center text-muted py-5">Memuat data dari server...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,14 +235,27 @@
     <div id="print-wrapper"></div>
 
     <script>
-        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI BAWAH INI !!!
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzqHrDmDGLRukr6J8rDgCNDo0U166c-2ICNEvpwtojGrCyhMz6dA7VmgzxOkp3PbbEU4Q/exec"; 
         
         let studentsGlobal = [];
         let sessionUser = {};
-        
-        // Link TTD Hardcode (Admin dapat mengganti link gambar ttd+stempel disini)
-        const TTD_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Signature_of_Soekarno.png/800px-Signature_of_Soekarno.png"; // Ganti dengan URL TTD Anda
+        let globalSettings = { ttd: "", nama: "", nip: "" };
+
+        // Handle File TTD Convert ke Base64
+        let base64String = "";
+        document.getElementById('ttdUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    base64String = evt.target.result;
+                    document.getElementById('ttdPreview').src = base64String;
+                    document.getElementById('ttdPreview').classList.remove('d-none');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
 
         // Cek Session saat reload
         window.onload = function() {
@@ -256,29 +273,26 @@
             const alertMsg = document.getElementById('login-alert');
             
             if(!u || !p) {
-                alertMsg.textContent = "Username dan Password wajib diisi.";
-                alertMsg.classList.remove('d-none');
-                return;
+                alertMsg.textContent = "Isi Username dan Password!";
+                alertMsg.classList.remove('d-none'); return;
             }
             
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memeriksa...'; 
-            btn.disabled = true;
+            btn.innerHTML = 'Memeriksa...'; btn.disabled = true;
             
             fetch(`${GAS_URL}?action=login&username=${u}&password=${p}`)
                 .then(res => res.json())
                 .then(res => {
                     if(res.success) {
                         sessionUser = res;
-                        sessionStorage.setItem('userSession', JSON.stringify(res)); // Simpan Sesi
+                        sessionStorage.setItem('userSession', JSON.stringify(res));
                         showDashboard();
                     } else {
                         alertMsg.textContent = res.message;
                         alertMsg.classList.remove('d-none');
                         btn.innerHTML = 'MASUK APLIKASI'; btn.disabled = false;
                     }
-                })
-                .catch(err => {
-                    alertMsg.textContent = "Terjadi kesalahan koneksi server.";
+                }).catch(err => {
+                    alertMsg.textContent = "Koneksi Error. Pastikan URL GAS benar.";
                     alertMsg.classList.remove('d-none');
                     btn.innerHTML = 'MASUK APLIKASI'; btn.disabled = false;
                 });
@@ -288,9 +302,8 @@
             sessionStorage.removeItem('userSession');
             document.getElementById('dashboard-page').classList.add('d-none');
             document.getElementById('login-page').classList.remove('d-none');
-            document.getElementById('login-page').classList.add('login-wrapper'); // Kembalikan display flex
+            document.getElementById('login-page').classList.add('login-wrapper');
             
-            // Reset form
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             document.getElementById('btnLogin').innerHTML = 'MASUK APLIKASI';
@@ -302,32 +315,82 @@
             document.getElementById('login-page').classList.remove('login-wrapper');
             document.getElementById('dashboard-page').classList.remove('d-none');
             
-            document.getElementById('user-info').innerText = `Login sebagai: ${sessionUser.name} (${sessionUser.role})`;
+            document.getElementById('user-info').innerText = `Login: ${sessionUser.name} (${sessionUser.role})`;
             document.getElementById('school-name').innerText = sessionUser.sekolah;
+            
+            // Konfigurasi Layar Admin / Guru
+            if(sessionUser.role === "Admin") {
+                document.getElementById('admin-settings').classList.remove('d-none');
+                document.getElementById('table-container').classList.replace('col-md-12', 'col-md-8');
+            } else {
+                document.getElementById('admin-settings').classList.add('d-none');
+                document.getElementById('table-container').classList.replace('col-md-8', 'col-md-12');
+            }
             
             loadStudentData();
         }
 
         function loadStudentData() {
+            document.getElementById('student-table-body').innerHTML = `<tr><td colspan="4" class="text-center py-5">Memuat data dari Database...</td></tr>`;
+            
             fetch(`${GAS_URL}?action=getData&role=${sessionUser.role}&sekolah=${sessionUser.sekolah}`)
                 .then(res => res.json())
                 .then(data => {
-                    studentsGlobal = data;
+                    studentsGlobal = data.students;
+                    globalSettings = data.settings; // Ambil Data TTD dan Ketua dari DB
+                    
+                    // Isi form Admin jika ada
+                    if(sessionUser.role === "Admin"){
+                        document.getElementById('ketuaNama').value = globalSettings.nama;
+                        document.getElementById('ketuaNip').value = globalSettings.nip;
+                        if(globalSettings.ttd) {
+                            base64String = globalSettings.ttd;
+                            document.getElementById('ttdPreview').src = base64String;
+                            document.getElementById('ttdPreview').classList.remove('d-none');
+                        }
+                    }
+
                     let html = '';
-                    if(data.length === 0) {
-                        html = `<tr><td colspan="4" class="text-center text-muted py-4">Tidak ada data siswa ditemukan untuk sekolah ini.</td></tr>`;
+                    if(studentsGlobal.length === 0) {
+                        html = `<tr><td colspan="4" class="text-center text-muted py-4">Tidak ada data siswa ditemukan.</td></tr>`;
                     } else {
-                        data.forEach((s, idx) => {
+                        studentsGlobal.forEach((s, idx) => {
                             html += `<tr>
                                 <td>${idx + 1}</td>
                                 <td class="fw-bold">${s.nama}</td>
                                 <td>${s.sekolah}</td>
-                                <td class="text-center"><button class="btn btn-sm btn-primary rounded-pill px-3" onclick="downloadPDF('${s.id}')">Unduh PDF</button></td>
+                                <td class="text-center"><button class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold" onclick="downloadPDF('${s.id}')">Cetak PDF</button></td>
                             </tr>`;
                         });
                     }
                     document.getElementById('student-table-body').innerHTML = html;
                 });
+        }
+
+        function saveAdminSettings() {
+            const btn = document.getElementById('btnSaveSet');
+            btn.innerHTML = "Menyimpan..."; btn.disabled = true;
+            
+            const payload = {
+                action: "saveSettings",
+                nama: document.getElementById('ketuaNama').value,
+                nip: document.getElementById('ketuaNip').value,
+                ttd: base64String
+            };
+
+            fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(res => {
+                if(res.success){
+                    alert("Pengaturan Berhasil Disimpan!");
+                    loadStudentData(); // Reload setingan terbaru
+                }
+                btn.innerHTML = "Simpan Pengaturan"; btn.disabled = false;
+            }).catch(e => {
+                alert("Gagal menyimpan!");
+                btn.innerHTML = "Simpan Pengaturan"; btn.disabled = false;
+            });
         }
 
         // GENERATOR SERTIFIKAT PDF
@@ -337,18 +400,16 @@
             wrapper.style.display = 'block';
 
             let listToPrint = studentId ? studentsGlobal.filter(s => s.id == studentId) : studentsGlobal;
-
-            if(listToPrint.length === 0) {
-                alert("Tidak ada data untuk dicetak!");
-                wrapper.style.display = 'none';
-                return;
-            }
+            
+            // Validasi Setting TTD
+            let imgTtd = globalSettings.ttd || 'https://via.placeholder.com/150x80?text=Belum+Disetting+Admin';
+            let nmKetua = globalSettings.nama || 'NAMA KETUA KKGMI';
+            let nipKetua = globalSettings.nip || 'NIP. -';
 
             listToPrint.forEach((student, index) => {
                 let tableRows = '';
                 let t1 = 0, t2 = 0, t3 = 0, tAvg = 0;
                 
-                // Kalkulasi Nilai
                 student.results.forEach((r, i) => {
                     let avg = ((r.to1 + r.to2 + r.to3) / 3);
                     t1 += r.to1; t2 += r.to2; t3 += r.to3; tAvg += avg;
@@ -366,24 +427,24 @@
                 
                 let c = student.results.length || 1;
                 
-                // Template HTML Sertifikat
+                // STRUKTUR FLEXBOX MENCEGAH NUMPUK (Header -> Body -> Footer)
                 let certHTML = `
                     <div class="cert-page" ${index > 0 ? 'style="page-break-before: always;"' : ''}>
                         <div class="cert-border">
                             
+                            <!-- BAGIAN ATAS -->
                             <div class="cert-header">
-                                <!-- Logo tanpa kotak border -->
                                 <img src="https://lh3.googleusercontent.com/d/1SCvmdQxuqmX_f0gBaYt0Ob53Tws97Hnq" alt="Logo KKGMI">
                                 <h3 style="margin: 0; font-weight: bold; font-family: 'Times New Roman', serif;">KELOMPOK KERJA GURU MADRASAH IBTIDAIYAH (KKGMI)</h3>
                                 <h4 style="margin: 5px 0 15px 0; font-weight: bold;">KOTA SURABAYA 10</h4>
                                 <hr style="border: 1px solid #000; margin: 0 0 2px 0;">
                                 <hr style="border: 0.5px solid #000; margin: 0 0 20px 0;">
-                                
                                 <h4 style="margin: 0; font-weight: bold; color:#1a3b5c; text-decoration: underline;">SERTIFIKAT HASIL TRYOUT TES KEMAMPUAN AKADEMIK</h4>
                                 <p style="font-style: italic; margin-top:5px;">Tahun Ajaran 2026/2027</p>
                             </div>
                             
-                            <div style="padding: 0 10px;">
+                            <!-- BAGIAN TENGAH (Mendorong Footer Kebawah) -->
+                            <div class="cert-body">
                                 <p style="text-indent: 40px; text-align: justify; line-height: 1.5; margin-bottom: 10px;">Berdasarkan hasil rangkaian pelaksanaan Tryout Tes Kemampuan Akademik (TKA) jenjang MI sederajat yang diselenggarakan di wilayah Kota Surabaya 10, menerangkan dengan sesungguhnya bahwa:</p>
                                 
                                 <table style="width: 80%; margin: 5px auto; line-height: 1.5;">
@@ -408,14 +469,14 @@
                                     </thead>
                                     <tbody>
                                         ${tableRows}
-                                        <tr class="footer-row">
-                                            <td colspan="2" style="text-align: right; padding-right: 15px;">TOTAL NILAI SETIAP GELOMBANG</td>
-                                            <td>${t1.toFixed(2)}</td>
-                                            <td>${t2.toFixed(2)}</td>
-                                            <td>${t3.toFixed(2)}</td>
+                                        <tr>
+                                            <td colspan="2" style="text-align: right; padding-right: 15px; font-weight: bold;">TOTAL NILAI SETIAP GELOMBANG</td>
+                                            <td style="font-weight: bold;">${t1.toFixed(2)}</td>
+                                            <td style="font-weight: bold;">${t2.toFixed(2)}</td>
+                                            <td style="font-weight: bold;">${t3.toFixed(2)}</td>
                                             <td class="footer-bg">-</td>
                                         </tr>
-                                        <tr class="footer-row footer-bg">
+                                        <tr class="footer-bg">
                                             <td colspan="2" style="text-align: right; padding-right: 15px;">RATA-RATA KESELURUHAN GELOMBANG</td>
                                             <td>${(t1/c).toFixed(2)}</td>
                                             <td>${(t2/c).toFixed(2)}</td>
@@ -426,19 +487,19 @@
                                 </table>
                             </div>
 
-                            <!-- Footer Sertifikat (QR Kiri, TTD Kanan) -->
+                            <!-- BAGIAN BAWAH (Pasti Berada di Bawah Tabel) -->
                             <div class="cert-footer">
                                 <div class="qr-section">
                                     <div class="qr-container" id="qr-${student.id}"></div>
-                                    <div class="qr-text">ID-TKA: ${student.id}</div>
+                                    <div style="font-size: 10px; font-family: monospace; margin-top: 5px;">ID-TKA: ${student.id}</div>
                                 </div>
                                 
                                 <div class="ttd-section">
                                     <p>Surabaya, 30 Mei 2026</p>
                                     <p>Ketua KKGMI Surabaya 10,</p>
-                                    <img src="${TTD_IMAGE_URL}" class="ttd-image" alt="Tanda Tangan">
-                                    <p style="font-weight: bold; text-decoration: underline;">Nama Ketua KKGMI</p>
-                                    <p>NIP. 19801010 200501 1 001</p>
+                                    <img src="${imgTtd}" class="ttd-image" alt="Tanda Tangan">
+                                    <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">${nmKetua}</p>
+                                    <p style="margin-top: 2px;">NIP. ${nipKetua}</p>
                                 </div>
                             </div>
                             
@@ -447,14 +508,14 @@
                 `;
                 wrapper.insertAdjacentHTML('beforeend', certHTML);
                 
-                // Inject QR Code
+                // Render QR Code
                 new QRCode(document.getElementById(`qr-${student.id}`), {
                     text: `Verifikasi Sah\nNama: ${student.nama}\nSekolah: ${student.sekolah}\nID: ${student.id}`,
-                    width: 80, height: 80
+                    width: 85, height: 85
                 });
             });
 
-            // Opsi PDF (Force 1 lembar)
+            // Eksekusi PDF 
             const filenameStr = studentId ? `Sertifikat_TKA_${listToPrint[0].nama}.pdf` : `Sertifikat_TKA_${sessionUser.sekolah}.pdf`;
             const opt = {
               margin:       0,
