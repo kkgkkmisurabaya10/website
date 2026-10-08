@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -165,9 +164,8 @@ body {
         </select>
       </div>
       
-      <!-- Container untuk 3 Tombol Template -->
       <div id="dashboard-template-links" class="w-full md:w-1/3 flex flex-col sm:flex-row gap-2 hidden justify-end">
-        <!-- Dirender melalui JS saat dropdown dipilih -->
+        <!-- Dirender melalui JS -->
       </div>
     </div>
 
@@ -354,7 +352,6 @@ let globalFiles = [];
 let globalStats = null;
 let globalAllFileTitles = null; 
 let globalTemplates = [];
-let isHasAdminAccess = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedSession = localStorage.getItem('kkgmi_session_sumatif');
@@ -415,8 +412,6 @@ function showDashboard() {
   document.getElementById('auth-page').classList.add('hidden');
   document.getElementById('dashboard-page').classList.remove('hidden');
   document.getElementById('user-name').innerText = currentUser.nama;
-  
-  isHasAdminAccess = (currentUser.role.toLowerCase() === 'admin' || currentUser.role.toLowerCase() === 'penanggungjawab');
   
   if (currentUser.role) {
     document.getElementById('user-role-badge').innerText = 'Akses: ' + currentUser.role.toUpperCase();
@@ -584,44 +579,12 @@ function closeChecklistModal() {
   document.getElementById('checklist-modal').classList.add('hidden');
 }
 
-// FUNGSI CEK DOMAIN KOORDINATOR
-function checkKoordinatorDomain(role, kelas, mapel) {
-  const r = role.toLowerCase().trim();
-  const k = kelas.toLowerCase().trim();
-  const m = mapel.toLowerCase().trim();
-  
-  if (r === 'admin' || r === 'penanggungjawab') return true;
-  
-  const isUmum = ['ipas', 'pkn', 'bahasa indonesia', 'matematika'].includes(m);
-  
-  if (r === 'koordinator kelas 1' && k === 'kelas 1' && isUmum) return true;
-  if (r === 'koordinator kelas 2' && k === 'kelas 2' && isUmum) return true;
-  if (r === 'koordinator kelas 3' && k === 'kelas 3' && isUmum) return true;
-  if (r === 'koordinator kelas 4' && k === 'kelas 4' && isUmum) return true;
-  if (r === 'koordinator kelas 5' && k === 'kelas 5' && isUmum) return true;
-  if (r === 'koordinator kelas 6' && k === 'kelas 6' && isUmum) return true;
-  
-  if (r === 'koordinator pjok' && m === 'pjok') return true;
-  if (r === 'koordinator bahasa jawa' && m === 'bahasa jawa') return true;
-  if (r === 'koordinator bahasa arab' && m === 'bahasa arab') return true;
-  if (r === 'koordinator bahasa inggris' && m === 'bahasa inggris') return true;
-  
-  const isPaiA = ['fikih', 'akidah akhlak', 'al-quran hadis'].includes(m);
-  const isPaiBC = ['fikih', 'akidah akhlak', 'al-quran hadis', 'ski'].includes(m);
-  
-  if (r === 'koordinator pai fase a' && (k === 'kelas 1' || k === 'kelas 2') && isPaiA) return true;
-  if (r === 'koordinator pai fase b' && (k === 'kelas 3' || k === 'kelas 4') && isPaiBC) return true;
-  if (r === 'koordinator pai fase c' && (k === 'kelas 5' || k === 'kelas 6') && isPaiBC) return true;
-  
-  return false;
-}
-
 function renderFiles(files) {
   const grid = document.getElementById('file-grid');
   grid.innerHTML = '';
   
   if(files.length === 0) {
-    grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 bg-white/70 backdrop-blur rounded-3xl p-8 border font-medium shadow-sm">Tidak ada file yang ditemukan atau filter terlalu spesifik.</div>';
+    grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 bg-white/70 backdrop-blur rounded-3xl p-8 border font-medium shadow-sm">Tidak ada file yang ditemukan atau tidak ada dalam otoritas Anda.</div>';
     return;
   }
   
@@ -632,7 +595,7 @@ function renderFiles(files) {
     else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
     else if(['doc', 'docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
     
-    // PEMBATASAN AKSES KELOLA FILE (EDIT/HAPUS)
+    // ATURAN KELOLA BERDASARKAN HASIL FILTER DARI BACKEND
     const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
     const isOwner = file.uploader === currentUser.nama;
     const isSetelahTelaah = (file.statusTelaah && file.statusTelaah.toLowerCase() === 'setelah telaah');
@@ -641,8 +604,8 @@ function renderFiles(files) {
     if (userRole === 'admin' || userRole === 'penanggungjawab') {
       canManage = true;
     } else if (userRole.startsWith('koordinator')) {
-      canManage = isOwner || checkKoordinatorDomain(userRole, file.kelas, file.mapel);
-    } else { // Jika Guru Biasa
+      canManage = true; 
+    } else { 
       canManage = isOwner && !isSetelahTelaah;
     }
     
@@ -758,6 +721,7 @@ function openUploadModal() {
   
   const statusSelect = document.getElementById('up-status-telaah');
   const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
+  
   if (userRole === 'guru') {
     statusSelect.value = 'Sebelum Telaah';
     statusSelect.disabled = true;
@@ -785,6 +749,7 @@ function openEditModal(id, filename, kelas, jenis, statusTelaah, mapel, kategori
   const statusSelect = document.getElementById('up-status-telaah');
   statusSelect.value = statusTelaah || "Sebelum Telaah";
   const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
+  
   if (userRole === 'guru') {
     statusSelect.disabled = true;
     statusSelect.classList.add('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
