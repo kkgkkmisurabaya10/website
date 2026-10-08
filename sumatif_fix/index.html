@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -143,7 +144,7 @@ body {
       </div>
     </div>
 
-    <!-- AREA UNDUH TEMPLATE (SESUAI REQUEST) -->
+    <!-- AREA UNDUH TEMPLATE -->
     <div class="bg-white/95 p-5 rounded-3xl shadow-lg border border-indigo-100 mb-6 backdrop-blur-md flex flex-col md:flex-row items-center gap-4 justify-between">
       <div class="flex items-center gap-3 w-full md:w-1/3">
         <div class="bg-indigo-100 p-3 rounded-full text-indigo-600 shadow-inner">
@@ -334,7 +335,6 @@ body {
         </select>
       </div>
       
-      <!-- KOLOM UPLOAD FILE -->
       <div class="border-b pb-4">
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih File (Max 10MB)</label>
         <p class="text-[10px] text-blue-600 mb-2 italic" id="edit-help-text">Abaikan kolom ini jika hanya ingin mengubah nama/kategori file.</p>
@@ -416,9 +416,9 @@ function showDashboard() {
   document.getElementById('dashboard-page').classList.remove('hidden');
   document.getElementById('user-name').innerText = currentUser.nama;
   
-  isHasAdminAccess = (currentUser.role === 'koordinator' || currentUser.role === 'penanggungjawab');
+  isHasAdminAccess = (currentUser.role.toLowerCase() === 'admin' || currentUser.role.toLowerCase() === 'penanggungjawab');
   
-  if (isHasAdminAccess || currentUser.role === 'guru') {
+  if (currentUser.role) {
     document.getElementById('user-role-badge').innerText = 'Akses: ' + currentUser.role.toUpperCase();
     document.getElementById('user-role-badge').classList.remove('hidden');
     document.getElementById('btn-open-upload').classList.remove('hidden'); 
@@ -584,6 +584,38 @@ function closeChecklistModal() {
   document.getElementById('checklist-modal').classList.add('hidden');
 }
 
+// FUNGSI CEK DOMAIN KOORDINATOR
+function checkKoordinatorDomain(role, kelas, mapel) {
+  const r = role.toLowerCase().trim();
+  const k = kelas.toLowerCase().trim();
+  const m = mapel.toLowerCase().trim();
+  
+  if (r === 'admin' || r === 'penanggungjawab') return true;
+  
+  const isUmum = ['ipas', 'pkn', 'bahasa indonesia', 'matematika'].includes(m);
+  
+  if (r === 'koordinator kelas 1' && k === 'kelas 1' && isUmum) return true;
+  if (r === 'koordinator kelas 2' && k === 'kelas 2' && isUmum) return true;
+  if (r === 'koordinator kelas 3' && k === 'kelas 3' && isUmum) return true;
+  if (r === 'koordinator kelas 4' && k === 'kelas 4' && isUmum) return true;
+  if (r === 'koordinator kelas 5' && k === 'kelas 5' && isUmum) return true;
+  if (r === 'koordinator kelas 6' && k === 'kelas 6' && isUmum) return true;
+  
+  if (r === 'koordinator pjok' && m === 'pjok') return true;
+  if (r === 'koordinator bahasa jawa' && m === 'bahasa jawa') return true;
+  if (r === 'koordinator bahasa arab' && m === 'bahasa arab') return true;
+  if (r === 'koordinator bahasa inggris' && m === 'bahasa inggris') return true;
+  
+  const isPaiA = ['fikih', 'akidah akhlak', 'al-quran hadis'].includes(m);
+  const isPaiBC = ['fikih', 'akidah akhlak', 'al-quran hadis', 'ski'].includes(m);
+  
+  if (r === 'koordinator pai fase a' && (k === 'kelas 1' || k === 'kelas 2') && isPaiA) return true;
+  if (r === 'koordinator pai fase b' && (k === 'kelas 3' || k === 'kelas 4') && isPaiBC) return true;
+  if (r === 'koordinator pai fase c' && (k === 'kelas 5' || k === 'kelas 6') && isPaiBC) return true;
+  
+  return false;
+}
+
 function renderFiles(files) {
   const grid = document.getElementById('file-grid');
   grid.innerHTML = '';
@@ -600,14 +632,22 @@ function renderFiles(files) {
     else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
     else if(['doc', 'docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
     
-    // PEMBATASAN AKSES
+    // PEMBATASAN AKSES KELOLA FILE (EDIT/HAPUS)
+    const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
+    const isOwner = file.uploader === currentUser.nama;
     const isSetelahTelaah = (file.statusTelaah && file.statusTelaah.toLowerCase() === 'setelah telaah');
-    const uploaderIsCurrentUser = (file.uploader === currentUser.nama);
+    
+    let canManage = false;
+    if (userRole === 'admin' || userRole === 'penanggungjawab') {
+      canManage = true;
+    } else if (userRole.startsWith('koordinator')) {
+      canManage = isOwner || checkKoordinatorDomain(userRole, file.kelas, file.mapel);
+    } else { // Jika Guru Biasa
+      canManage = isOwner && !isSetelahTelaah;
+    }
     
     let adminControls = '';
-    
-    // Syarat Tombol Muncul
-    if (isHasAdminAccess || (uploaderIsCurrentUser && !isSetelahTelaah)) {
+    if (canManage) {
       const escapedFilename = file.filename.replace(/'/g, "\\'");
       adminControls = `
         <button onclick="openEditModal('${file.id}', '${escapedFilename}', '${file.kelas}', '${file.jenis}', '${file.statusTelaah}', '${file.mapel}', '${file.kategori}')" class="bg-yellow-50 text-yellow-700 border border-yellow-200 px-3 py-2 rounded-xl hover:bg-yellow-100 transition flex items-center justify-center text-xs font-bold gap-1" title="Perbaharui Info/File"><i class="fas fa-edit"></i> Edit</button>
@@ -615,8 +655,7 @@ function renderFiles(files) {
       `;
     }
 
-    const isSetelah = file.statusTelaah.toLowerCase() === 'setelah telaah';
-    const telaahBadgeColor = isSetelah ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-orange-100 text-orange-700 border-orange-200';
+    const telaahBadgeColor = isSetelahTelaah ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-orange-100 text-orange-700 border-orange-200';
 
     grid.innerHTML += `
       <div class="bg-white/95 p-5 rounded-3xl shadow-md hover:shadow-lg transition border border-gray-100 flex flex-col relative overflow-hidden backdrop-blur-sm">
@@ -667,7 +706,6 @@ function filterFiles() {
   renderFiles(filtered);
 }
 
-// LOGIKA TAMPILKAN TEMPLATE (IKON SESUAI PERMINTAAN)
 function showDashboardTemplates() {
   const fase = document.getElementById('dashboard-template-fase').value;
   const container = document.getElementById('dashboard-template-links');
@@ -688,18 +726,17 @@ function showDashboardTemplates() {
   }
   
   filtered.forEach(t => {
-    // Pengaturan Ikon Sesuai Request
     let icon = 'fa-file-alt text-gray-500';
     let styleClass = 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700';
 
     if (t.kategori.toLowerCase().includes('kisi')) {
-      icon = 'fa-file-excel text-green-600'; // Ikon Excel
+      icon = 'fa-file-excel text-green-600'; 
       styleClass = 'bg-green-50 hover:bg-green-100 border-green-200 text-green-800';
     } else if (t.kategori.toLowerCase().includes('soal')) {
-      icon = 'fa-file-word text-blue-600'; // Ikon Word
+      icon = 'fa-file-word text-blue-600'; 
       styleClass = 'bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-800';
     } else if (t.kategori.toLowerCase().includes('kunci')) {
-      icon = 'fa-file-word text-orange-600'; // Ikon Word (Oranye agar beda visual)
+      icon = 'fa-file-word text-orange-600'; 
       styleClass = 'bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-800';
     }
     
@@ -716,9 +753,21 @@ function openUploadModal() {
   document.getElementById('modal-title').innerText = "Upload Dokumen Baru";
   document.getElementById('edit-file-id').value = "";
   document.getElementById('up-filename').value = "";
-  document.getElementById('up-status-telaah').value = "Sebelum Telaah";
   document.getElementById('up-file').value = "";
   document.getElementById('edit-help-text').classList.add('hidden');
+  
+  const statusSelect = document.getElementById('up-status-telaah');
+  const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
+  if (userRole === 'guru') {
+    statusSelect.value = 'Sebelum Telaah';
+    statusSelect.disabled = true;
+    statusSelect.classList.add('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+  } else {
+    statusSelect.value = 'Sebelum Telaah';
+    statusSelect.disabled = false;
+    statusSelect.classList.remove('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+  }
+
   document.getElementById('upload-modal').classList.remove('hidden');
 }
 
@@ -728,11 +777,22 @@ function openEditModal(id, filename, kelas, jenis, statusTelaah, mapel, kategori
   document.getElementById('up-filename').value = filename;
   document.getElementById('up-kelas').value = kelas;
   document.getElementById('up-jenis').value = jenis;
-  document.getElementById('up-status-telaah').value = statusTelaah || "Sebelum Telaah";
   document.getElementById('up-mapel').value = mapel;
   document.getElementById('up-kategori').value = kategori;
   document.getElementById('up-file').value = ""; 
   document.getElementById('edit-help-text').classList.remove('hidden');
+  
+  const statusSelect = document.getElementById('up-status-telaah');
+  statusSelect.value = statusTelaah || "Sebelum Telaah";
+  const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
+  if (userRole === 'guru') {
+    statusSelect.disabled = true;
+    statusSelect.classList.add('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+  } else {
+    statusSelect.disabled = false;
+    statusSelect.classList.remove('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+  }
+
   document.getElementById('upload-modal').classList.remove('hidden');
 }
 
@@ -745,11 +805,14 @@ function processUpload() {
   const judul = document.getElementById('up-filename').value.trim();
   const kelas = document.getElementById('up-kelas').value.trim();
   const jenis = document.getElementById('up-jenis').value.trim();
-  const statusTelaah = document.getElementById('up-status-telaah').value.trim();
   const mapel = document.getElementById('up-mapel').value.trim();
   const kategori = document.getElementById('up-kategori').value.trim();
   const fileInput = document.getElementById('up-file').files[0];
   const btnSubmit = document.getElementById('btn-submit-upload');
+  
+  const statusSelect = document.getElementById('up-status-telaah');
+  let statusTelaah = statusSelect.value.trim();
+  if(statusSelect.disabled) statusTelaah = 'Sebelum Telaah';
   
   if(!judul || !kelas || !jenis || !statusTelaah || !mapel || !kategori) return Swal.fire('Peringatan', 'Lengkapi semua isian form!', 'warning');
   
