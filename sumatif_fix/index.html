@@ -23,28 +23,28 @@ body {
 </style>
 </head>
 <body class="min-h-screen relative text-gray-800">
-<!-- BACKGROUND PENDIDIKAN DENGAN OVERLAY -->
-<div class="fixed inset-0 z-[-1] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=1920');">
-  <div class="absolute inset-0 bg-emerald-50/90 backdrop-blur-[3px]"></div>
+<!-- BACKGROUND CERIA PENDIDIKAN DENGAN OVERLAY -->
+<div class="fixed inset-0 z-[-1] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1920&auto=format&fit=crop');">
+  <div class="absolute inset-0 bg-yellow-50/90 backdrop-blur-[4px]"></div>
 </div>
 
 <!-- AUTHENTICATION PAGE -->
-<div id="auth-page" class="min-h-screen flex items-center justify-center p-4 relative" style="background: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=1920') center/cover no-repeat fixed;">
-  <div class="absolute inset-0 bg-gradient-to-tr from-green-900/95 to-blue-900/90 backdrop-blur-sm"></div>
+<div id="auth-page" class="min-h-screen flex items-center justify-center p-4 relative" style="background: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;">
+  <div class="absolute inset-0 bg-gradient-to-tr from-yellow-300/80 via-emerald-400/80 to-teal-500/80 backdrop-blur-md"></div>
   
-  <div class="bg-white/95 p-8 rounded-3xl shadow-2xl w-full max-w-md relative z-10 border border-emerald-500/25">
+  <div class="bg-white/95 p-8 rounded-3xl shadow-2xl w-full max-w-md relative z-10 border border-emerald-300/50">
     <div class="text-center mb-6">
       <img src="https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc" alt="Logo KKGMI" class="h-24 mx-auto mb-4 object-contain drop-shadow-md">
     </div>
-    <h2 class="text-2xl font-black text-green-800 text-center uppercase tracking-wide">Portal Perangkat Soal</h2>
-    <p class="text-blue-800 font-bold text-center text-sm mb-4">KKGMI Surabaya 10</p>
+    <h2 class="text-2xl font-black text-teal-800 text-center uppercase tracking-wide">Portal Perangkat Soal</h2>
+    <p class="text-emerald-700 font-bold text-center text-sm mb-4">KKGMI Surabaya 10</p>
     
-    <div class="bg-amber-50 border border-amber-300 p-3 rounded-2xl text-xs text-amber-800 text-center mb-4 font-medium">
+    <div class="bg-amber-100 border border-amber-300 p-3 rounded-2xl text-xs text-amber-900 text-center mb-4 font-medium">
       Silakan login dengan akun <strong>guruhebat</strong> Anda. Jika belum terdaftar, gunakan menu di bawah untuk mendaftar.
     </div>
     <form id="auth-form" class="space-y-4">
       <div id="madrasah-container" class="hidden">
-        <label class="block text-xs font-bold text-green-900 uppercase">Asal Madrasah</label>
+        <label class="block text-xs font-bold text-teal-900 uppercase">Asal Madrasah</label>
         <select id="madrasah" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 p-3 border text-sm">
           <option value="">-- Pilih Madrasah --</option>
           <option value="MIS Baiturrahman Gubeng">MIS Baiturrahman Gubeng</option>
@@ -64,24 +64,24 @@ body {
         </select>
       </div>
       <div>
-        <label class="block text-xs font-bold text-green-900 uppercase">Nama Lengkap</label>
+        <label class="block text-xs font-bold text-teal-900 uppercase">Nama Lengkap</label>
         <input type="text" id="nama" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-emerald-500 focus:ring p-3 border text-sm" placeholder="Ketik nama Anda">
       </div>
       <div>
-        <label class="block text-xs font-bold text-green-900 uppercase">Password</label>
+        <label class="block text-xs font-bold text-teal-900 uppercase">Password</label>
         <input type="password" id="password" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-emerald-500 focus:ring p-3 border text-sm" placeholder="Ketik password">
       </div>
-      <button type="submit" id="btn-auth" class="w-full bg-gradient-to-r from-emerald-600 to-green-700 text-white font-bold py-3 px-4 rounded-xl hover:shadow-lg transition">Masuk Aplikasi</button>
+      <button type="submit" id="btn-auth" class="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-bold py-3 px-4 rounded-xl hover:shadow-lg transition">Masuk Aplikasi</button>
     </form>
     <div class="mt-5 text-center text-xs">
-      <a href="#" id="toggle-auth" class="text-emerald-700 font-bold hover:underline">Belum punya akun? Daftar sekarang</a>
+      <a href="#" id="toggle-auth" class="text-teal-700 font-bold hover:underline">Belum punya akun? Daftar sekarang</a>
     </div>
   </div>
 </div>
 
 <!-- DASHBOARD PAGE -->
 <div id="dashboard-page" class="hidden min-h-screen pb-12">
-  <nav class="bg-gradient-to-r from-emerald-800 to-green-700 text-white shadow-lg sticky top-0 z-50">
+  <nav class="bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
         <div class="flex items-center gap-3">
@@ -95,27 +95,27 @@ body {
     </div>
   </nav>
 
-  <!-- BANNER ATAS -->
+  <!-- BANNER ATAS CERIA -->
   <div class="relative py-12 px-4 shadow-inner text-white overflow-hidden bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc');">
-    <div class="absolute inset-0 bg-gradient-to-b from-emerald-950/95 via-green-900/90 to-emerald-900/90 z-0"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-teal-600/95 via-emerald-500/90 to-yellow-500/85 z-0"></div>
     <div class="max-w-7xl mx-auto text-center relative z-10">
-      <h1 class="text-3xl md:text-4xl font-extrabold drop-shadow-md tracking-wider text-yellow-300 font-sans mb-2">Assalamu'alaikum Warahmatullahi Wabarakatuh</h1>
-      <p class="text-md sm:text-lg text-emerald-100 mb-1">Ahlan wa Sahlan, <span id="user-name" class="font-black text-yellow-200"></span></p>
-      <p class="text-xs sm:text-sm text-yellow-400/90 font-medium max-w-lg mx-auto leading-relaxed border-t border-emerald-500/35 pt-2 mt-2">Portal Perangkat & Berbagi Soal Sumatif KKGMI Surabaya 10</p>
-      <span id="user-role-badge" class="inline-block mt-3 px-4 py-1.5 bg-yellow-400/25 border border-yellow-300/40 text-yellow-200 text-xs font-black rounded-full tracking-widest uppercase hidden"></span>
+      <h1 class="text-3xl md:text-4xl font-extrabold drop-shadow-md tracking-wider text-white font-sans mb-2">Assalamu'alaikum Warahmatullahi Wabarakatuh</h1>
+      <p class="text-md sm:text-lg text-yellow-100 font-bold mb-1">Ahlan wa Sahlan, <span id="user-name" class="font-black text-yellow-300"></span></p>
+      <p class="text-xs sm:text-sm text-yellow-50 font-medium max-w-lg mx-auto leading-relaxed border-t border-white/30 pt-2 mt-2">Portal Perangkat & Berbagi Soal Sumatif KKGMI Surabaya 10</p>
+      <span id="user-role-badge" class="inline-block mt-3 px-4 py-1.5 bg-yellow-400/90 border border-yellow-300 text-teal-900 text-xs font-black rounded-full tracking-widest uppercase hidden shadow-sm"></span>
     </div>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 mt-8">
     
     <!-- DASHBOARD PANTAUAN PROGRES -->
-    <div class="bg-white/90 p-6 rounded-3xl shadow-lg border border-white/50 mb-6 backdrop-blur-md">
+    <div class="bg-white/95 p-6 rounded-3xl shadow-lg border border-teal-100 mb-6 backdrop-blur-md">
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-5 gap-4">
-        <h3 class="text-md sm:text-lg font-black text-emerald-900 uppercase tracking-wider"><i class="fas fa-chart-pie text-emerald-600 mr-2"></i>Pantauan Progres Upload</h3>
+        <h3 class="text-md sm:text-lg font-black text-teal-800 uppercase tracking-wider"><i class="fas fa-chart-pie text-emerald-500 mr-2"></i>Pantauan Progres Upload</h3>
         <div class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
           <div class="flex items-center gap-2 w-full sm:w-auto">
             <label class="text-xs text-gray-600 font-bold whitespace-nowrap">UJIAN:</label>
-            <select id="stat-jenis-filter" onchange="updateStatsUI()" class="w-full sm:w-auto p-2 border rounded-xl text-xs font-bold text-emerald-900 border-emerald-200 focus:outline-none focus:border-emerald-500 bg-emerald-50/50">
+            <select id="stat-jenis-filter" onchange="updateStatsUI()" class="w-full sm:w-auto p-2 border rounded-xl text-xs font-bold text-teal-900 border-teal-200 focus:outline-none focus:border-emerald-500 bg-teal-50/50">
               <option value="STS 1 2026/2027">STS 1 2026/2027</option>
               <option value="SAS 2026/2027">SAS 2026/2027</option>
               <option value="STS 2 2026/2027">STS 2 2026/2027</option>
@@ -143,8 +143,8 @@ body {
       </div>
     </div>
 
-    <!-- AREA UNDUH TEMPLATE (DI ATAS PENCARIAN & TOMBOL UPLOAD) -->
-    <div class="bg-white/90 p-5 rounded-3xl shadow-lg border border-white/50 mb-6 backdrop-blur-md flex flex-col md:flex-row items-center gap-4 justify-between">
+    <!-- AREA UNDUH TEMPLATE (SESUAI REQUEST) -->
+    <div class="bg-white/95 p-5 rounded-3xl shadow-lg border border-indigo-100 mb-6 backdrop-blur-md flex flex-col md:flex-row items-center gap-4 justify-between">
       <div class="flex items-center gap-3 w-full md:w-1/3">
         <div class="bg-indigo-100 p-3 rounded-full text-indigo-600 shadow-inner">
           <i class="fas fa-file-download text-xl"></i>
@@ -171,20 +171,20 @@ body {
     </div>
 
     <!-- PENCARIAN & FILTER FILE (TOMBOL UPLOAD ADA DI SINI) -->
-    <div class="bg-white/90 p-5 rounded-3xl shadow-lg border border-white/50 mb-6 backdrop-blur-md">
+    <div class="bg-white/95 p-5 rounded-3xl shadow-lg border border-teal-100 mb-6 backdrop-blur-md">
       <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-5 border-b border-gray-100 pb-4">
         <div class="w-full md:flex-1 relative">
           <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
           <input type="text" id="search-input" onkeyup="filterFiles()" class="w-full pl-11 pr-4 py-2.5 border border-emerald-100 rounded-full focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 text-sm bg-white" placeholder="Cari berdasarkan nama file atau mapel...">
         </div>
-        <button id="btn-open-upload" onclick="openUploadModal()" class="hidden w-full md:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-2.5 rounded-full font-bold shadow-md transition transform hover:scale-105">
+        <button id="btn-open-upload" onclick="openUploadModal()" class="hidden w-full md:w-auto bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white px-6 py-2.5 rounded-full font-bold shadow-md transition transform hover:scale-105">
           <i class="fas fa-cloud-upload-alt mr-2 animate-bounce"></i>Upload File Baru
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
         <div>
-          <label class="block text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider mb-1">Kelas</label>
-          <select id="filter-kelas" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-green-500 bg-white">
+          <label class="block text-[10px] font-extrabold text-teal-900 uppercase tracking-wider mb-1">Kelas</label>
+          <select id="filter-kelas" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 bg-white">
             <option value="">Semua Kelas</option>
             <option value="Kelas 1">Kelas 1</option>
             <option value="Kelas 2">Kelas 2</option>
@@ -195,8 +195,8 @@ body {
           </select>
         </div>
         <div>
-          <label class="block text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider mb-1">Jenis Ujian</label>
-          <select id="filter-jenis" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-green-500 bg-white">
+          <label class="block text-[10px] font-extrabold text-teal-900 uppercase tracking-wider mb-1">Jenis Ujian</label>
+          <select id="filter-jenis" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 bg-white">
             <option value="">Semua Ujian</option>
             <option value="STS 1 2026/2027">STS 1 2026/2027</option>
             <option value="SAS 2026/2027">SAS 2026/2027</option>
@@ -206,16 +206,16 @@ body {
           </select>
         </div>
         <div>
-          <label class="block text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider mb-1">Status Telaah</label>
-          <select id="filter-status-telaah" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-black text-blue-700 bg-blue-50/20 focus:outline-none focus:border-green-500">
+          <label class="block text-[10px] font-extrabold text-teal-900 uppercase tracking-wider mb-1">Status Telaah</label>
+          <select id="filter-status-telaah" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-black text-blue-700 bg-blue-50/50 focus:outline-none focus:border-emerald-500">
             <option value="">Semua Status</option>
             <option value="sebelum telaah">Sebelum Telaah</option>
             <option value="setelah telaah">Setelah Telaah</option>
           </select>
         </div>
         <div>
-           <label class="block text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider mb-1">Mapel</label>
-           <select id="filter-mapel" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-green-500 bg-white">
+           <label class="block text-[10px] font-extrabold text-teal-900 uppercase tracking-wider mb-1">Mapel</label>
+           <select id="filter-mapel" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 bg-white">
             <option value="">Semua Mapel</option>
             <option value="SKI">SKI</option>
             <option value="Akidah Akhlak">Akidah Akhlak</option>
@@ -232,8 +232,8 @@ body {
           </select>
         </div>
         <div>
-          <label class="block text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider mb-1">Kategori File</label>
-          <select id="filter-kategori" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-green-500 bg-white">
+          <label class="block text-[10px] font-extrabold text-teal-900 uppercase tracking-wider mb-1">Kategori File</label>
+          <select id="filter-kategori" onchange="filterFiles()" class="w-full p-2.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 bg-white">
             <option value="">Semua Kategori</option>
             <option value="kisi-kisi">Kisi-kisi</option>
             <option value="soal">Soal</option>
@@ -251,10 +251,10 @@ body {
 </div>
 
 <!-- CHECKLIST MODAL -->
-<div id="checklist-modal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
+<div id="checklist-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
   <div class="bg-white rounded-3xl w-full max-w-3xl p-6 shadow-2xl h-[85vh] flex flex-col">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
-      <h3 class="text-md md:text-lg font-black text-emerald-900 uppercase" id="checklist-title">Status Kelengkapan</h3>
+      <h3 class="text-md md:text-lg font-black text-teal-900 uppercase" id="checklist-title">Status Kelengkapan</h3>
       <button onclick="closeChecklistModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
     </div>
     <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="checklist-content">
@@ -267,10 +267,10 @@ body {
 </div>
 
 <!-- UPLOAD & EDIT MODAL -->
-<div id="upload-modal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
+<div id="upload-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
   <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl h-auto max-h-[90vh] overflow-y-auto border border-emerald-100">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
-      <h3 class="text-lg font-bold text-emerald-900" id="modal-title">Upload Soal</h3>
+      <h3 class="text-lg font-bold text-teal-900" id="modal-title">Upload Soal</h3>
       <button onclick="closeUploadModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
     </div>
     <div class="space-y-4">
@@ -303,7 +303,7 @@ body {
       </div>
       <div>
         <label class="block text-xs font-black text-blue-900 uppercase mb-1">Status Telaah</label>
-        <select id="up-status-telaah" class="w-full p-2.5 border border-blue-300 bg-blue-50/30 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-900">
+        <select id="up-status-telaah" class="w-full p-2.5 border border-blue-300 bg-blue-50/50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-900">
           <option value="Sebelum Telaah">Sebelum Telaah</option>
           <option value="Setelah Telaah">Setelah Telaah</option>
         </select>
@@ -341,7 +341,7 @@ body {
         <input type="file" id="up-file" accept=".doc, .docx, .xls, .xlsx, .pdf" class="w-full p-2 border rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
       </div>
 
-      <button onclick="processUpload()" id="btn-submit-upload" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 rounded-xl transition mt-2 shadow-md text-sm">Simpan File</button>
+      <button onclick="processUpload()" id="btn-submit-upload" class="w-full bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white font-bold py-3 rounded-xl transition mt-2 shadow-md text-sm">Simpan File</button>
     </div>
   </div>
 </div>
@@ -470,10 +470,10 @@ function updateStatsUI() {
     classes.forEach(cls => {
       const count = jenisData[cls] ? jenisData[cls]['_total'] : 0;
       grid.innerHTML += `
-        <div onclick="showChecklistModal('${cls}', '${selectedJenis}', 'Semua Mapel')" class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-4 text-center border border-emerald-200 shadow-sm transition hover:shadow-md hover:bg-emerald-100 cursor-pointer hover:scale-105 transform duration-200">
-          <div class="text-xs font-black text-emerald-800">${cls}</div>
+        <div onclick="showChecklistModal('${cls}', '${selectedJenis}', 'Semua Mapel')" class="bg-gradient-to-br from-emerald-50 to-teal-100 rounded-2xl p-4 text-center border border-teal-200 shadow-sm transition hover:shadow-md hover:bg-teal-100 cursor-pointer hover:scale-105 transform duration-200">
+          <div class="text-xs font-black text-teal-900">${cls}</div>
           <div class="text-3xl font-black text-emerald-600 mt-1">${count}</div>
-          <div class="text-[9px] font-bold text-emerald-700/85 uppercase tracking-wider mt-1">Dokumen</div>
+          <div class="text-[9px] font-bold text-teal-800/80 uppercase tracking-wider mt-1">Dokumen</div>
         </div>
       `;
     });
@@ -667,7 +667,7 @@ function filterFiles() {
   renderFiles(filtered);
 }
 
-// FUNGSI BARU TAMPILKAN TEMPLATE DI DASHBOARD
+// LOGIKA TAMPILKAN TEMPLATE (IKON SESUAI PERMINTAAN)
 function showDashboardTemplates() {
   const fase = document.getElementById('dashboard-template-fase').value;
   const container = document.getElementById('dashboard-template-links');
@@ -688,13 +688,23 @@ function showDashboardTemplates() {
   }
   
   filtered.forEach(t => {
-    let icon = 'fa-file-word text-blue-500';
-    if(t.kategori.toLowerCase().includes('kunci') || t.nama.toLowerCase().includes('xlsx')) {
-      icon = 'fa-file-excel text-green-500';
+    // Pengaturan Ikon Sesuai Request
+    let icon = 'fa-file-alt text-gray-500';
+    let styleClass = 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700';
+
+    if (t.kategori.toLowerCase().includes('kisi')) {
+      icon = 'fa-file-excel text-green-600'; // Ikon Excel
+      styleClass = 'bg-green-50 hover:bg-green-100 border-green-200 text-green-800';
+    } else if (t.kategori.toLowerCase().includes('soal')) {
+      icon = 'fa-file-word text-blue-600'; // Ikon Word
+      styleClass = 'bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-800';
+    } else if (t.kategori.toLowerCase().includes('kunci')) {
+      icon = 'fa-file-word text-orange-600'; // Ikon Word (Oranye agar beda visual)
+      styleClass = 'bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-800';
     }
     
     container.innerHTML += `
-      <a href="${t.url}" target="_blank" class="flex-1 flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 py-2.5 px-3 rounded-xl transition text-[10px] font-bold text-indigo-900 shadow-sm truncate" title="${t.nama}">
+      <a href="${t.url}" target="_blank" class="flex-1 flex items-center justify-center gap-2 ${styleClass} border py-2.5 px-3 rounded-xl transition text-[11px] font-bold shadow-sm truncate" title="${t.nama}">
         <i class="fas ${icon} text-sm"></i>
         <span>${t.kategori}</span>
       </a>
