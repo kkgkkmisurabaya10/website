@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -345,7 +346,9 @@ body {
 </div>
 
 <script>
+// PENTING: Jika menggunakan link Google Script baru, update link di bawah ini!
 const API_URL = 'https://script.google.com/macros/s/AKfycbwaVYKsN171kwTAtTeCR3LyR4ckiZ13-FeCjlZ7wjrfucOptLKg6OEoLai-iPlfq68_/exec'; 
+
 let isLoginMode = true;
 let currentUser = null;
 let globalFiles = [];
@@ -449,7 +452,7 @@ async function loadFiles() {
     } else {
       document.getElementById('file-grid').innerHTML = `<p class="text-red-500 text-center col-span-full bg-white p-5 rounded-xl border">Gagal: ${data.message}</p>`;
     }
-  } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full bg-white p-5 rounded-xl border">Gagal memuat file dari server.</p>'; }
+  } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full bg-white p-5 rounded-xl border">Gagal memuat file dari server. Pastikan URL API baru sudah dimasukkan jika ada pembaruan kode Google Apps Script.</p>'; }
 }
 
 function updateStatsUI() {
@@ -595,7 +598,7 @@ function renderFiles(files) {
     else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
     else if(['doc', 'docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
     
-    // ATURAN KELOLA BERDASARKAN HASIL FILTER DARI BACKEND
+    // PEMBATASAN AKSES KELOLA FILE
     const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
     const isOwner = file.uploader === currentUser.nama;
     const isSetelahTelaah = (file.statusTelaah && file.statusTelaah.toLowerCase() === 'setelah telaah');
