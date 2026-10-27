@@ -178,6 +178,29 @@
             border-color: #a855f7;
         }
 
+        /* Grand Total Box */
+        .grand-total-box {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-size: 1.6em;
+            font-weight: 700;
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin: -10px auto 40px auto;
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3), inset 0 0 0 4px rgba(255,255,255,0.3);
+            border: 4px solid white;
+            font-family: 'Fredoka', sans-serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
         /* Container Tabel */
         .table-grid {
             display: grid;
@@ -273,6 +296,11 @@
                 🚀 MASUK TRYOUT TKA SEKARANG
             </a>
 
+            <!-- Total Keseluruhan -->
+            <div>
+                <div class="grand-total-box" id="grandTotalBadge">Menghitung Total Keseluruhan...</div>
+            </div>
+
             <!-- ================= BAGIAN MADRASAH MITRA ================= -->
             <div class="section-banner">
                 <span class="icon icon-left">🎓</span>
@@ -306,13 +334,17 @@
             <br>
             <div class="total-badge purple" id="totalKKMI">Menghitung Total Peserta...</div>
             
-            <!-- Tabel 1 Kolom untuk KKMI 10 -->
-            <div class="table-single">
+            <!-- Grid 2 Kolom untuk KKMI 10 -->
+            <div class="table-grid" id="containerKKMI">
+                <!-- Tabel Kiri -->
                 <table class="theme-purple">
-                    <thead><tr><th width="10%">No</th><th width="70%">Nama Peserta / Sekolah</th><th width="20%">Siswa</th></tr></thead>
-                    <tbody id="tbodyKKMI">
-                        <tr><td colspan="3" class="loading-text">Memuat data...</td></tr>
-                    </tbody>
+                    <thead><tr><th width="15%">No</th><th width="65%">Nama Sekolah</th><th width="20%">Siswa</th></tr></thead>
+                    <tbody id="tbodyKKMILeft"><tr><td colspan="3" class="loading-text">Memuat data...</td></tr></tbody>
+                </table>
+                <!-- Tabel Kanan -->
+                <table class="theme-purple">
+                    <thead><tr><th width="15%">No</th><th width="65%">Nama Sekolah</th><th width="20%">Siswa</th></tr></thead>
+                    <tbody id="tbodyKKMIRight"><tr><td colspan="3" class="loading-text">Memuat data...</td></tr></tbody>
                 </table>
             </div>
 
@@ -322,11 +354,11 @@
     <script>
         const sheetId = '17RYvkrxh54Qn0H_jj5l4GtQbijcLFBOTLPkgYmd8N1I';
         
-        // Fungsi utama pengambil data
-        function loadSheetData(sheetName, isSplit, tbodyLeftId, tbodyRightId, totalBadgeId) {
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+        // Fungsi utama pengambil data menggunakan GID tab spreadsheet
+        function loadSheetData(gid, sheetName, isSplit, tbodyLeftId, tbodyRightId, totalBadgeId) {
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
 
-            fetch(url)
+            return fetch(url)
                 .then(res => res.text())
                 .then(text => {
                     const jsonData = JSON.parse(text.substring(47).slice(0, -2));
@@ -337,15 +369,16 @@
 
                     // Filter dan ekstrak data yang valid
                     rows.forEach((row, index) => {
-                        if (row && row.c && row.c[1] && row.c[1].v != null && index > 0) {
+                        // Hapus pembatasan index > 0 agar baris data pertama tidak terlewat
+                        if (row && row.c && row.c[1] && row.c[1].v != null) {
                             let nama = row.c[1].v.toString().trim();
-                            if(nama.toLowerCase() === 'nama sekolah') return; // Skip baris header
+                            if(nama.toLowerCase() === 'nama sekolah' || nama === '') return; // Skip baris header / kosong
 
-                            // Ambil angka dari kolom total (misal "92 Siswa" menjadi angka 92)
+                            // Ambil angka dari kolom total (mengantisipasi kolom yang kosong/tidak diisi)
                             let jumlahRaw = (row.c[2] && row.c[2].v) ? row.c[2].v.toString() : '0';
-                            let jumlahAngka = parseInt(jumlahRaw.replace(/\D/g, '')) || 0; // Hapus semua teks selain angka
+                            let jumlahAngka = parseInt(jumlahRaw.replace(/\D/g, '')) || 0; 
                             
-                            // Jika kosong atau NaN, set jadi strip (-) untuk tampilan
+                            // Jika kosong atau 0, set jadi strip (-) untuk tampilan
                             let jumlahTampil = jumlahAngka > 0 ? jumlahAngka : '-';
                             
                             totalSiswa += jumlahAngka; // Tambahkan ke total keseluruhan
@@ -368,12 +401,15 @@
                     } else {
                         document.getElementById(tbodyLeftId).innerHTML = generateTableRows(validRows);
                     }
+
+                    return totalSiswa; // Mengembalikan nilai total untuk dihitung di grand total
                 })
                 .catch(err => {
                     console.error('Error:', err);
                     let errorMsg = `<tr><td colspan="3" style="color:red; text-align:center;">Gagal memuat ${sheetName}.</td></tr>`;
                     document.getElementById(tbodyLeftId).innerHTML = errorMsg;
                     if(isSplit) document.getElementById(tbodyRightId).innerHTML = errorMsg;
+                    return 0; // Kembalikan 0 jika terjadi error
                 });
         }
 
@@ -392,11 +428,16 @@
 
         // Jalankan saat web dimuat
         window.onload = () => {
-            // Muat Data Madrasah Mitra (Tabel di-split 2 kolom)
-            loadSheetData('Madrasah Mitra', true, 'tbodyMitraLeft', 'tbodyMitraRight', 'totalMitra');
-            
-            // Muat Data KKMI 10 (Tabel utuh 1 kolom)
-            loadSheetData('Madrasah KKMI 10', false, 'tbodyKKMI', null, 'totalKKMI');
+            // Gunakan Promise.all untuk menjalankan pengambilan data secara bersamaan 
+            // dan menunggu keduanya selesai untuk menghitung Grand Total
+            Promise.all([
+                loadSheetData('945047202', 'Madrasah Mitra', true, 'tbodyMitraLeft', 'tbodyMitraRight', 'totalMitra'),
+                loadSheetData('354979597', 'Madrasah KKMI 10', true, 'tbodyKKMILeft', 'tbodyKKMIRight', 'totalKKMI')
+            ]).then(totals => {
+                // totals[0] adalah total Mitra, totals[1] adalah total KKMI 10
+                const grandTotal = totals[0] + totals[1];
+                document.getElementById('grandTotalBadge').innerHTML = `🌟 Total Keseluruhan: ${grandTotal} Siswa 🌟`;
+            });
         };
     </script>
 </body>
