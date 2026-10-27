@@ -106,7 +106,6 @@ body { font-family: 'Poppins', sans-serif; }
           <span class="font-extrabold text-md sm:text-lg tracking-wide">KKGMI Surabaya 10</span>
         </div>
         <div class="flex items-center gap-2">
-          <!-- Tombol Admin Panel Khusus Admin -->
           <button id="btn-admin-panel" onclick="openAdminPanel()" class="hidden bg-indigo-500 hover:bg-indigo-600 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition shadow-md border border-indigo-400"><i class="fas fa-cogs mr-2"></i>Admin</button>
           <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition shadow-md"><i class="fas fa-sign-out-alt mr-2"></i>Keluar</button>
         </div>
@@ -303,19 +302,11 @@ body { font-family: 'Poppins', sans-serif; }
              <option value="Sebelum Telaah">Folder: Sebelum Telaah</option>
              <option value="Setelah Telaah">Folder: Setelah Telaah</option>
           </select>
-          <select id="share-mapel" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
-             <option value="SKI">SKI</option>
-             <option value="Akidah Akhlak">Akidah Akhlak</option>
-             <option value="Fikih">Fikih</option>
-             <option value="Al-Quran Hadis">Al-Quran Hadis</option>
-             <option value="Bahasa Arab">Bahasa Arab</option>
-             <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-             <option value="Bahasa Inggris">Bahasa Inggris</option>
-             <option value="Bahasa Jawa">Bahasa Jawa</option>
-             <option value="Matematika">Matematika</option>
-             <option value="IPAS">IPAS</option>
-             <option value="PKn">PKn</option>
-             <option value="PJOK">PJOK</option>
+          <!-- UBAH: Dari Mapel menjadi Kategori File -->
+          <select id="share-kategori" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="Soal">Folder: Soal</option>
+             <option value="Kisi-kisi">Folder: Kisi-kisi</option>
+             <option value="Kunci Jawaban">Folder: Kunci Jawaban</option>
           </select>
           <button onclick="generateShareLink()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-xs hover:bg-blue-700 transition">Buat Link</button>
         </div>
@@ -438,10 +429,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// UBAH: initPublicShare membaca Kategori, bukan Mapel
 function initPublicShare(shareParam) {
   try {
     const shareData = JSON.parse(atob(shareParam));
-    document.getElementById('share-title').innerText = `Folder: ${shareData.j} | ${shareData.m} | ${shareData.t}`;
+    document.getElementById('share-title').innerText = `Folder: ${shareData.j} | ${shareData.t} | ${shareData.kat}`;
     
     document.getElementById('share-grid').innerHTML = '<div class="col-span-full text-center text-indigo-500 py-10"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><p class="font-bold">Mencari dokumen...</p></div>';
     
@@ -467,7 +459,7 @@ function initPublicShare(shareParam) {
                   <i class="fas ${icon} text-3xl shrink-0"></i>
                   <div class="truncate">
                      <div class="font-bold text-sm text-gray-800 truncate" title="${f.filename}">${f.filename}</div>
-                     <div class="text-[10px] text-gray-500 mt-1"><span class="bg-gray-100 px-2 py-0.5 rounded">${f.kelas}</span> <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.kategori}</span></div>
+                     <div class="text-[10px] text-gray-500 mt-1"><span class="bg-gray-100 px-2 py-0.5 rounded">${f.kelas}</span> <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.mapel}</span></div>
                   </div>
                 </div>
                 <a href="${f.url}" target="_blank" class="shrink-0 ml-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white transition px-4 py-2 rounded-xl text-xs font-bold border border-indigo-200">Lihat/Download</a>
@@ -644,19 +636,20 @@ async function saveAdminSettings() {
      if(data.status === 'success') {
         Swal.fire('Tersimpan', data.message, 'success');
         globalSettings = newSettings;
-        loadFiles(); // reload UI changes based on new settings
+        loadFiles(); 
      } else { Swal.fire('Gagal', data.message, 'error'); }
    } catch(e) { Swal.fire('Error', 'Gagal menyimpan pengaturan.', 'error'); }
    
    btn.innerText = 'Simpan Pengaturan'; btn.disabled = false;
 }
 
+// UBAH: Ambil data kategori saat generate link share
 function generateShareLink() {
    const j = document.getElementById('share-jenis').value;
    const t = document.getElementById('share-telaah').value;
-   const m = document.getElementById('share-mapel').value;
+   const kat = document.getElementById('share-kategori').value;
    
-   const shareData = { j: j, t: t, m: m };
+   const shareData = { j: j, t: t, kat: kat }; // Data param m diganti dengan kat
    const encoded = btoa(JSON.stringify(shareData));
    const linkUrl = window.location.origin + window.location.pathname + '?share=' + encoded;
    
@@ -677,7 +670,6 @@ function updateStatsUI() {
   const selectedJenis = document.getElementById('stat-jenis-filter').value;
   const selectedFokus = document.getElementById('stat-fokus-filter').value;
   
-  // Sembunyikan stats jika admin menutup dashboard untuk Jenis ini dan user bukan admin
   const isClosed = globalSettings['DASH_' + selectedJenis] === 'CLOSE';
   if(isClosed && currentUser.role.toLowerCase() !== 'admin') {
      grid.innerHTML = '<div class="col-span-full p-4 bg-red-50 text-red-600 rounded-xl border border-red-200 text-sm font-bold text-center">Akses Pantauan untuk '+selectedJenis+' ditutup oleh Admin.</div>';
@@ -912,7 +904,6 @@ function processUpload() {
   let statusTelaah = document.getElementById('up-status-telaah').value.trim();
   if(document.getElementById('up-status-telaah').disabled) statusTelaah = 'Sebelum Telaah';
   
-  // Validasi Otoritas Admin Tutup Upload
   if(!checkUploadPermitted(jenis, statusTelaah)) {
      return Swal.fire('Akses Ditutup', 'Admin sedang menutup akses upload untuk jenis ujian & folder ini.', 'error');
   }
