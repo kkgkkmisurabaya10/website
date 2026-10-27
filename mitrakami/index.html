@@ -135,6 +135,56 @@
             box-shadow: none;
         }
 
+        /* Container Tombol & Tombol Daftar */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .button-group .btn-action {
+            margin-bottom: 0; /* Menghapus margin agar sejajar */
+        }
+        
+        .btn-green {
+            background: linear-gradient(to bottom, #10b981, #059669);
+            border-color: #064e3b;
+            box-shadow: 0 6px 0 #064e3b, 0 10px 15px rgba(0,0,0,0.2);
+        }
+        .btn-green:hover {
+            box-shadow: 0 4px 0 #064e3b, 0 8px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Tombol Musik Melayang */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            border: 3px solid #b45309;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #b45309, 0 8px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .music-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b45309, 0 6px 8px rgba(0,0,0,0.2);
+        }
+        .music-btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+
         /* Style Tabel Flyer */
         .section-banner {
             background: #e0f2fe;
@@ -291,10 +341,15 @@
                 <p>Bagi Madrasah yang belum mendaftar, pendaftaran <strong>masih terbuka!</strong> Jangan lewatkan kesempatan emas ini untuk mengasah kemampuan siswa-siswi kita. Mari sukseskan bersama!</p>
             </div>
 
-            <!-- Tombol Tryout -->
-            <a href="https://kkgmisurabaya10.com/tryouttka/" target="_blank" class="btn-action">
-                🚀 MASUK TRYOUT TKA SEKARANG
-            </a>
+            <!-- Grup Tombol Daftar & Masuk Tryout -->
+            <div class="button-group">
+                <a href="https://kkgmisurabaya10.com/daftartryoutka" target="_blank" class="btn-action btn-green">
+                    📝 DAFTAR TRYOUT TKA
+                </a>
+                <a href="https://kkgmisurabaya10.com/tryouttka/" target="_blank" class="btn-action">
+                    🚀 MASUK TRYOUT SEKARANG
+                </a>
+            </div>
 
             <!-- Total Keseluruhan -->
             <div>
@@ -439,6 +494,40 @@
                 document.getElementById('grandTotalBadge').innerHTML = `🌟 Total Keseluruhan: ${grandTotal} Siswa 🌟`;
             });
         };
+
+        // Script Pemutar Musik Background
+        const musicBtn = document.getElementById('musicToggle');
+        const bgMusic = document.getElementById('bgMusic');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicBtn.innerHTML = '🎵 Putar Musik';
+            } else {
+                bgMusic.play();
+                musicBtn.innerHTML = '⏸️ Jeda Musik';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Trik Autoplay: Putar otomatis saat ada klik pertama kali di mana saja di halaman
+        document.body.addEventListener('click', function() {
+            if(!isPlaying) {
+                bgMusic.play().then(() => {
+                    isPlaying = true;
+                    musicBtn.innerHTML = '⏸️ Jeda Musik';
+                }).catch(err => console.log('Autoplay menunggu interaksi langsung...'));
+            }
+        }, { once: true }); // event listener hanya memicu 1 kali klik saja
     </script>
+
+    <!-- Elemen Audio & Tombol Pemutar Melayang -->
+    <audio id="bgMusic" loop>
+        <!-- Menggunakan Audio Royalty Free berirama Ceria / Semangat -->
+        <source src="https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792bc.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🎵 Putar Musik</button>
+
 </body>
 </html>
