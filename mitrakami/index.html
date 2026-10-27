@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terima Kasih - Tryout TKA KKGMI Surabaya 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        h1 {
+            color: #1a365d;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 1.1em;
+            color: #4a5568;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-tryout {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+            margin-bottom: 40px;
+        }
+
+        .btn-tryout:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+        }
+
+        /* Styling untuk Kotak Ajakan */
+        .ajakan-box {
+            background: linear-gradient(135deg, #e6fffa 0%, #ebf8ff 100%);
+            border-left: 5px solid #319795;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .ajakan-box h3 {
+            color: #285e61;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .ajakan-box p {
+            color: #4a5568;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Styling untuk Tab Button */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-tab {
+            background: #edf2f7;
+            color: #4a5568;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .btn-tab:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-tab.active {
+            background: #2b6cb0;
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.4);
+        }
+
+        .table-title {
+            font-size: 1.4em;
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        th {
+            background-color: #2b6cb0;
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background-color: #f7fafc;
+        }
+
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: #718096;
+            margin: 20px 0;
+            padding: 20px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .container { padding: 20px; }
+            .btn-tab { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Logo -->
+        <img src="https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc" alt="Logo KKGMI Surabaya 10" class="logo">
+        
+        <!-- Ucapan Terima Kasih -->
+        <h2 style="color: #2b6cb0; font-size: 1.2em; font-weight: 400; margin-bottom: 5px; font-style: italic;">Assalamu'alaikum Warahmatullahi Wabarakatuh</h2>
+        <h1 style="color: #1a365d; font-size: 2.2em; margin-bottom: 15px;">Jazakumullah Khairan Katsiran</h1>
+        <p class="subtitle">
+            Alhamdulillah, puji syukur ke hadirat Allah SWT. Kami segenap panitia <strong>KKGMI Surabaya 10</strong> mengucapkan terima kasih yang tak terhingga atas kepercayaan dan partisipasi aktif Madrasah Bapak/Ibu dalam program <strong>Tryout TKA</strong>.<br><br>
+            Semoga ikhtiar kita dalam mencerdaskan generasi bangsa dicatat sebagai amal jariyah dan senantiasa mendapat limpahan barokah serta ridho dari Allah SWT. Aamiin Ya Rabbal 'Alamin.
+        </p>
+
+        <!-- Kotak Ajakan Bergabung -->
+        <div class="ajakan-box">
+            <h3>📢 Mari Bergabung Bersama Kami!</h3>
+            <p>Bagi Madrasah yang belum berpartisipasi, pendaftaran masih terbuka. Jangan lewatkan kesempatan ini untuk mengukur dan meningkatkan kompetensi siswa-siswi kita tercinta menjelang ujian. Mari bersinergi dan sukseskan bersama!</p>
+        </div>
+
+        <!-- Tombol Masuk Tryout -->
+        <a href="https://kkgmisurabaya10.com/tryouttka/" target="_blank" class="btn-tryout">
+            Masuk Tryout TKA
+        </a>
+
+        <!-- Tombol Tab Pilihan Spreadsheet -->
+        <div class="tab-container">
+            <button class="btn-tab active" id="btnMitra" onclick="switchTab('Madrasah Mitra', this)">
+                Madrasah Mitra
+            </button>
+            <button class="btn-tab" id="btnKKMI" onclick="switchTab('Madrasah KKMI 10', this)">
+                Madrasah KKMI 10
+            </button>
+        </div>
+
+        <!-- Tabel Data Peserta -->
+        <h2 id="tableTitle" class="table-title">Daftar Madrasah Mitra</h2>
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th width="10%">No.</th>
+                        <th width="60%">Nama Sekolah</th>
+                        <th width="30%">Total Peserta</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody">
+                    <tr>
+                        <td colspan="3" class="loading">Memuat data peserta...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ID Spreadsheet Anda
+        const sheetId = '17RYvkrxh54Qn0H_jj5l4GtQbijcLFBOTLPkgYmd8N1I';
+        
+        // Fungsi untuk mengambil data berdasarkan nama Sheet (Tab di bawah Excel)
+        function loadData(sheetName) {
+            const tbody = document.getElementById('dataBody');
+            tbody.innerHTML = `<tr><td colspan="3" class="loading">Memuat data dari ${sheetName}...</td></tr>`;
+            
+            // Encode nama sheet agar aman di dalam URL
+            const encodedSheetName = encodeURIComponent(sheetName);
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodedSheetName}`;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    // Ekstrak JSON dari respons Google Visualization API
+                    const jsonData = JSON.parse(data.substring(47).slice(0, -2));
+                    const rows = jsonData.table.rows;
+                    
+                    tbody.innerHTML = ''; 
+                    let count = 1;
+
+                    rows.forEach((row) => {
+                        // Pastikan baris dan kolom 1 (B / Nama Sekolah) ada nilainya
+                        if (row && row.c && row.c[1] && row.c[1].v != null) {
+                            const namaSekolah = row.c[1].v.toString().trim();
+                            
+                            // Abaikan jika terbaca baris header
+                            if(namaSekolah.toLowerCase() === 'nama sekolah') return;
+
+                            // Jika kolom Total Peserta kosong, beri strip (-)
+                            const totalPeserta = (row.c[2] && row.c[2].v) ? row.c[2].v : '-';
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${count}</td>
+                                <td>${namaSekolah}</td>
+                                <td>${totalPeserta}</td>
+                            `;
+                            tbody.appendChild(tr);
+                            count++;
+                        }
+                    });
+
+                    // Jika tidak ada data yang masuk
+                    if(count === 1) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Belum ada data tersedia di sheet ini.</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#e53e3e; padding:20px;">Gagal memuat data. Pastikan akses Spreadsheet diatur ke "Siapa saja yang memiliki link (Viewer)".</td></tr>';
+                });
+        }
+
+        // Fungsi saat tombol tab diklik
+        function switchTab(sheetName, btnElement) {
+            // Hapus class 'active' dari semua tombol
+            document.querySelectorAll('.btn-tab').forEach(btn => btn.classList.remove('active'));
+            // Tambahkan class 'active' pada tombol yang diklik
+            btnElement.classList.add('active');
+            
+            // Ubah judul tabel
+            document.getElementById('tableTitle').innerText = 'Daftar ' + sheetName;
+            
+            // Muat data untuk sheet yang dipilih
+            loadData(sheetName);
+        }
+
+        // Jalankan saat halaman pertama kali dimuat
+        window.onload = () => {
+            // Muat data "Madrasah Mitra" secara default
+            const defaultBtn = document.getElementById('btnMitra');
+            switchTab('Madrasah Mitra', defaultBtn);
+        };
+    </script>
+</body>
+</html>
