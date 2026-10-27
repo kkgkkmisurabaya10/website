@@ -14,24 +14,44 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 @import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700&display=swap');
-body { 
-  font-family: 'Poppins', sans-serif; 
-}
-#checklist-content::-webkit-scrollbar { width: 6px; }
-#checklist-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
-#checklist-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+body { font-family: 'Poppins', sans-serif; }
+#checklist-content::-webkit-scrollbar, #admin-content::-webkit-scrollbar { width: 6px; }
+#checklist-content::-webkit-scrollbar-track, #admin-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+#checklist-content::-webkit-scrollbar-thumb, #admin-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
 </style>
 </head>
 <body class="min-h-screen relative text-gray-800">
-<!-- BACKGROUND CERIA PENDIDIKAN DENGAN OVERLAY -->
+
+<!-- BACKGROUND UMUM -->
 <div class="fixed inset-0 z-[-1] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1920&auto=format&fit=crop');">
   <div class="absolute inset-0 bg-yellow-50/90 backdrop-blur-[4px]"></div>
+</div>
+
+<!-- PUBLIC SHARE PAGE (MUNCUL JIKA ADA PARAMETER ?share= ) -->
+<div id="share-page" class="hidden min-h-screen pb-12">
+  <nav class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center h-16 gap-3">
+        <img src="https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc" alt="Logo" class="h-10 bg-white rounded-full p-1 shadow">
+        <span class="font-extrabold text-md sm:text-lg tracking-wide">Public View - KKGMI Surabaya 10</span>
+      </div>
+    </div>
+  </nav>
+  <div class="max-w-4xl mx-auto px-4 mt-8">
+    <div class="bg-white/95 p-6 rounded-3xl shadow-xl border border-indigo-100 backdrop-blur-md">
+      <h2 class="text-xl font-black text-indigo-900 mb-2" id="share-title">Folder Dokumen Publik</h2>
+      <p class="text-sm text-gray-500 mb-6 border-b pb-4"><i class="fas fa-info-circle text-blue-500 mr-2"></i>Anda sedang melihat dokumen hasil sharing (tanpa login).</p>
+      
+      <div id="share-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <!-- Data share diload disini -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- AUTHENTICATION PAGE -->
 <div id="auth-page" class="min-h-screen flex items-center justify-center p-4 relative" style="background: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;">
   <div class="absolute inset-0 bg-gradient-to-tr from-yellow-300/80 via-emerald-400/80 to-teal-500/80 backdrop-blur-md"></div>
-  
   <div class="bg-white/95 p-8 rounded-3xl shadow-2xl w-full max-w-md relative z-10 border border-emerald-300/50">
     <div class="text-center mb-6">
       <img src="https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc" alt="Logo KKGMI" class="h-24 mx-auto mb-4 object-contain drop-shadow-md">
@@ -39,13 +59,10 @@ body {
     <h2 class="text-2xl font-black text-teal-800 text-center uppercase tracking-wide">Portal Perangkat Soal</h2>
     <p class="text-emerald-700 font-bold text-center text-sm mb-4">KKGMI Surabaya 10</p>
     
-    <div class="bg-amber-100 border border-amber-300 p-3 rounded-2xl text-xs text-amber-900 text-center mb-4 font-medium">
-      Silakan login dengan akun <strong>guruhebat</strong> Anda. Jika belum terdaftar, gunakan menu di bawah untuk mendaftar.
-    </div>
     <form id="auth-form" class="space-y-4">
       <div id="madrasah-container" class="hidden">
         <label class="block text-xs font-bold text-teal-900 uppercase">Asal Madrasah</label>
-        <select id="madrasah" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 p-3 border text-sm">
+        <select id="madrasah" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-emerald-500 focus:ring p-3 border text-sm">
           <option value="">-- Pilih Madrasah --</option>
           <option value="MIS Baiturrahman Gubeng">MIS Baiturrahman Gubeng</option>
           <option value="MIS YAPISTHON">MIS YAPISTHON</option>
@@ -64,7 +81,7 @@ body {
         </select>
       </div>
       <div>
-        <label class="block text-xs font-bold text-teal-900 uppercase">Nama Lengkap</label>
+        <label class="block text-xs font-bold text-teal-900 uppercase">Nama Lengkap / Username</label>
         <input type="text" id="nama" required class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-emerald-500 focus:ring p-3 border text-sm" placeholder="Ketik nama Anda">
       </div>
       <div>
@@ -88,7 +105,9 @@ body {
           <img src="https://lh3.googleusercontent.com/d/1JLOmiT6HxduFSEbib6VFmLuqEfga5DOc" alt="Logo" class="h-10 bg-white rounded-full p-1 object-contain shadow">
           <span class="font-extrabold text-md sm:text-lg tracking-wide">KKGMI Surabaya 10</span>
         </div>
-        <div>
+        <div class="flex items-center gap-2">
+          <!-- Tombol Admin Panel Khusus Admin -->
+          <button id="btn-admin-panel" onclick="openAdminPanel()" class="hidden bg-indigo-500 hover:bg-indigo-600 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition shadow-md border border-indigo-400"><i class="fas fa-cogs mr-2"></i>Admin</button>
           <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition shadow-md"><i class="fas fa-sign-out-alt mr-2"></i>Keluar</button>
         </div>
       </div>
@@ -137,7 +156,7 @@ body {
         </div>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="dashboard-stats-grid">
-        <!-- Card stats dirender disini via JS -->
+        <!-- Card stats -->
       </div>
     </div>
 
@@ -152,7 +171,6 @@ body {
           <p class="text-[10px] text-gray-500 font-medium">Pilih fase untuk menampilkan berkas</p>
         </div>
       </div>
-      
       <div class="w-full md:w-1/3">
         <select id="dashboard-template-fase" onchange="showDashboardTemplates()" class="w-full p-3 border border-indigo-200 bg-white rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-bold text-indigo-800 cursor-pointer shadow-sm">
           <option value="">-- Pilih Fase Pembelajaran --</option>
@@ -161,13 +179,10 @@ body {
           <option value="Fase C">Fase C (Kelas 5 & 6)</option>
         </select>
       </div>
-      
-      <div id="dashboard-template-links" class="w-full md:w-1/3 flex flex-col sm:flex-row gap-2 hidden justify-end">
-        <!-- Dirender melalui JS -->
-      </div>
+      <div id="dashboard-template-links" class="w-full md:w-1/3 flex flex-col sm:flex-row gap-2 hidden justify-end"></div>
     </div>
 
-    <!-- PENCARIAN & FILTER FILE (TOMBOL UPLOAD ADA DI SINI) -->
+    <!-- PENCARIAN & FILTER -->
     <div class="bg-white/95 p-5 rounded-3xl shadow-lg border border-teal-100 mb-6 backdrop-blur-md">
       <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-5 border-b border-gray-100 pb-4">
         <div class="w-full md:flex-1 relative">
@@ -241,29 +256,97 @@ body {
     </div>
 
     <!-- FILE GRID -->
-    <div id="file-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- File akan dimuat di sini -->
+    <div id="file-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+</div>
+
+<!-- MODAL ADMIN PANEL -->
+<div id="admin-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl w-full max-w-4xl p-6 shadow-2xl h-[90vh] flex flex-col border border-indigo-200">
+    <div class="flex justify-between items-center mb-4 border-b pb-3">
+      <h3 class="text-lg font-black text-indigo-900 uppercase"><i class="fas fa-cogs mr-2 text-indigo-600"></i>Panel Pengaturan Admin</h3>
+      <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    
+    <div class="overflow-y-auto flex-1 pr-2 space-y-6" id="admin-content">
+      
+      <!-- Akses Dashboard -->
+      <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100">
+        <h4 class="font-bold text-indigo-900 mb-3 text-sm"><i class="fas fa-eye mr-2"></i>Akses Buka/Tutup Dashboard Pantauan (Filter Non-Admin)</h4>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="admin-dashboard-toggles"></div>
+      </div>
+
+      <!-- Akses Upload Sebelum Telaah -->
+      <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-100">
+        <h4 class="font-bold text-orange-900 mb-3 text-sm"><i class="fas fa-upload mr-2"></i>Akses Upload Folder "Sebelum Telaah"</h4>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="admin-up-sebelum-toggles"></div>
+      </div>
+
+      <!-- Akses Upload Setelah Telaah -->
+      <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100">
+        <h4 class="font-bold text-emerald-900 mb-3 text-sm"><i class="fas fa-upload mr-2"></i>Akses Upload Folder "Setelah Telaah"</h4>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="admin-up-setelah-toggles"></div>
+      </div>
+
+      <!-- Share Link Generator -->
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <h4 class="font-bold text-gray-800 mb-3 text-sm"><i class="fas fa-share-alt mr-2 text-blue-600"></i>Generate Link Public Share (Tanpa Login)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+          <select id="share-jenis" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="STS 1 2026/2027">STS 1 2026/2027</option>
+             <option value="SAS 2026/2027">SAS 2026/2027</option>
+             <option value="STS 2 2026/2027">STS 2 2026/2027</option>
+             <option value="SAT 2026/2027">SAT 2026/2027</option>
+             <option value="UM 2026/2027">UM 2026/2027</option>
+          </select>
+          <select id="share-telaah" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="Sebelum Telaah">Folder: Sebelum Telaah</option>
+             <option value="Setelah Telaah">Folder: Setelah Telaah</option>
+          </select>
+          <select id="share-mapel" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="SKI">SKI</option>
+             <option value="Akidah Akhlak">Akidah Akhlak</option>
+             <option value="Fikih">Fikih</option>
+             <option value="Al-Quran Hadis">Al-Quran Hadis</option>
+             <option value="Bahasa Arab">Bahasa Arab</option>
+             <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+             <option value="Bahasa Inggris">Bahasa Inggris</option>
+             <option value="Bahasa Jawa">Bahasa Jawa</option>
+             <option value="Matematika">Matematika</option>
+             <option value="IPAS">IPAS</option>
+             <option value="PKn">PKn</option>
+             <option value="PJOK">PJOK</option>
+          </select>
+          <button onclick="generateShareLink()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-xs hover:bg-blue-700 transition">Buat Link</button>
+        </div>
+        <div class="flex gap-2">
+           <input type="text" id="share-result" readonly class="flex-1 p-2 bg-gray-50 border rounded-xl text-xs text-gray-600 outline-none" placeholder="Link akan muncul di sini...">
+           <button onclick="copyShareLink()" class="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-xl text-xs hover:bg-gray-300 transition">Copy</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="mt-4 pt-4 border-t flex justify-between">
+        <button onclick="saveAdminSettings()" id="btn-save-admin" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-indigo-700 transition text-sm shadow-md">Simpan Pengaturan</button>
+        <button onclick="closeAdminPanel()" class="bg-gray-200 text-gray-800 px-5 py-2.5 rounded-xl font-bold hover:bg-gray-300 transition text-sm">Tutup</button>
     </div>
   </div>
 </div>
 
-<!-- CHECKLIST MODAL -->
+<!-- CHECKLIST MODAL & UPLOAD MODAL SAMA SEPERTI SEBELUMNYA -->
 <div id="checklist-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
   <div class="bg-white rounded-3xl w-full max-w-3xl p-6 shadow-2xl h-[85vh] flex flex-col">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
       <h3 class="text-md md:text-lg font-black text-teal-900 uppercase" id="checklist-title">Status Kelengkapan</h3>
       <button onclick="closeChecklistModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
     </div>
-    <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="checklist-content">
-      <!-- Checklist item di-render disini via Javascript -->
-    </div>
+    <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="checklist-content"></div>
     <div class="mt-4 pt-4 border-t text-right">
         <button onclick="closeChecklistModal()" class="bg-gray-200 text-gray-800 px-5 py-2.5 rounded-xl font-bold hover:bg-gray-300 transition text-sm">Tutup Pengecekan</button>
     </div>
   </div>
 </div>
 
-<!-- UPLOAD & EDIT MODAL -->
 <div id="upload-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
   <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl h-auto max-h-[90vh] overflow-y-auto border border-emerald-100">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
@@ -280,57 +363,38 @@ body {
       <div>
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Kelas</label>
         <select id="up-kelas" class="w-full p-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-          <option value="Kelas 1">Kelas 1</option>
-          <option value="Kelas 2">Kelas 2</option>
-          <option value="Kelas 3">Kelas 3</option>
-          <option value="Kelas 4">Kelas 4</option>
-          <option value="Kelas 5">Kelas 5</option>
-          <option value="Kelas 6">Kelas 6</option>
+          <option value="Kelas 1">Kelas 1</option><option value="Kelas 2">Kelas 2</option><option value="Kelas 3">Kelas 3</option>
+          <option value="Kelas 4">Kelas 4</option><option value="Kelas 5">Kelas 5</option><option value="Kelas 6">Kelas 6</option>
         </select>
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Folder Jenis Ujian</label>
         <select id="up-jenis" class="w-full p-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-          <option value="STS 1 2026/2027">STS 1 2026/2027</option>
-          <option value="SAS 2026/2027">SAS 2026/2027</option>
-          <option value="STS 2 2026/2027">STS 2 2026/2027</option>
-          <option value="SAT 2026/2027">SAT 2026/2027</option>
-          <option value="UM 2026/2027">UM 2026/2027</option>
+          <option value="STS 1 2026/2027">STS 1 2026/2027</option><option value="SAS 2026/2027">SAS 2026/2027</option>
+          <option value="STS 2 2026/2027">STS 2 2026/2027</option><option value="SAT 2026/2027">SAT 2026/2027</option><option value="UM 2026/2027">UM 2026/2027</option>
         </select>
       </div>
       <div>
         <label class="block text-xs font-black text-blue-900 uppercase mb-1">Status Telaah</label>
         <select id="up-status-telaah" class="w-full p-2.5 border border-blue-300 bg-blue-50/50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-900">
-          <option value="Sebelum Telaah">Sebelum Telaah</option>
-          <option value="Setelah Telaah">Setelah Telaah</option>
+          <option value="Sebelum Telaah">Sebelum Telaah</option><option value="Setelah Telaah">Setelah Telaah</option>
         </select>
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Kategori File</label>
         <select id="up-kategori" class="w-full p-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-          <option value="Kisi-kisi">Kisi-kisi</option>
-          <option value="Soal">Soal</option>
-          <option value="Kunci Jawaban">Kunci Jawaban</option>
+          <option value="Kisi-kisi">Kisi-kisi</option><option value="Soal">Soal</option><option value="Kunci Jawaban">Kunci Jawaban</option>
         </select>
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Folder Mapel</label>
         <select id="up-mapel" class="w-full p-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-            <option value="SKI">SKI</option>
-            <option value="Akidah Akhlak">Akidah Akhlak</option>
-            <option value="Fikih">Fikih</option>
-            <option value="Al-Quran Hadis">Al-Quran Hadis</option>
-            <option value="Bahasa Arab">Bahasa Arab</option>
-            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-            <option value="Bahasa Inggris">Bahasa Inggris</option>
-            <option value="Bahasa Jawa">Bahasa Jawa</option>
-            <option value="Matematika">Matematika</option>
-            <option value="IPAS">IPAS</option>
-            <option value="PKn">PKn</option>
-            <option value="PJOK">PJOK</option>
+            <option value="SKI">SKI</option><option value="Akidah Akhlak">Akidah Akhlak</option><option value="Fikih">Fikih</option>
+            <option value="Al-Quran Hadis">Al-Quran Hadis</option><option value="Bahasa Arab">Bahasa Arab</option><option value="Bahasa Indonesia">Bahasa Indonesia</option>
+            <option value="Bahasa Inggris">Bahasa Inggris</option><option value="Bahasa Jawa">Bahasa Jawa</option><option value="Matematika">Matematika</option>
+            <option value="IPAS">IPAS</option><option value="PKn">PKn</option><option value="PJOK">PJOK</option>
         </select>
       </div>
-      
       <div class="border-b pb-4">
         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih File (Max 10MB)</label>
         <p class="text-[10px] text-blue-600 mb-2 italic" id="edit-help-text">Abaikan kolom ini jika hanya ingin mengubah nama/kategori file.</p>
@@ -342,7 +406,7 @@ body {
 </div>
 
 <script>
-// PASTIKAN API_URL ini tidak berubah kecuali Anda melakukan Deploy Baru di Google Apps Script
+// PASTIKAN API_URL INI BENAR (SETELAH DEPLOY BARU DI GOOGLE APPS SCRIPT)
 const API_URL = 'https://script.google.com/macros/s/AKfycbwaVYKsN171kwTAtTeCR3LyR4ckiZ13-FeCjlZ7wjrfucOptLKg6OEoLai-iPlfq68_/exec'; 
 
 let isLoginMode = true;
@@ -351,16 +415,73 @@ let globalFiles = [];
 let globalStats = null;
 let globalAllFileTitles = null; 
 let globalTemplates = [];
+let globalSettings = {}; 
+
+const daftarJenisUjian = ["STS 1 2026/2027", "SAS 2026/2027", "STS 2 2026/2027", "SAT 2026/2027", "UM 2026/2027"];
 
 document.addEventListener('DOMContentLoaded', () => {
-  const savedSession = localStorage.getItem('kkgmi_session_sumatif');
-  if (savedSession) {
-    try {
-      currentUser = JSON.parse(savedSession);
-      if (currentUser && currentUser.nama) showDashboard();
-    } catch (error) { localStorage.removeItem('kkgmi_session_sumatif'); }
+  const urlParams = new URLSearchParams(window.location.search);
+  const shareParam = urlParams.get('share');
+  
+  if (shareParam) {
+    document.getElementById('auth-page').classList.add('hidden');
+    document.getElementById('share-page').classList.remove('hidden');
+    initPublicShare(shareParam);
+  } else {
+    const savedSession = localStorage.getItem('kkgmi_session_sumatif');
+    if (savedSession) {
+      try {
+        currentUser = JSON.parse(savedSession);
+        if (currentUser && currentUser.nama) showDashboard();
+      } catch (error) { localStorage.removeItem('kkgmi_session_sumatif'); }
+    }
   }
 });
+
+function initPublicShare(shareParam) {
+  try {
+    const shareData = JSON.parse(atob(shareParam));
+    document.getElementById('share-title').innerText = `Folder: ${shareData.j} | ${shareData.m} | ${shareData.t}`;
+    
+    document.getElementById('share-grid').innerHTML = '<div class="col-span-full text-center text-indigo-500 py-10"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><p class="font-bold">Mencari dokumen...</p></div>';
+    
+    fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getSharedFiles', shareData: shareData }) })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const grid = document.getElementById('share-grid');
+          grid.innerHTML = '';
+          if(data.files.length === 0) {
+            grid.innerHTML = '<div class="col-span-full text-center bg-gray-50 p-5 rounded-xl border text-sm text-gray-500">Belum ada file di folder ini.</div>';
+            return;
+          }
+          data.files.forEach(f => {
+            let icon = 'fa-file-alt text-gray-500';
+            if(f.filename.toLowerCase().includes('pdf')) icon = 'fa-file-pdf text-red-500';
+            else if(f.filename.toLowerCase().includes('xls')) icon = 'fa-file-excel text-green-500';
+            else if(f.filename.toLowerCase().includes('doc')) icon = 'fa-file-word text-blue-500';
+            
+            grid.innerHTML += `
+              <div class="border rounded-2xl p-4 flex items-center justify-between hover:shadow-md transition bg-white">
+                <div class="flex items-center gap-3 overflow-hidden">
+                  <i class="fas ${icon} text-3xl shrink-0"></i>
+                  <div class="truncate">
+                     <div class="font-bold text-sm text-gray-800 truncate" title="${f.filename}">${f.filename}</div>
+                     <div class="text-[10px] text-gray-500 mt-1"><span class="bg-gray-100 px-2 py-0.5 rounded">${f.kelas}</span> <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.kategori}</span></div>
+                  </div>
+                </div>
+                <a href="${f.url}" target="_blank" class="shrink-0 ml-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white transition px-4 py-2 rounded-xl text-xs font-bold border border-indigo-200">Lihat/Download</a>
+              </div>
+            `;
+          });
+        } else {
+           document.getElementById('share-grid').innerHTML = `<p class="text-red-500">${data.message}</p>`;
+        }
+      }).catch(e => { document.getElementById('share-grid').innerHTML = '<p class="text-red-500">Terjadi kesalahan sistem.</p>'; });
+  } catch (e) {
+    document.getElementById('share-grid').innerHTML = '<div class="col-span-full text-center bg-red-50 text-red-600 p-5 rounded-xl border">Link tidak valid atau kadaluarsa.</div>';
+  }
+}
 
 document.getElementById('toggle-auth').addEventListener('click', (e) => {
   e.preventDefault();
@@ -383,28 +504,24 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
   
   const payload = { action: isLoginMode ? 'login' : 'register', nama, password, madrasah };
   
-  Swal.fire({ title: 'Mohon Tunggu', text: 'Memproses koneksi database...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  Swal.fire({ title: 'Mohon Tunggu', text: 'Memproses koneksi...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
   
   try {
-    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type': 'text/plain; charset=utf-8'} });
+    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
     const data = await res.json();
     if (data.status === 'success') {
       if (isLoginMode) {
         currentUser = data.user;
         localStorage.setItem('kkgmi_session_sumatif', JSON.stringify(currentUser));
-        Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Login sukses!', timer: 1500, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Login sukses!', timer: 1000, showConfirmButton: false });
         setTimeout(showDashboard, 1000);
       } else {
         Swal.fire('Berhasil', 'Akun terdaftar, silakan Masuk!', 'success');
         document.getElementById('toggle-auth').click();
       }
     } else { Swal.fire('Gagal', data.message, 'error'); }
-  } catch (err) { 
-    Swal.fire('Error', 'Koneksi ke server gagal. Pastikan link API URL sudah benar.', 'error'); 
-  } finally {
-    btnAuth.disabled = false;
-    btnAuth.classList.remove('opacity-50', 'cursor-not-allowed');
-  }
+  } catch (err) { Swal.fire('Error', 'Koneksi ke server gagal.', 'error'); 
+  } finally { btnAuth.disabled = false; btnAuth.classList.remove('opacity-50', 'cursor-not-allowed'); }
 });
 
 function showDashboard() {
@@ -416,8 +533,11 @@ function showDashboard() {
     document.getElementById('user-role-badge').innerText = 'Akses: ' + currentUser.role.toUpperCase();
     document.getElementById('user-role-badge').classList.remove('hidden');
     document.getElementById('btn-open-upload').classList.remove('hidden'); 
+    
+    if(currentUser.role.toLowerCase() === 'admin') {
+       document.getElementById('btn-admin-panel').classList.remove('hidden');
+    }
   }
-  
   loadFiles();
 }
 
@@ -426,14 +546,14 @@ function logout() {
   localStorage.removeItem('kkgmi_session_sumatif');
   document.getElementById('dashboard-page').classList.add('hidden');
   document.getElementById('auth-page').classList.remove('hidden');
+  document.getElementById('btn-admin-panel').classList.add('hidden');
   document.getElementById('auth-form').reset();
 }
 
 async function loadFiles() {
-  document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10 bg-white/80 backdrop-blur rounded-3xl p-8 border border-white/50 shadow-sm"><i class="fas fa-spinner fa-spin text-3xl text-emerald-600 mb-3"></i><p class="font-bold text-emerald-950">Memuat database soal dan pantauan...</p></div>';
+  document.getElementById('file-grid').innerHTML = '<div class="col-span-full text-center py-10 bg-white/80 backdrop-blur rounded-3xl p-8 shadow-sm"><i class="fas fa-spinner fa-spin text-3xl text-emerald-600 mb-3"></i><p class="font-bold text-emerald-950">Memuat database...</p></div>';
   try {
     const payload = { action: 'getFiles', nama: currentUser.nama, role: currentUser.role };
-    
     const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
     const data = await res.json();
     
@@ -442,20 +562,127 @@ async function loadFiles() {
       globalStats = data.stats; 
       globalAllFileTitles = data.allFileTitles; 
       globalTemplates = data.templates || []; 
+      globalSettings = data.settings || {};
       
       renderFiles(globalFiles);
       updateStatsUI(); 
-    } else {
-      document.getElementById('file-grid').innerHTML = `<p class="text-red-500 text-center col-span-full bg-white p-5 rounded-xl border">Gagal: ${data.message}</p>`;
-    }
-  } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 text-center col-span-full bg-white p-5 rounded-xl border">Gagal memuat file dari server. Pastikan URL API baru sudah dimasukkan jika ada pembaruan kode Google Apps Script.</p>'; }
+    } else { document.getElementById('file-grid').innerHTML = `<p class="text-red-500 p-5 rounded-xl border">${data.message}</p>`; }
+  } catch(e) { document.getElementById('file-grid').innerHTML = '<p class="text-red-500 p-5">Gagal memuat. Pastikan URL API sudah di-update di script.</p>'; }
 }
+
+// ----- FUNGSI ADMIN PANEL -----
+function openAdminPanel() {
+  const dashContainer = document.getElementById('admin-dashboard-toggles');
+  const upSebContainer = document.getElementById('admin-up-sebelum-toggles');
+  const upSetContainer = document.getElementById('admin-up-setelah-toggles');
+  
+  dashContainer.innerHTML = ''; upSebContainer.innerHTML = ''; upSetContainer.innerHTML = '';
+  
+  daftarJenisUjian.forEach(j => {
+    // Dash Toggles
+    const dashVal = globalSettings['DASH_' + j] === 'CLOSE' ? 'CLOSE' : 'OPEN';
+    dashContainer.innerHTML += `
+       <div class="bg-white p-2 rounded-xl border border-gray-200 text-center shadow-sm">
+         <div class="text-[10px] font-bold text-gray-700 mb-1 truncate" title="${j}">${j}</div>
+         <select id="set_DASH_${j}" class="w-full text-xs p-1 rounded font-bold outline-none ${dashVal==='OPEN' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}" onchange="toggleColor(this)">
+            <option value="OPEN" ${dashVal==='OPEN'?'selected':''}>Buka</option><option value="CLOSE" ${dashVal==='CLOSE'?'selected':''}>Tutup</option>
+         </select>
+       </div>
+    `;
+    
+    // Up Sebelum Toggles
+    const upSebVal = globalSettings['UP_SEBELUM_' + j] === 'CLOSE' ? 'CLOSE' : 'OPEN';
+    upSebContainer.innerHTML += `
+       <div class="bg-white p-2 rounded-xl border border-gray-200 text-center shadow-sm">
+         <div class="text-[10px] font-bold text-gray-700 mb-1 truncate" title="${j}">${j}</div>
+         <select id="set_UP_SEBELUM_${j}" class="w-full text-xs p-1 rounded font-bold outline-none ${upSebVal==='OPEN' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}" onchange="toggleColor(this)">
+            <option value="OPEN" ${upSebVal==='OPEN'?'selected':''}>Buka</option><option value="CLOSE" ${upSebVal==='CLOSE'?'selected':''}>Tutup</option>
+         </select>
+       </div>
+    `;
+
+    // Up Setelah Toggles
+    const upSetVal = globalSettings['UP_SETELAH_' + j] === 'CLOSE' ? 'CLOSE' : 'OPEN';
+    upSetContainer.innerHTML += `
+       <div class="bg-white p-2 rounded-xl border border-gray-200 text-center shadow-sm">
+         <div class="text-[10px] font-bold text-gray-700 mb-1 truncate" title="${j}">${j}</div>
+         <select id="set_UP_SETELAH_${j}" class="w-full text-xs p-1 rounded font-bold outline-none ${upSetVal==='OPEN' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}" onchange="toggleColor(this)">
+            <option value="OPEN" ${upSetVal==='OPEN'?'selected':''}>Buka</option><option value="CLOSE" ${upSetVal==='CLOSE'?'selected':''}>Tutup</option>
+         </select>
+       </div>
+    `;
+  });
+  
+  document.getElementById('admin-modal').classList.remove('hidden');
+}
+
+function toggleColor(selectEl) {
+   if(selectEl.value === 'OPEN') {
+      selectEl.classList.remove('bg-red-100', 'text-red-700'); selectEl.classList.add('bg-green-100', 'text-green-700');
+   } else {
+      selectEl.classList.remove('bg-green-100', 'text-green-700'); selectEl.classList.add('bg-red-100', 'text-red-700');
+   }
+}
+
+function closeAdminPanel() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+async function saveAdminSettings() {
+   const newSettings = {};
+   daftarJenisUjian.forEach(j => {
+     newSettings['DASH_' + j] = document.getElementById('set_DASH_' + j).value;
+     newSettings['UP_SEBELUM_' + j] = document.getElementById('set_UP_SEBELUM_' + j).value;
+     newSettings['UP_SETELAH_' + j] = document.getElementById('set_UP_SETELAH_' + j).value;
+   });
+   
+   const btn = document.getElementById('btn-save-admin');
+   btn.innerText = 'Menyimpan...'; btn.disabled = true;
+   
+   try {
+     const payload = { action: 'saveSettings', role: currentUser.role, settings: newSettings };
+     const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+     const data = await res.json();
+     if(data.status === 'success') {
+        Swal.fire('Tersimpan', data.message, 'success');
+        globalSettings = newSettings;
+        loadFiles(); // reload UI changes based on new settings
+     } else { Swal.fire('Gagal', data.message, 'error'); }
+   } catch(e) { Swal.fire('Error', 'Gagal menyimpan pengaturan.', 'error'); }
+   
+   btn.innerText = 'Simpan Pengaturan'; btn.disabled = false;
+}
+
+function generateShareLink() {
+   const j = document.getElementById('share-jenis').value;
+   const t = document.getElementById('share-telaah').value;
+   const m = document.getElementById('share-mapel').value;
+   
+   const shareData = { j: j, t: t, m: m };
+   const encoded = btoa(JSON.stringify(shareData));
+   const linkUrl = window.location.origin + window.location.pathname + '?share=' + encoded;
+   
+   document.getElementById('share-result').value = linkUrl;
+}
+
+function copyShareLink() {
+   const input = document.getElementById('share-result');
+   if(!input.value) return Swal.fire('Oops', 'Generate link terlebih dahulu', 'warning');
+   input.select(); document.execCommand('copy');
+   Swal.fire({ icon: 'success', title: 'Tercopy!', showConfirmButton: false, timer: 1000 });
+}
+// ----- AKHIR FUNGSI ADMIN PANEL -----
 
 function updateStatsUI() {
   const grid = document.getElementById('dashboard-stats-grid');
   if (!globalStats) return;
   const selectedJenis = document.getElementById('stat-jenis-filter').value;
   const selectedFokus = document.getElementById('stat-fokus-filter').value;
+  
+  // Sembunyikan stats jika admin menutup dashboard untuk Jenis ini dan user bukan admin
+  const isClosed = globalSettings['DASH_' + selectedJenis] === 'CLOSE';
+  if(isClosed && currentUser.role.toLowerCase() !== 'admin') {
+     grid.innerHTML = '<div class="col-span-full p-4 bg-red-50 text-red-600 rounded-xl border border-red-200 text-sm font-bold text-center">Akses Pantauan untuk '+selectedJenis+' ditutup oleh Admin.</div>';
+     return;
+  }
   
   const jenisData = globalStats[selectedJenis] || {};
   grid.innerHTML = '';
@@ -473,7 +700,6 @@ function updateStatsUI() {
     });
   } else {
     const daftarMapel = ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"];
-    
     daftarMapel.forEach(mapel => {
       const count = (jenisData[selectedFokus] && jenisData[selectedFokus][mapel]) ? jenisData[selectedFokus][mapel] : 0;
       grid.innerHTML += `
@@ -488,104 +714,56 @@ function updateStatsUI() {
 }
 
 function showChecklistModal(kelas, jenis, mapelFilter) {
-  const titleExtra = mapelFilter === 'Semua Mapel' ? '' : ` - ${mapelFilter}`;
-  document.getElementById('checklist-title').innerText = `Pantauan Detail - ${kelas} (${jenis})${titleExtra}`;
-  
+  document.getElementById('checklist-title').innerText = `Pantauan Detail - ${kelas} (${jenis})${mapelFilter === 'Semua Mapel' ? '' : ' - ' + mapelFilter}`;
   const content = document.getElementById('checklist-content');
   content.innerHTML = '';
   
-  let filesList = [];
-  if(globalAllFileTitles && globalAllFileTitles[jenis] && globalAllFileTitles[jenis][kelas]) {
-     filesList = globalAllFileTitles[jenis][kelas];
-  }
+  let filesList = (globalAllFileTitles && globalAllFileTitles[jenis] && globalAllFileTitles[jenis][kelas]) ? globalAllFileTitles[jenis][kelas] : [];
+  const targetMapels = mapelFilter === 'Semua Mapel' ? ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"] : [mapelFilter];
   
-  const daftarMapel = ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"];
-  const targetMapels = mapelFilter === 'Semua Mapel' ? daftarMapel : [mapelFilter];
-  
-  let totalMissing = 0;
-  let htmlContent = '';
-  
+  let totalMissing = 0; let htmlContent = '';
   targetMapels.forEach(mapel => {
       const filesForMapel = filesList.filter(f => f.mapel.toLowerCase() === mapel.toLowerCase());
+      const hasSoal = filesForMapel.some(f => f.kategori.toLowerCase().includes('soal'));
+      const hasKisi = filesForMapel.some(f => f.kategori.toLowerCase().includes('kisi'));
+      const hasKunci = filesForMapel.some(f => f.kategori.toLowerCase().includes('kunci'));
       
-      const hasSoal = filesForMapel.some(f => f.kategori && f.kategori.toLowerCase().includes('soal'));
-      const hasKisi = filesForMapel.some(f => f.kategori && f.kategori.toLowerCase().includes('kisi'));
-      const hasKunci = filesForMapel.some(f => f.kategori && f.kategori.toLowerCase().includes('kunci'));
+      let missing = 0; if(!hasSoal) missing++; if(!hasKisi) missing++; if(!hasKunci) missing++;
+      totalMissing += missing;
       
-      let missingInMapel = 0;
-      if(!hasSoal) missingInMapel++;
-      if(!hasKisi) missingInMapel++;
-      if(!hasKunci) missingInMapel++;
-      totalMissing += missingInMapel;
-      
-      const getIcon = (isExist) => isExist ? '<i class="fas fa-check-circle text-green-500 text-lg"></i>' : '<i class="fas fa-times-circle text-red-500 text-lg"></i>';
-      const getBg = (isExist) => isExist ? 'bg-green-50/50 border-green-200' : 'bg-red-50/50 border-red-200';
-      const getText = (isExist) => isExist ? 'text-green-700' : 'text-red-600 font-bold';
+      const getIcon = (isE) => isE ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-times-circle text-red-500"></i>';
       let fileDetails = '';
-      
       filesForMapel.forEach(f => {
-          fileDetails += `<div class="text-xs text-gray-500 ml-2 py-1 flex items-center justify-between"><div class="flex items-center truncate mr-2"><i class="fas fa-file-alt mr-2 text-gray-400"></i> <span class="truncate font-medium text-gray-700" title="${f.filename}">${f.filename}</span></div> <div class="flex items-center gap-1.5 shrink-0"><span class="bg-blue-100 text-blue-800 text-[9px] px-1.5 rounded font-black uppercase">${f.statusTelaah || 'Sebelum Telaah'}</span><span class="bg-gray-200 px-1 rounded-sm text-[9px] text-gray-700">${f.uploader}</span></div></div>`;
+          fileDetails += `<div class="text-xs text-gray-500 ml-2 py-1 flex items-center justify-between"><div class="flex items-center truncate mr-2"><i class="fas fa-file-alt mr-2 text-gray-400"></i> <span class="truncate font-medium">${f.filename}</span></div> <div class="flex items-center gap-1.5 shrink-0"><span class="bg-blue-100 text-blue-800 text-[9px] px-1.5 rounded uppercase">${f.statusTelaah || 'Sebelum Telaah'}</span><span class="bg-gray-200 px-1 rounded text-[9px]">${f.uploader}</span></div></div>`;
       });
       
       htmlContent += `
-          <div class="border rounded-2xl p-4 mb-3 bg-white shadow-sm border-gray-150">
+          <div class="border rounded-2xl p-4 mb-3 bg-white shadow-sm">
             <h4 class="font-bold text-gray-800 mb-3 border-b pb-2"><i class="fas fa-book text-emerald-600 mr-2"></i>${mapel}</h4>
             <div class="grid grid-cols-3 gap-2 mb-2">
-                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 p-2 rounded-xl border ${getBg(hasSoal)} text-center md:text-left">
-                    ${getIcon(hasSoal)}
-                    <span class="text-xs ${getText(hasSoal)}">Soal</span>
-                </div>
-                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 p-2 rounded-xl border ${getBg(hasKisi)} text-center md:text-left">
-                    ${getIcon(hasKisi)}
-                    <span class="text-xs ${getText(hasKisi)}">Kisi-kisi</span>
-                </div>
-                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 p-2 rounded-xl border ${getBg(hasKunci)} text-center md:text-left">
-                    ${getIcon(hasKunci)}
-                    <span class="text-xs ${getText(hasKunci)}">Kunci Jawaban</span>
-                </div>
+                <div class="flex items-center justify-center gap-2 p-2 rounded-xl border ${hasSoal?'bg-green-50':'bg-red-50'}">${getIcon(hasSoal)} <span class="text-xs ${hasSoal?'text-green-700':'text-red-600 font-bold'}">Soal</span></div>
+                <div class="flex items-center justify-center gap-2 p-2 rounded-xl border ${hasKisi?'bg-green-50':'bg-red-50'}">${getIcon(hasKisi)} <span class="text-xs ${hasKisi?'text-green-700':'text-red-600 font-bold'}">Kisi-kisi</span></div>
+                <div class="flex items-center justify-center gap-2 p-2 rounded-xl border ${hasKunci?'bg-green-50':'bg-red-50'}">${getIcon(hasKunci)} <span class="text-xs ${hasKunci?'text-green-700':'text-red-600 font-bold'}">Kunci</span></div>
             </div>
-            ${fileDetails ? `<div class="mt-3 pt-2 border-t border-dashed border-gray-200 bg-gray-50/80 rounded-xl p-2.5">${fileDetails}</div>` : '<div class="mt-2 text-xs text-red-400 italic text-center">Belum ada file diunggah.</div>'}
+            ${fileDetails ? `<div class="mt-3 pt-2 border-t bg-gray-50 p-2.5 rounded-xl">${fileDetails}</div>` : '<div class="mt-2 text-xs text-red-400 italic text-center">Belum ada file diunggah.</div>'}
           </div>
       `;
   });
   
-  let topNotif = '';
-  if (totalMissing > 0) {
-      topNotif = `
-        <div class="bg-red-50 text-red-700 p-4 rounded-2xl border border-red-200 shadow-sm flex items-center mb-5">
-            <i class="fas fa-exclamation-triangle text-2xl mr-4 text-red-500"></i>
-            <div>
-                <div class="text-xs sm:text-sm font-bold uppercase tracking-wide">Analisis Kelengkapan</div>
-                <div class="text-xs mt-1">Terdapat ${totalMissing} dokumen yang belum diunggah (Status Silang Merah).</div>
-            </div>
-        </div>
-      `;
-  } else {
-      topNotif = `
-        <div class="bg-emerald-50 text-emerald-800 p-4 rounded-2xl border border-emerald-200 shadow-sm flex items-center mb-5">
-            <i class="fas fa-check-double text-2xl mr-4 text-emerald-600"></i>
-            <div>
-                <div class="text-xs sm:text-sm font-bold uppercase tracking-wide">Semua Lengkap!</div>
-                <div class="text-xs mt-1">Seluruh dokumen (Soal, Kisi-kisi, Kunci Jawaban) untuk ${mapelFilter === 'Semua Mapel' ? 'kelas ini' : 'mapel ini'} telah lengkap.</div>
-            </div>
-        </div>
-      `;
-  }
+  let topNotif = totalMissing > 0 ? 
+    `<div class="bg-red-50 text-red-700 p-4 rounded-2xl border flex items-center mb-5"><i class="fas fa-exclamation-triangle text-2xl mr-4"></i><div><div class="text-sm font-bold uppercase">Analisis Kelengkapan</div><div class="text-xs mt-1">Terdapat ${totalMissing} dokumen yang belum diunggah.</div></div></div>` :
+    `<div class="bg-emerald-50 text-emerald-800 p-4 rounded-2xl border flex items-center mb-5"><i class="fas fa-check-double text-2xl mr-4"></i><div><div class="text-sm font-bold uppercase">Semua Lengkap!</div><div class="text-xs mt-1">Seluruh dokumen telah lengkap.</div></div></div>`;
+    
   content.innerHTML = topNotif + htmlContent;
   document.getElementById('checklist-modal').classList.remove('hidden');
 }
 
-function closeChecklistModal() {
-  document.getElementById('checklist-modal').classList.add('hidden');
-}
+function closeChecklistModal() { document.getElementById('checklist-modal').classList.add('hidden'); }
 
 function renderFiles(files) {
-  const grid = document.getElementById('file-grid');
-  grid.innerHTML = '';
-  
+  const grid = document.getElementById('file-grid'); grid.innerHTML = '';
   if(files.length === 0) {
-    grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 bg-white/70 backdrop-blur rounded-3xl p-8 border font-medium shadow-sm">Tidak ada file yang ditemukan atau tidak ada dalam otoritas Anda.</div>';
-    return;
+    grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10 bg-white/70 backdrop-blur rounded-3xl border font-medium">Tidak ada file ditemukan (Atau akses ditutup Admin).</div>'; return;
   }
   
   files.forEach(file => {
@@ -595,44 +773,35 @@ function renderFiles(files) {
     else if(['xls','xlsx'].includes(ext)) icon = 'fa-file-excel text-green-500';
     else if(['doc', 'docx'].includes(ext)) icon = 'fa-file-word text-blue-500';
     
-    // PEMBATASAN AKSES KELOLA FILE
     const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
     const isOwner = file.uploader === currentUser.nama;
     const isSetelahTelaah = (file.statusTelaah && file.statusTelaah.toLowerCase() === 'setelah telaah');
     
     let canManage = false;
-    if (userRole === 'admin' || userRole === 'penanggungjawab') {
-      canManage = true;
-    } else if (userRole.startsWith('koordinator')) {
-      canManage = true; 
-    } else { 
-      canManage = isOwner && !isSetelahTelaah;
-    }
+    if (userRole === 'admin' || userRole === 'penanggungjawab' || userRole.startsWith('koordinator')) canManage = true; 
+    else canManage = isOwner && !isSetelahTelaah;
     
     let adminControls = '';
     if (canManage) {
       const escapedFilename = file.filename.replace(/'/g, "\\'");
       adminControls = `
-        <button onclick="openEditModal('${file.id}', '${escapedFilename}', '${file.kelas}', '${file.jenis}', '${file.statusTelaah}', '${file.mapel}', '${file.kategori}')" class="bg-yellow-50 text-yellow-700 border border-yellow-200 px-3 py-2 rounded-xl hover:bg-yellow-100 transition flex items-center justify-center text-xs font-bold gap-1" title="Perbaharui Info/File"><i class="fas fa-edit"></i> Edit</button>
-        <button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 border border-red-200 px-3 py-2 rounded-xl hover:bg-red-100 transition flex items-center justify-center text-xs font-bold gap-1" title="Hapus"><i class="fas fa-trash"></i> Hapus</button>
+        <button onclick="openEditModal('${file.id}', '${escapedFilename}', '${file.kelas}', '${file.jenis}', '${file.statusTelaah}', '${file.mapel}', '${file.kategori}')" class="bg-yellow-50 text-yellow-700 border px-3 py-2 rounded-xl hover:bg-yellow-100 transition text-xs font-bold gap-1"><i class="fas fa-edit"></i> Edit</button>
+        <button onclick="deleteFile('${file.id}')" class="bg-red-50 text-red-600 border px-3 py-2 rounded-xl hover:bg-red-100 transition text-xs font-bold gap-1"><i class="fas fa-trash"></i> Hapus</button>
       `;
     }
     const telaahBadgeColor = isSetelahTelaah ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-orange-100 text-orange-700 border-orange-200';
     
     grid.innerHTML += `
-      <div class="bg-white/95 p-5 rounded-3xl shadow-md hover:shadow-lg transition border border-gray-100 flex flex-col relative overflow-hidden backdrop-blur-sm">
-        <div class="absolute top-3 right-3">
-          <span class="text-[9px] ${telaahBadgeColor} font-black uppercase tracking-wider px-2 py-0.5 rounded-full border">${file.statusTelaah || 'Sebelum Telaah'}</span>
-        </div>
-        
+      <div class="bg-white/95 p-5 rounded-3xl shadow-md hover:shadow-lg transition border flex flex-col relative overflow-hidden backdrop-blur-sm">
+        <div class="absolute top-3 right-3"><span class="text-[9px] ${telaahBadgeColor} font-black uppercase px-2 py-0.5 rounded-full border">${file.statusTelaah || 'Sebelum Telaah'}</span></div>
         <div class="flex items-start gap-4 mb-3 mt-3">
           <i class="fas ${icon} text-4xl shrink-0 mt-1"></i>
           <div class="flex-1 min-w-0">
-            <h4 class="font-bold text-gray-800 text-sm line-clamp-2 pr-16 break-words" title="${file.filename}">${file.filename}</h4>
+            <h4 class="font-bold text-gray-800 text-sm line-clamp-2 pr-16 break-words">${file.filename}</h4>
             <div class="flex flex-wrap gap-1 mt-2">
-              <span class="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-100 px-2 py-0.5 rounded-md font-bold">${file.kelas}</span>
-              <span class="text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-100 px-2 py-0.5 rounded-md font-bold">${file.mapel}</span>
-              <span class="text-[9px] bg-purple-50 text-purple-700 border border-purple-100 px-2 py-0.5 rounded-md font-bold">${file.kategori}</span>
+              <span class="text-[9px] bg-emerald-50 text-emerald-800 border px-2 py-0.5 rounded-md font-bold">${file.kelas}</span>
+              <span class="text-[9px] bg-indigo-50 text-indigo-700 border px-2 py-0.5 rounded-md font-bold">${file.mapel}</span>
+              <span class="text-[9px] bg-purple-50 text-purple-700 border px-2 py-0.5 rounded-md font-bold">${file.kategori}</span>
             </div>
           </div>
         </div>
@@ -641,7 +810,7 @@ function renderFiles(files) {
           <p class="truncate"><i class="fas fa-user mr-1 text-emerald-600"></i> ${file.uploader} <span class="text-gray-300">|</span> <span class="text-[10px]">${file.time}</span></p>
         </div>
         <div class="mt-auto pt-2 border-t flex gap-2 justify-end">
-          <a href="${file.url}" target="_blank" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-xl hover:bg-emerald-100 transition flex items-center justify-center text-xs font-bold gap-1 mr-auto"><i class="fas fa-eye"></i> Lihat</a>
+          <a href="${file.url}" target="_blank" class="bg-emerald-50 text-emerald-700 border px-3 py-2 rounded-xl hover:bg-emerald-100 transition text-xs font-bold gap-1 mr-auto"><i class="fas fa-eye"></i> Lihat</a>
           ${adminControls}
         </div>
       </div>
@@ -653,7 +822,7 @@ function filterFiles() {
   const query = document.getElementById('search-input').value.toLowerCase().trim();
   const fKelas = document.getElementById('filter-kelas').value.toLowerCase().trim();
   const fJenis = document.getElementById('filter-jenis').value.toLowerCase().trim();
-  const fStatusTelaah = document.getElementById('filter-status-telaah').value.toLowerCase().trim();
+  const fStatus = document.getElementById('filter-status-telaah').value.toLowerCase().trim();
   const fMapel = document.getElementById('filter-mapel').value.toLowerCase().trim();
   const fKategori = document.getElementById('filter-kategori').value.toLowerCase().trim();
   
@@ -661,7 +830,7 @@ function filterFiles() {
     return (f.filename.toLowerCase().includes(query) || f.mapel.toLowerCase().includes(query)) &&
            (fKelas === '' || f.kelas.toLowerCase() === fKelas) &&
            (fJenis === '' || f.jenis.toLowerCase() === fJenis) &&
-           (fStatusTelaah === '' || (f.statusTelaah || 'sebelum telaah').toLowerCase() === fStatusTelaah) &&
+           (fStatus === '' || (f.statusTelaah || 'sebelum telaah').toLowerCase() === fStatus) &&
            (fMapel === '' || f.mapel.toLowerCase() === fMapel) &&
            (fKategori === '' || f.kategori.toLowerCase() === fKategori);
   });
@@ -671,94 +840,63 @@ function filterFiles() {
 function showDashboardTemplates() {
   const fase = document.getElementById('dashboard-template-fase').value;
   const container = document.getElementById('dashboard-template-links');
+  if (!fase) { container.classList.add('hidden'); return; }
   
-  if (!fase) {
-    container.classList.add('hidden');
-    return;
-  }
-  
-  container.classList.remove('hidden');
-  container.innerHTML = '';
-  
+  container.classList.remove('hidden'); container.innerHTML = '';
   const filtered = globalTemplates.filter(t => t.fase.toLowerCase() === fase.toLowerCase());
   
   if (filtered.length === 0) {
-    container.innerHTML = '<p class="text-[10px] text-red-500 italic p-2 w-full text-center bg-white rounded-lg border border-red-200">Template belum tersedia di sistem.</p>';
-    return;
+    container.innerHTML = '<p class="text-[10px] text-red-500 italic p-2 w-full text-center bg-white rounded-lg border">Template belum tersedia.</p>'; return;
   }
   
   filtered.forEach(t => {
-    let icon = 'fa-file-alt text-gray-500';
-    let styleClass = 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700';
-    if (t.kategori.toLowerCase().includes('kisi')) {
-      icon = 'fa-file-excel text-green-600'; 
-      styleClass = 'bg-green-50 hover:bg-green-100 border-green-200 text-green-800';
-    } else if (t.kategori.toLowerCase().includes('soal')) {
-      icon = 'fa-file-word text-blue-600'; 
-      styleClass = 'bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-800';
-    } else if (t.kategori.toLowerCase().includes('kunci')) {
-      icon = 'fa-file-word text-orange-600'; 
-      styleClass = 'bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-800';
-    }
+    let icon = 'fa-file-alt text-gray-500'; let styleClass = 'bg-gray-50 hover:bg-gray-100 text-gray-700';
+    if (t.kategori.toLowerCase().includes('kisi')) { icon = 'fa-file-excel text-green-600'; styleClass = 'bg-green-50 hover:bg-green-100 text-green-800'; } 
+    else if (t.kategori.toLowerCase().includes('soal')) { icon = 'fa-file-word text-blue-600'; styleClass = 'bg-blue-50 hover:bg-blue-100 text-blue-800'; } 
+    else if (t.kategori.toLowerCase().includes('kunci')) { icon = 'fa-file-word text-orange-600'; styleClass = 'bg-orange-50 hover:bg-orange-100 text-orange-800'; }
     
-    container.innerHTML += `
-      <a href="${t.url}" target="_blank" class="flex-1 flex items-center justify-center gap-2 ${styleClass} border py-2.5 px-3 rounded-xl transition text-[11px] font-bold shadow-sm truncate" title="${t.nama}">
-        <i class="fas ${icon} text-sm"></i>
-        <span>${t.kategori}</span>
-      </a>
-    `;
+    container.innerHTML += `<a href="${t.url}" target="_blank" class="flex-1 flex items-center justify-center gap-2 ${styleClass} border py-2.5 px-3 rounded-xl transition text-[11px] font-bold shadow-sm truncate"><i class="fas ${icon} text-sm"></i><span>${t.kategori}</span></a>`;
   });
 }
 
 function openUploadModal() {
   document.getElementById('modal-title').innerText = "Upload Dokumen Baru";
-  document.getElementById('edit-file-id').value = "";
-  document.getElementById('up-filename').value = "";
-  document.getElementById('up-file').value = "";
-  document.getElementById('edit-help-text').classList.add('hidden');
+  document.getElementById('edit-file-id').value = ""; document.getElementById('up-filename').value = "";
+  document.getElementById('up-file').value = ""; document.getElementById('edit-help-text').classList.add('hidden');
   
   const statusSelect = document.getElementById('up-status-telaah');
-  const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
-  
-  if (userRole === 'guru') {
-    statusSelect.value = 'Sebelum Telaah';
-    statusSelect.disabled = true;
-    statusSelect.classList.add('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+  if (currentUser.role.toLowerCase() === 'guru') {
+    statusSelect.value = 'Sebelum Telaah'; statusSelect.disabled = true; statusSelect.classList.add('bg-gray-100', 'opacity-70');
   } else {
-    statusSelect.value = 'Sebelum Telaah';
-    statusSelect.disabled = false;
-    statusSelect.classList.remove('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+    statusSelect.value = 'Sebelum Telaah'; statusSelect.disabled = false; statusSelect.classList.remove('bg-gray-100', 'opacity-70');
   }
   document.getElementById('upload-modal').classList.remove('hidden');
 }
 
 function openEditModal(id, filename, kelas, jenis, statusTelaah, mapel, kategori) {
   document.getElementById('modal-title').innerText = "Perbaharui Data Dokumen";
-  document.getElementById('edit-file-id').value = id;
-  document.getElementById('up-filename').value = filename;
-  document.getElementById('up-kelas').value = kelas;
-  document.getElementById('up-jenis').value = jenis;
-  document.getElementById('up-mapel').value = mapel;
-  document.getElementById('up-kategori').value = kategori;
-  document.getElementById('up-file').value = ""; 
-  document.getElementById('edit-help-text').classList.remove('hidden');
+  document.getElementById('edit-file-id').value = id; document.getElementById('up-filename').value = filename;
+  document.getElementById('up-kelas').value = kelas; document.getElementById('up-jenis').value = jenis;
+  document.getElementById('up-mapel').value = mapel; document.getElementById('up-kategori').value = kategori;
+  document.getElementById('up-file').value = ""; document.getElementById('edit-help-text').classList.remove('hidden');
   
   const statusSelect = document.getElementById('up-status-telaah');
   statusSelect.value = statusTelaah || "Sebelum Telaah";
-  const userRole = currentUser.role ? currentUser.role.toLowerCase().trim() : 'guru';
-  
-  if (userRole === 'guru') {
-    statusSelect.disabled = true;
-    statusSelect.classList.add('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+  if (currentUser.role.toLowerCase() === 'guru') {
+    statusSelect.disabled = true; statusSelect.classList.add('bg-gray-100', 'opacity-70');
   } else {
-    statusSelect.disabled = false;
-    statusSelect.classList.remove('bg-gray-100', 'cursor-not-allowed', 'opacity-70');
+    statusSelect.disabled = false; statusSelect.classList.remove('bg-gray-100', 'opacity-70');
   }
   document.getElementById('upload-modal').classList.remove('hidden');
 }
 
-function closeUploadModal() {
-  document.getElementById('upload-modal').classList.add('hidden');
+function closeUploadModal() { document.getElementById('upload-modal').classList.add('hidden'); }
+
+function checkUploadPermitted(jenis, statusTelaah) {
+   if(currentUser.role.toLowerCase() === 'admin') return true;
+   const isSetelah = statusTelaah.toLowerCase().includes('setelah');
+   const key = 'UP_' + (isSetelah ? 'SETELAH_' : 'SEBELUM_') + jenis;
+   return globalSettings[key] !== 'CLOSE';
 }
 
 function processUpload() {
@@ -771,79 +909,52 @@ function processUpload() {
   const fileInput = document.getElementById('up-file').files[0];
   const btnSubmit = document.getElementById('btn-submit-upload');
   
-  const statusSelect = document.getElementById('up-status-telaah');
-  let statusTelaah = statusSelect.value.trim();
-  if(statusSelect.disabled) statusTelaah = 'Sebelum Telaah';
+  let statusTelaah = document.getElementById('up-status-telaah').value.trim();
+  if(document.getElementById('up-status-telaah').disabled) statusTelaah = 'Sebelum Telaah';
   
-  if(!judul || !kelas || !jenis || !statusTelaah || !mapel || !kategori) return Swal.fire('Peringatan', 'Lengkapi semua isian form!', 'warning');
+  // Validasi Otoritas Admin Tutup Upload
+  if(!checkUploadPermitted(jenis, statusTelaah)) {
+     return Swal.fire('Akses Ditutup', 'Admin sedang menutup akses upload untuk jenis ujian & folder ini.', 'error');
+  }
   
-  if(!fileId && !fileInput) return Swal.fire('Peringatan', 'File dokumen wajib dilampirkan jika upload baru!', 'warning');
+  if(!judul || !kelas || !jenis || !statusTelaah || !mapel || !kategori) return Swal.fire('Peringatan', 'Lengkapi form!', 'warning');
+  if(!fileId && !fileInput) return Swal.fire('Peringatan', 'File wajib dilampirkan!', 'warning');
+  if(fileInput && fileInput.size > 10*1024*1024) return Swal.fire('Error', 'Maksimal 10MB', 'error');
   
-  if(fileInput && fileInput.size > 10*1024*1024) return Swal.fire('Error', 'Ukuran file maksimal 10MB', 'error');
-  
-  btnSubmit.disabled = true;
-  btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
-  btnSubmit.innerText = 'Menyimpan Data...';
+  btnSubmit.disabled = true; btnSubmit.innerText = 'Menyimpan...';
   
   const processData = (base64Data, finalName, mimeType) => {
-    Swal.fire({ title: 'Menyimpan Data...', text: 'Tunggu sebentar, jangan tutup browser...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    
+    Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     const payload = {
-      action: fileId ? 'update' : 'upload',
-      fileId: fileId,
-      base64: base64Data,
-      filename: finalName,
-      mimeType: mimeType,
-      kelas: kelas,
-      jenis: jenis, 
-      statusTelaah: statusTelaah,
-      mapel: mapel,
-      kategori: kategori,
-      uploader: currentUser.nama
+      action: fileId ? 'update' : 'upload', fileId: fileId, base64: base64Data, filename: finalName, mimeType: mimeType,
+      kelas: kelas, jenis: jenis, statusTelaah: statusTelaah, mapel: mapel, kategori: kategori, uploader: currentUser.nama, role: currentUser.role
     };
-    
-    fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: {'Content-Type': 'text/plain; charset=utf-8'} })
-      .then(res => res.json())
-      .then(data => {
+    fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }).then(res => res.json()).then(data => {
         if(data.status === 'success') {
-          Swal.fire({ icon: 'success', title: 'Berhasil', text: data.message, timer: 2000, showConfirmButton: false });
-          closeUploadModal();
-          loadFiles();
+          Swal.fire({ icon: 'success', title: 'Berhasil', text: data.message, timer: 1500, showConfirmButton: false });
+          closeUploadModal(); loadFiles();
         } else { Swal.fire('Gagal', data.message, 'error'); }
-      }).catch(() => {
-        Swal.fire('Error', 'Gagal memproses ke server Google.', 'error');
-      }).finally(() => {
-        btnSubmit.disabled = false;
-        btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
-        btnSubmit.innerText = 'Simpan File';
-      });
+      }).catch(() => Swal.fire('Error', 'Gagal memproses.', 'error')
+      ).finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = 'Simpan File'; });
   };
   
   if (fileInput) {
     const reader = new FileReader();
-    reader.onload = function(e) {
-      const base64Data = e.target.result.split(',')[1];
-      const finalName = judul + '.' + fileInput.name.split('.').pop();
-      processData(base64Data, finalName, fileInput.type);
-    };
+    reader.onload = function(e) { processData(e.target.result.split(',')[1], judul + '.' + fileInput.name.split('.').pop(), fileInput.type); };
     reader.readAsDataURL(fileInput);
-  } else {
-    processData(null, judul, null);
-  }
+  } else { processData(null, judul, null); }
 }
 
 async function deleteFile(fileId) {
-  const confirm = await Swal.fire({ title: 'Yakin hapus dokumen ini?', text: "Proses ini akan memindahkan file ke tempat sampah (Trash).", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Ya, Hapus!' });
+  const confirm = await Swal.fire({ title: 'Yakin hapus?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Hapus!' });
   if(confirm.isConfirmed) {
-    Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    Swal.fire({ title: 'Menghapus...', didOpen: () => Swal.showLoading() });
     try {
-      const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', fileId: fileId, uploader: currentUser.nama }), headers: {'Content-Type': 'text/plain; charset=utf-8'} });
+      const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', fileId: fileId, uploader: currentUser.nama }) });
       const data = await res.json();
-      if(data.status === 'success') {
-        Swal.fire({ icon: 'success', title: 'Terhapus!', timer: 1500, showConfirmButton: false });
-        loadFiles();
-      } else { Swal.fire('Gagal', data.message, 'error'); }
-    } catch(e) { Swal.fire('Error', 'Gagal memproses penghapusan.', 'error'); }
+      if(data.status === 'success') { Swal.fire({ icon: 'success', title: 'Terhapus!', timer: 1000 }); loadFiles(); }
+      else { Swal.fire('Gagal', data.message, 'error'); }
+    } catch(e) { Swal.fire('Error', 'Gagal.', 'error'); }
   }
 }
 </script>
