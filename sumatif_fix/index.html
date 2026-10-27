@@ -916,17 +916,46 @@ function processUpload() {
   
   const processData = (base64Data, finalName, mimeType) => {
     Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    
     const payload = {
-      action: fileId ? 'update' : 'upload', fileId: fileId, base64: base64Data, filename: finalName, mimeType: mimeType,
-      kelas: kelas, jenis: jenis, statusTelaah: statusTelaah, mapel: mapel, kategori: kategori, uploader: currentUser.nama, role: currentUser.role
+      action: fileId ? 'update' : 'upload', 
+      fileId: fileId, 
+      base64: base64Data, 
+      filename: finalName, 
+      mimeType: mimeType,
+      kelas: kelas, 
+      jenis: jenis, 
+      statusTelaah: statusTelaah, 
+      mapel: mapel, 
+      kategori: kategori, 
+      uploader: currentUser.nama, 
+      role: currentUser.role
     };
-    fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }).then(res => res.json()).then(data => {
+    
+    // PERBAIKAN: Penambahan headers 'text/plain' untuk mencegah error CORS di Google Script
+    fetch(API_URL, { 
+        method: 'POST', 
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    })
+    .then(res => res.json())
+    .then(data => {
         if(data.status === 'success') {
           Swal.fire({ icon: 'success', title: 'Berhasil', text: data.message, timer: 1500, showConfirmButton: false });
-          closeUploadModal(); loadFiles();
-        } else { Swal.fire('Gagal', data.message, 'error'); }
-      }).catch(() => Swal.fire('Error', 'Gagal memproses.', 'error')
-      ).finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = 'Simpan File'; });
+          closeUploadModal(); 
+          loadFiles();
+        } else { 
+          Swal.fire('Gagal', data.message, 'error'); 
+        }
+    })
+    .catch((error) => {
+        console.error('Upload error:', error);
+        Swal.fire('Error', 'Gagal memproses. Pastikan API URL terbaru sudah di-copy dari "New Deployment" Google Apps Script.', 'error');
+    })
+    .finally(() => { 
+        btnSubmit.disabled = false; 
+        btnSubmit.innerText = 'Simpan File'; 
+    });
   };
   
   if (fileInput) {
