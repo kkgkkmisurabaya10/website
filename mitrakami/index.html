@@ -493,6 +493,14 @@
                 const grandTotal = totals[0] + totals[1];
                 document.getElementById('grandTotalBadge').innerHTML = `🌟 Total Keseluruhan: ${grandTotal} Siswa 🌟`;
             });
+
+            // Percobaan Autoplay saat halaman dimuat
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                musicBtn.innerHTML = '⏸️ Jeda Musik';
+            }).catch(error => {
+                console.log('Autoplay ditahan oleh browser sampai ada interaksi pengguna.');
+            });
         };
 
         // Script Pemutar Musik Background
@@ -511,21 +519,21 @@
             isPlaying = !isPlaying;
         }
 
-        // Trik Autoplay: Putar otomatis saat ada klik pertama kali di mana saja di halaman
+        // Putar otomatis saat ada interaksi pertama dari pengguna (klik/tap di mana saja)
         document.body.addEventListener('click', function() {
             if(!isPlaying) {
                 bgMusic.play().then(() => {
                     isPlaying = true;
                     musicBtn.innerHTML = '⏸️ Jeda Musik';
-                }).catch(err => console.log('Autoplay menunggu interaksi langsung...'));
+                }).catch(err => console.log('Autoplay menunggu interaksi lebih lanjut...'));
             }
-        }, { once: true }); // event listener hanya memicu 1 kali klik saja
+        }, { once: true });
     </script>
 
     <!-- Elemen Audio & Tombol Pemutar Melayang -->
-    <audio id="bgMusic" loop>
-        <!-- Menggunakan Audio Royalty Free berirama Ceria / Semangat -->
-        <source src="https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792bc.mp3" type="audio/mpeg">
+    <audio id="bgMusic" loop autoplay>
+        <!-- Menggunakan Direct Link MP3 Lofi Study -->
+        <source src="https://cdn.pixabay.com/download/audio/2021/11/20/audio_b287103eb6.mp3" type="audio/mpeg">
     </audio>
     <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🎵 Putar Musik</button>
 
