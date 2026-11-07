@@ -37,14 +37,44 @@ body { font-family: 'Poppins', sans-serif; }
       </div>
     </div>
   </nav>
-  <div class="max-w-4xl mx-auto px-4 mt-8">
-    <div class="bg-white/95 p-6 rounded-3xl shadow-xl border border-indigo-100 backdrop-blur-md">
-      <h2 class="text-xl font-black text-indigo-900 mb-2" id="share-title">Folder Publik</h2>
-      <div id="share-subtitle" class="mb-5 flex flex-wrap gap-2 border-b pb-4">
-         <!-- Badges Filter Dirender oleh JS -->
+  
+  <div class="max-w-5xl mx-auto px-4 mt-8">
+    <div class="bg-white/95 p-6 md:p-8 rounded-3xl shadow-xl border border-indigo-100 backdrop-blur-md">
+      <h2 class="text-xl md:text-2xl font-black text-indigo-900 mb-4" id="share-title">Folder Publik</h2>
+      
+      <!-- PERBAIKAN: Filter Kelas & Mapel interaktif di halaman Public View -->
+      <div id="share-filters" class="mb-6 flex flex-wrap items-center gap-3 border-b border-gray-200 pb-5">
+         <span id="badge-telaah" class="bg-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm border border-indigo-200">Sebelum Telaah</span>
+         <span id="badge-kategori" class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm border border-blue-200">Semua Kategori</span>
+         
+         <select id="public-filter-kelas" onchange="filterPublicFiles()" class="p-1.5 border border-emerald-300 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer shadow-sm">
+            <option value="">Semua Kelas</option>
+            <option value="Kelas 1">Kelas 1</option>
+            <option value="Kelas 2">Kelas 2</option>
+            <option value="Kelas 3">Kelas 3</option>
+            <option value="Kelas 4">Kelas 4</option>
+            <option value="Kelas 5">Kelas 5</option>
+            <option value="Kelas 6">Kelas 6</option>
+         </select>
+         
+         <select id="public-filter-mapel" onchange="filterPublicFiles()" class="p-1.5 border border-orange-300 bg-orange-50 text-orange-800 rounded-lg text-xs font-bold focus:outline-none focus:ring-1 focus:ring-orange-500 cursor-pointer shadow-sm">
+            <option value="">Semua Mapel</option>
+            <option value="SKI">SKI</option>
+            <option value="Akidah Akhlak">Akidah Akhlak</option>
+            <option value="Fikih">Fikih</option>
+            <option value="Al-Quran Hadis">Al-Quran Hadis</option>
+            <option value="Bahasa Arab">Bahasa Arab</option>
+            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+            <option value="Bahasa Inggris">Bahasa Inggris</option>
+            <option value="Bahasa Jawa">Bahasa Jawa</option>
+            <option value="Matematika">Matematika</option>
+            <option value="IPAS">IPAS</option>
+            <option value="PKn">PKn</option>
+            <option value="PJOK">PJOK</option>
+         </select>
       </div>
       
-      <div id="share-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div id="share-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
          <!-- Data share diload disini -->
       </div>
     </div>
@@ -263,7 +293,7 @@ body { font-family: 'Poppins', sans-serif; }
 
 <!-- MODAL ADMIN PANEL -->
 <div id="admin-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
-  <div class="bg-white rounded-3xl w-full max-w-5xl p-6 shadow-2xl h-[90vh] flex flex-col border border-indigo-200">
+  <div class="bg-white rounded-3xl w-full max-w-4xl p-6 shadow-2xl h-[90vh] flex flex-col border border-indigo-200">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
       <h3 class="text-lg font-black text-indigo-900 uppercase"><i class="fas fa-cogs mr-2 text-indigo-600"></i>Panel Pengaturan Admin</h3>
       <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
@@ -289,12 +319,11 @@ body { font-family: 'Poppins', sans-serif; }
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="admin-up-setelah-toggles"></div>
       </div>
 
-      <!-- Share Link Generator -->
+      <!-- PERBAIKAN: Share Link Generator hanya butuh parameter utama (Jenis, Telaah, Kategori) -->
       <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
         <h4 class="font-bold text-gray-800 mb-3 text-sm"><i class="fas fa-share-alt mr-2 text-blue-600"></i>Generate Link Public Share (Tanpa Login)</h4>
         
-        <!-- PENGEMBANGAN FILTER KELAS & MAPEL -->
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
           <select id="share-jenis" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
              <option value="STS 1 2026/2027">STS 1 2026/2027</option>
              <option value="SAS 2026/2027">SAS 2026/2027</option>
@@ -303,38 +332,14 @@ body { font-family: 'Poppins', sans-serif; }
              <option value="UM 2026/2027">UM 2026/2027</option>
           </select>
           <select id="share-telaah" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
-             <option value="Sebelum Telaah">Sebelum Telaah</option>
-             <option value="Setelah Telaah">Setelah Telaah</option>
+             <option value="Sebelum Telaah">Folder: Sebelum Telaah</option>
+             <option value="Setelah Telaah">Folder: Setelah Telaah</option>
           </select>
           <select id="share-kategori" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
              <option value="">Semua Kategori</option>
              <option value="Soal">Folder: Soal</option>
              <option value="Kisi-kisi">Folder: Kisi-kisi</option>
              <option value="Kunci Jawaban">Folder: Kunci Jawaban</option>
-          </select>
-          <select id="share-kelas" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
-             <option value="Semua Kelas">Semua Kelas</option>
-             <option value="Kelas 1">Kelas 1</option>
-             <option value="Kelas 2">Kelas 2</option>
-             <option value="Kelas 3">Kelas 3</option>
-             <option value="Kelas 4">Kelas 4</option>
-             <option value="Kelas 5">Kelas 5</option>
-             <option value="Kelas 6">Kelas 6</option>
-          </select>
-          <select id="share-mapel" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
-             <option value="Semua Mapel">Semua Mapel</option>
-             <option value="SKI">SKI</option>
-             <option value="Akidah Akhlak">Akidah Akhlak</option>
-             <option value="Fikih">Fikih</option>
-             <option value="Al-Quran Hadis">Al-Quran Hadis</option>
-             <option value="Bahasa Arab">Bahasa Arab</option>
-             <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-             <option value="Bahasa Inggris">Bahasa Inggris</option>
-             <option value="Bahasa Jawa">Bahasa Jawa</option>
-             <option value="Matematika">Matematika</option>
-             <option value="IPAS">IPAS</option>
-             <option value="PKn">PKn</option>
-             <option value="PJOK">PJOK</option>
           </select>
           <button onclick="generateShareLink()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-xs hover:bg-blue-700 transition">Buat Link</button>
         </div>
@@ -426,6 +431,7 @@ body { font-family: 'Poppins', sans-serif; }
 </div>
 
 <script>
+// PASTIKAN API_URL INI BENAR (SETELAH DEPLOY BARU DI GOOGLE APPS SCRIPT)
 const API_URL = 'https://script.google.com/macros/s/AKfycbzXgRo7vhtEi-ChNmEDcpnnT07L6TIr_jD0mof4J-SSnMTLLMTDywNMItxTFd6UukwY/exec'; 
 
 let isLoginMode = true;
@@ -435,6 +441,8 @@ let globalStats = null;
 let globalAllFileTitles = null; 
 let globalTemplates = [];
 let globalSettings = {}; 
+
+let globalSharedFiles = []; // Variable penampung file publik untuk fitur filter 
 
 const daftarJenisUjian = ["STS 1 2026/2027", "SAS 2026/2027", "STS 2 2026/2027", "SAT 2026/2027", "UM 2026/2027"];
 
@@ -457,20 +465,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// FUNGSI INIT SHARE (Mengambil data base dari server)
 function initPublicShare(shareParam) {
   try {
     const shareData = JSON.parse(atob(shareParam));
     const katTitle = shareData.kat || 'Semua Kategori';
-    const kelTitle = shareData.k || 'Semua Kelas';
-    const mapTitle = shareData.m || 'Semua Mapel';
     
     document.getElementById('share-title').innerText = `Folder Publik: ${shareData.j}`;
-    document.getElementById('share-subtitle').innerHTML = `
-       <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${shareData.t}</span>
-       <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${katTitle}</span>
-       <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${kelTitle}</span>
-       <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${mapTitle}</span>
-    `;
+    document.getElementById('badge-telaah').innerText = shareData.t || 'Semua Telaah';
+    document.getElementById('badge-kategori').innerText = katTitle;
     
     document.getElementById('share-grid').innerHTML = '<div class="col-span-full text-center text-indigo-500 py-10"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><p class="font-bold">Mencari dokumen...</p></div>';
     
@@ -478,31 +481,8 @@ function initPublicShare(shareParam) {
       .then(res => res.json())
       .then(data => {
         if (data.status === 'success') {
-          const grid = document.getElementById('share-grid');
-          grid.innerHTML = '';
-          if(data.files.length === 0) {
-            grid.innerHTML = '<div class="col-span-full text-center bg-gray-50 p-5 rounded-xl border text-sm text-gray-500">Belum ada file di folder ini.</div>';
-            return;
-          }
-          data.files.forEach(f => {
-            let icon = 'fa-file-alt text-gray-500';
-            if(f.filename.toLowerCase().includes('pdf')) icon = 'fa-file-pdf text-red-500';
-            else if(f.filename.toLowerCase().includes('xls')) icon = 'fa-file-excel text-green-500';
-            else if(f.filename.toLowerCase().includes('doc')) icon = 'fa-file-word text-blue-500';
-            
-            grid.innerHTML += `
-              <div class="border rounded-2xl p-4 flex items-center justify-between hover:shadow-md transition bg-white">
-                <div class="flex items-center gap-3 overflow-hidden">
-                  <i class="fas ${icon} text-3xl shrink-0"></i>
-                  <div class="truncate">
-                     <div class="font-bold text-sm text-gray-800 truncate" title="${f.filename}">${f.filename}</div>
-                     <div class="text-[10px] text-gray-500 mt-1"><span class="bg-gray-100 px-2 py-0.5 rounded">${f.kelas}</span> <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.mapel}</span> <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-100">${f.kategori}</span></div>
-                  </div>
-                </div>
-                <a href="${f.url}" target="_blank" class="shrink-0 ml-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white transition px-4 py-2 rounded-xl text-xs font-bold border border-indigo-200">Lihat/Download</a>
-              </div>
-            `;
-          });
+          globalSharedFiles = data.files;
+          renderSharedFiles(globalSharedFiles);
         } else {
            document.getElementById('share-grid').innerHTML = `<p class="text-red-500">${data.message}</p>`;
         }
@@ -512,6 +492,54 @@ function initPublicShare(shareParam) {
   }
 }
 
+// FUNGSI RENDER SHARE KE GRID (UI)
+function renderSharedFiles(filesToRender) {
+  const grid = document.getElementById('share-grid');
+  grid.innerHTML = '';
+  if(filesToRender.length === 0) {
+    grid.innerHTML = '<div class="col-span-full text-center bg-gray-50 p-5 rounded-xl border text-sm text-gray-500 font-bold">Belum ada file / Tidak ditemukan berdasarkan filter.</div>';
+    return;
+  }
+  
+  filesToRender.forEach(f => {
+    let icon = 'fa-file-alt text-gray-500';
+    if(f.filename.toLowerCase().includes('pdf')) icon = 'fa-file-pdf text-red-500';
+    else if(f.filename.toLowerCase().includes('xls')) icon = 'fa-file-excel text-green-500';
+    else if(f.filename.toLowerCase().includes('doc')) icon = 'fa-file-word text-blue-500';
+    
+    grid.innerHTML += `
+      <div class="border border-gray-200 rounded-2xl p-4 flex items-center justify-between hover:shadow-lg transition bg-white shadow-sm">
+        <div class="flex items-center gap-4 overflow-hidden">
+          <i class="fas ${icon} text-3xl shrink-0 mt-1"></i>
+          <div class="truncate">
+             <div class="font-black text-sm text-gray-800 truncate mb-1.5" title="${f.filename}">${f.filename}</div>
+             <div class="text-[9px] text-gray-600 flex gap-1.5 font-bold">
+                <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded border">${f.kelas}</span> 
+                <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.mapel}</span> 
+                <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-100">${f.kategori}</span>
+             </div>
+          </div>
+        </div>
+        <a href="${f.url}" target="_blank" class="shrink-0 ml-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white transition px-4 py-2.5 rounded-xl text-xs font-black border border-indigo-200 shadow-sm">Lihat/Download</a>
+      </div>
+    `;
+  });
+}
+
+// PERBAIKAN: FUNGSI FILTER KLIK DI HALAMAN PUBLIK
+function filterPublicFiles() {
+  const fKelas = document.getElementById('public-filter-kelas').value.toLowerCase().trim();
+  const fMapel = document.getElementById('public-filter-mapel').value.toLowerCase().trim();
+  
+  const filtered = globalSharedFiles.filter(f => {
+    return (fKelas === '' || f.kelas.toLowerCase() === fKelas) &&
+           (fMapel === '' || f.mapel.toLowerCase() === fMapel);
+  });
+  
+  renderSharedFiles(filtered);
+}
+
+// --- FUNGSI SISTEM BAWAAN (TIDAK ADA YANG DIUBAH) ---
 document.getElementById('toggle-auth').addEventListener('click', (e) => {
   e.preventDefault();
   isLoginMode = !isLoginMode;
@@ -608,7 +636,6 @@ function openAdminPanel() {
   dashContainer.innerHTML = ''; upSebContainer.innerHTML = ''; upSetContainer.innerHTML = '';
   
   daftarJenisUjian.forEach(j => {
-    // Dash Toggles
     const dashVal = globalSettings['DASH_' + j] === 'CLOSE' ? 'CLOSE' : 'OPEN';
     dashContainer.innerHTML += `
        <div class="bg-white p-2 rounded-xl border border-gray-200 text-center shadow-sm">
@@ -619,7 +646,6 @@ function openAdminPanel() {
        </div>
     `;
     
-    // Up Sebelum Toggles
     const upSebVal = globalSettings['UP_SEBELUM_' + j] === 'CLOSE' ? 'CLOSE' : 'OPEN';
     upSebContainer.innerHTML += `
        <div class="bg-white p-2 rounded-xl border border-gray-200 text-center shadow-sm">
@@ -630,7 +656,6 @@ function openAdminPanel() {
        </div>
     `;
 
-    // Up Setelah Toggles
     const upSetVal = globalSettings['UP_SETELAH_' + j] === 'CLOSE' ? 'CLOSE' : 'OPEN';
     upSetContainer.innerHTML += `
        <div class="bg-white p-2 rounded-xl border border-gray-200 text-center shadow-sm">
@@ -680,15 +705,13 @@ async function saveAdminSettings() {
    btn.innerText = 'Simpan Pengaturan'; btn.disabled = false;
 }
 
-// FUNGSI SHARE DENGAN PENAMBAHAN KELAS & MAPEL
+// PERBAIKAN: Pembuatan Link hanya untuk param Jenis, Telaah, & Kategori
 function generateShareLink() {
    const j = document.getElementById('share-jenis').value;
    const t = document.getElementById('share-telaah').value;
    const kat = document.getElementById('share-kategori').value;
-   const k = document.getElementById('share-kelas').value;
-   const m = document.getElementById('share-mapel').value;
    
-   const shareData = { j: j, t: t, kat: kat, k: k, m: m };
+   const shareData = { j: j, t: t, kat: kat };
    const encoded = btoa(JSON.stringify(shareData));
    const linkUrl = window.location.origin + window.location.pathname + '?share=' + encoded;
    
@@ -701,7 +724,6 @@ function copyShareLink() {
    input.select(); document.execCommand('copy');
    Swal.fire({ icon: 'success', title: 'Tercopy!', showConfirmButton: false, timer: 1000 });
 }
-// ----- AKHIR FUNGSI ADMIN PANEL -----
 
 function updateStatsUI() {
   const grid = document.getElementById('dashboard-stats-grid');
@@ -971,7 +993,6 @@ function processUpload() {
       role: currentUser.role
     };
     
-    // PERBAIKAN: Penambahan headers 'text/plain' untuk mencegah error CORS di Google Script
     fetch(API_URL, { 
         method: 'POST', 
         body: JSON.stringify(payload),
