@@ -39,8 +39,10 @@ body { font-family: 'Poppins', sans-serif; }
   </nav>
   <div class="max-w-4xl mx-auto px-4 mt-8">
     <div class="bg-white/95 p-6 rounded-3xl shadow-xl border border-indigo-100 backdrop-blur-md">
-      <h2 class="text-xl font-black text-indigo-900 mb-2" id="share-title">Folder Dokumen Publik</h2>
-      <p class="text-sm text-gray-500 mb-6 border-b pb-4"><i class="fas fa-info-circle text-blue-500 mr-2"></i>Anda sedang melihat dokumen hasil sharing (tanpa login).</p>
+      <h2 class="text-xl font-black text-indigo-900 mb-2" id="share-title">Folder Publik</h2>
+      <div id="share-subtitle" class="mb-5 flex flex-wrap gap-2 border-b pb-4">
+         <!-- Badges Filter Dirender oleh JS -->
+      </div>
       
       <div id="share-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
          <!-- Data share diload disini -->
@@ -261,7 +263,7 @@ body { font-family: 'Poppins', sans-serif; }
 
 <!-- MODAL ADMIN PANEL -->
 <div id="admin-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
-  <div class="bg-white rounded-3xl w-full max-w-4xl p-6 shadow-2xl h-[90vh] flex flex-col border border-indigo-200">
+  <div class="bg-white rounded-3xl w-full max-w-5xl p-6 shadow-2xl h-[90vh] flex flex-col border border-indigo-200">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
       <h3 class="text-lg font-black text-indigo-900 uppercase"><i class="fas fa-cogs mr-2 text-indigo-600"></i>Panel Pengaturan Admin</h3>
       <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-times text-xl"></i></button>
@@ -290,7 +292,9 @@ body { font-family: 'Poppins', sans-serif; }
       <!-- Share Link Generator -->
       <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
         <h4 class="font-bold text-gray-800 mb-3 text-sm"><i class="fas fa-share-alt mr-2 text-blue-600"></i>Generate Link Public Share (Tanpa Login)</h4>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+        
+        <!-- PENGEMBANGAN FILTER KELAS & MAPEL -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
           <select id="share-jenis" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
              <option value="STS 1 2026/2027">STS 1 2026/2027</option>
              <option value="SAS 2026/2027">SAS 2026/2027</option>
@@ -299,17 +303,42 @@ body { font-family: 'Poppins', sans-serif; }
              <option value="UM 2026/2027">UM 2026/2027</option>
           </select>
           <select id="share-telaah" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
-             <option value="Sebelum Telaah">Folder: Sebelum Telaah</option>
-             <option value="Setelah Telaah">Folder: Setelah Telaah</option>
+             <option value="Sebelum Telaah">Sebelum Telaah</option>
+             <option value="Setelah Telaah">Setelah Telaah</option>
           </select>
-          <!-- UBAH: Dari Mapel menjadi Kategori File -->
           <select id="share-kategori" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="">Semua Kategori</option>
              <option value="Soal">Folder: Soal</option>
              <option value="Kisi-kisi">Folder: Kisi-kisi</option>
              <option value="Kunci Jawaban">Folder: Kunci Jawaban</option>
           </select>
+          <select id="share-kelas" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="Semua Kelas">Semua Kelas</option>
+             <option value="Kelas 1">Kelas 1</option>
+             <option value="Kelas 2">Kelas 2</option>
+             <option value="Kelas 3">Kelas 3</option>
+             <option value="Kelas 4">Kelas 4</option>
+             <option value="Kelas 5">Kelas 5</option>
+             <option value="Kelas 6">Kelas 6</option>
+          </select>
+          <select id="share-mapel" class="p-2 border rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500">
+             <option value="Semua Mapel">Semua Mapel</option>
+             <option value="SKI">SKI</option>
+             <option value="Akidah Akhlak">Akidah Akhlak</option>
+             <option value="Fikih">Fikih</option>
+             <option value="Al-Quran Hadis">Al-Quran Hadis</option>
+             <option value="Bahasa Arab">Bahasa Arab</option>
+             <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+             <option value="Bahasa Inggris">Bahasa Inggris</option>
+             <option value="Bahasa Jawa">Bahasa Jawa</option>
+             <option value="Matematika">Matematika</option>
+             <option value="IPAS">IPAS</option>
+             <option value="PKn">PKn</option>
+             <option value="PJOK">PJOK</option>
+          </select>
           <button onclick="generateShareLink()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-xs hover:bg-blue-700 transition">Buat Link</button>
         </div>
+        
         <div class="flex gap-2">
            <input type="text" id="share-result" readonly class="flex-1 p-2 bg-gray-50 border rounded-xl text-xs text-gray-600 outline-none" placeholder="Link akan muncul di sini...">
            <button onclick="copyShareLink()" class="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-xl text-xs hover:bg-gray-300 transition">Copy</button>
@@ -324,7 +353,7 @@ body { font-family: 'Poppins', sans-serif; }
   </div>
 </div>
 
-<!-- CHECKLIST MODAL & UPLOAD MODAL SAMA SEPERTI SEBELUMNYA -->
+<!-- CHECKLIST MODAL & UPLOAD MODAL -->
 <div id="checklist-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4 backdrop-blur-sm">
   <div class="bg-white rounded-3xl w-full max-w-3xl p-6 shadow-2xl h-[85vh] flex flex-col">
     <div class="flex justify-between items-center mb-4 border-b pb-3">
@@ -397,7 +426,6 @@ body { font-family: 'Poppins', sans-serif; }
 </div>
 
 <script>
-// PASTIKAN API_URL INI BENAR (SETELAH DEPLOY BARU DI GOOGLE APPS SCRIPT)
 const API_URL = 'https://script.google.com/macros/s/AKfycbzXgRo7vhtEi-ChNmEDcpnnT07L6TIr_jD0mof4J-SSnMTLLMTDywNMItxTFd6UukwY/exec'; 
 
 let isLoginMode = true;
@@ -429,11 +457,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// UBAH: initPublicShare membaca Kategori, bukan Mapel
 function initPublicShare(shareParam) {
   try {
     const shareData = JSON.parse(atob(shareParam));
-    document.getElementById('share-title').innerText = `Folder: ${shareData.j} | ${shareData.t} | ${shareData.kat}`;
+    const katTitle = shareData.kat || 'Semua Kategori';
+    const kelTitle = shareData.k || 'Semua Kelas';
+    const mapTitle = shareData.m || 'Semua Mapel';
+    
+    document.getElementById('share-title').innerText = `Folder Publik: ${shareData.j}`;
+    document.getElementById('share-subtitle').innerHTML = `
+       <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${shareData.t}</span>
+       <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${katTitle}</span>
+       <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${kelTitle}</span>
+       <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-[10px] font-bold shadow-sm">${mapTitle}</span>
+    `;
     
     document.getElementById('share-grid').innerHTML = '<div class="col-span-full text-center text-indigo-500 py-10"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><p class="font-bold">Mencari dokumen...</p></div>';
     
@@ -459,7 +496,7 @@ function initPublicShare(shareParam) {
                   <i class="fas ${icon} text-3xl shrink-0"></i>
                   <div class="truncate">
                      <div class="font-bold text-sm text-gray-800 truncate" title="${f.filename}">${f.filename}</div>
-                     <div class="text-[10px] text-gray-500 mt-1"><span class="bg-gray-100 px-2 py-0.5 rounded">${f.kelas}</span> <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.mapel}</span></div>
+                     <div class="text-[10px] text-gray-500 mt-1"><span class="bg-gray-100 px-2 py-0.5 rounded">${f.kelas}</span> <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${f.mapel}</span> <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-100">${f.kategori}</span></div>
                   </div>
                 </div>
                 <a href="${f.url}" target="_blank" class="shrink-0 ml-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white transition px-4 py-2 rounded-xl text-xs font-bold border border-indigo-200">Lihat/Download</a>
@@ -643,13 +680,15 @@ async function saveAdminSettings() {
    btn.innerText = 'Simpan Pengaturan'; btn.disabled = false;
 }
 
-// UBAH: Ambil data kategori saat generate link share
+// FUNGSI SHARE DENGAN PENAMBAHAN KELAS & MAPEL
 function generateShareLink() {
    const j = document.getElementById('share-jenis').value;
    const t = document.getElementById('share-telaah').value;
    const kat = document.getElementById('share-kategori').value;
+   const k = document.getElementById('share-kelas').value;
+   const m = document.getElementById('share-mapel').value;
    
-   const shareData = { j: j, t: t, kat: kat }; // Data param m diganti dengan kat
+   const shareData = { j: j, t: t, kat: kat, k: k, m: m };
    const encoded = btoa(JSON.stringify(shareData));
    const linkUrl = window.location.origin + window.location.pathname + '?share=' + encoded;
    
