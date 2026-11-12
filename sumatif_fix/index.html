@@ -42,7 +42,6 @@ body { font-family: 'Poppins', sans-serif; }
     <div class="bg-white/95 p-6 md:p-8 rounded-3xl shadow-xl border border-indigo-100 backdrop-blur-md">
       <h2 class="text-xl md:text-2xl font-black text-indigo-900 mb-4" id="share-title">Folder Publik</h2>
       
-      <!-- PERBAIKAN: Filter Kelas & Mapel interaktif di halaman Public View -->
       <div id="share-filters" class="mb-6 flex flex-wrap items-center gap-3 border-b border-gray-200 pb-5">
          <span id="badge-telaah" class="bg-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm border border-indigo-200">Sebelum Telaah</span>
          <span id="badge-kategori" class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm border border-blue-200">Semua Kategori</span>
@@ -157,11 +156,14 @@ body { font-family: 'Poppins', sans-serif; }
   </div>
 
   <div class="max-w-7xl mx-auto px-4 mt-8">
+    
     <!-- DASHBOARD PANTAUAN PROGRES -->
     <div class="bg-white/95 p-6 rounded-3xl shadow-lg border border-teal-100 mb-6 backdrop-blur-md">
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-5 gap-4">
         <h3 class="text-md sm:text-lg font-black text-teal-800 uppercase tracking-wider"><i class="fas fa-chart-pie text-emerald-500 mr-2"></i>Pantauan Progres Upload</h3>
-        <div class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
+        
+        <!-- PERBAIKAN: Penambahan Filter TELAAH di Dashboard Pantauan -->
+        <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <div class="flex items-center gap-2 w-full sm:w-auto">
             <label class="text-xs text-gray-600 font-bold whitespace-nowrap">UJIAN:</label>
             <select id="stat-jenis-filter" onchange="updateStatsUI()" class="w-full sm:w-auto p-2 border rounded-xl text-xs font-bold text-teal-900 border-teal-200 focus:outline-none focus:border-emerald-500 bg-teal-50/50">
@@ -170,6 +172,14 @@ body { font-family: 'Poppins', sans-serif; }
               <option value="STS 2 2026/2027">STS 2 2026/2027</option>
               <option value="SAT 2026/2027">SAT 2026/2027</option>
               <option value="UM 2026/2027">UM 2026/2027</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <label class="text-xs text-gray-600 font-bold whitespace-nowrap ml-0 sm:ml-2">TELAAH:</label>
+            <select id="stat-telaah-filter" onchange="updateStatsUI()" class="w-full sm:w-auto p-2 border rounded-xl text-xs focus:outline-none border-purple-200 focus:border-purple-500 bg-purple-50/50 text-purple-800 font-bold">
+              <option value="">Semua Status</option>
+              <option value="Sebelum Telaah">Sebelum Telaah</option>
+              <option value="Setelah Telaah">Setelah Telaah</option>
             </select>
           </div>
           <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -187,7 +197,7 @@ body { font-family: 'Poppins', sans-serif; }
         </div>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="dashboard-stats-grid">
-        <!-- Card stats -->
+        <!-- Card stats dinamis -->
       </div>
     </div>
 
@@ -319,7 +329,7 @@ body { font-family: 'Poppins', sans-serif; }
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="admin-up-setelah-toggles"></div>
       </div>
 
-      <!-- PERBAIKAN: Share Link Generator hanya butuh parameter utama (Jenis, Telaah, Kategori) -->
+      <!-- Share Link Generator -->
       <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
         <h4 class="font-bold text-gray-800 mb-3 text-sm"><i class="fas fa-share-alt mr-2 text-blue-600"></i>Generate Link Public Share (Tanpa Login)</h4>
         
@@ -431,7 +441,6 @@ body { font-family: 'Poppins', sans-serif; }
 </div>
 
 <script>
-// PASTIKAN API_URL INI BENAR (SETELAH DEPLOY BARU DI GOOGLE APPS SCRIPT)
 const API_URL = 'https://script.google.com/macros/s/AKfycbxQXGwunuQN2D5mqHpuSMS1kgtDmiiigXYZqFjfJEyza_RTPopmVM3HF9kKEo16vVJO/exec'; 
 
 let isLoginMode = true;
@@ -442,7 +451,7 @@ let globalAllFileTitles = null;
 let globalTemplates = [];
 let globalSettings = {}; 
 
-let globalSharedFiles = []; // Variable penampung file publik untuk fitur filter 
+let globalSharedFiles = []; 
 
 const daftarJenisUjian = ["STS 1 2026/2027", "SAS 2026/2027", "STS 2 2026/2027", "SAT 2026/2027", "UM 2026/2027"];
 
@@ -465,7 +474,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// FUNGSI INIT SHARE (Mengambil data base dari server)
 function initPublicShare(shareParam) {
   try {
     const shareData = JSON.parse(atob(shareParam));
@@ -492,7 +500,6 @@ function initPublicShare(shareParam) {
   }
 }
 
-// FUNGSI RENDER SHARE KE GRID (UI)
 function renderSharedFiles(filesToRender) {
   const grid = document.getElementById('share-grid');
   grid.innerHTML = '';
@@ -526,7 +533,6 @@ function renderSharedFiles(filesToRender) {
   });
 }
 
-// PERBAIKAN: FUNGSI FILTER KLIK DI HALAMAN PUBLIK
 function filterPublicFiles() {
   const fKelas = document.getElementById('public-filter-kelas').value.toLowerCase().trim();
   const fMapel = document.getElementById('public-filter-mapel').value.toLowerCase().trim();
@@ -539,7 +545,6 @@ function filterPublicFiles() {
   renderSharedFiles(filtered);
 }
 
-// --- FUNGSI SISTEM BAWAAN (TIDAK ADA YANG DIUBAH) ---
 document.getElementById('toggle-auth').addEventListener('click', (e) => {
   e.preventDefault();
   isLoginMode = !isLoginMode;
@@ -705,7 +710,6 @@ async function saveAdminSettings() {
    btn.innerText = 'Simpan Pengaturan'; btn.disabled = false;
 }
 
-// PERBAIKAN: Pembuatan Link hanya untuk param Jenis, Telaah, & Kategori
 function generateShareLink() {
    const j = document.getElementById('share-jenis').value;
    const t = document.getElementById('share-telaah').value;
@@ -725,11 +729,13 @@ function copyShareLink() {
    Swal.fire({ icon: 'success', title: 'Tercopy!', showConfirmButton: false, timer: 1000 });
 }
 
+// PERBAIKAN: Fungsi Update Stats dengan Filter Telaah
 function updateStatsUI() {
   const grid = document.getElementById('dashboard-stats-grid');
-  if (!globalStats) return;
+  if (!globalAllFileTitles) return;
   const selectedJenis = document.getElementById('stat-jenis-filter').value;
   const selectedFokus = document.getElementById('stat-fokus-filter').value;
+  const selectedTelaah = document.getElementById('stat-telaah-filter').value.toLowerCase().trim();
   
   const isClosed = globalSettings['DASH_' + selectedJenis] === 'CLOSE';
   if(isClosed && currentUser.role.toLowerCase() !== 'admin') {
@@ -737,12 +743,16 @@ function updateStatsUI() {
      return;
   }
   
-  const jenisData = globalStats[selectedJenis] || {};
+  const jenisFiles = globalAllFileTitles[selectedJenis] || {};
   grid.innerHTML = '';
+  
   if (selectedFokus === 'Semua Kelas') {
     const classes = ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6'];
     classes.forEach(cls => {
-      const count = jenisData[cls] ? jenisData[cls]['_total'] : 0;
+      let count = 0;
+      if(jenisFiles[cls]) {
+          count = jenisFiles[cls].filter(f => selectedTelaah === '' || (f.statusTelaah || 'sebelum telaah').toLowerCase() === selectedTelaah).length;
+      }
       grid.innerHTML += `
         <div onclick="showChecklistModal('${cls}', '${selectedJenis}', 'Semua Mapel')" class="bg-gradient-to-br from-emerald-50 to-teal-100 rounded-2xl p-4 text-center border border-teal-200 shadow-sm transition hover:shadow-md hover:bg-teal-100 cursor-pointer hover:scale-105 transform duration-200">
           <div class="text-xs font-black text-teal-900">${cls}</div>
@@ -754,7 +764,14 @@ function updateStatsUI() {
   } else {
     const daftarMapel = ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"];
     daftarMapel.forEach(mapel => {
-      const count = (jenisData[selectedFokus] && jenisData[selectedFokus][mapel]) ? jenisData[selectedFokus][mapel] : 0;
+      let count = 0;
+      if(jenisFiles[selectedFokus]) {
+          count = jenisFiles[selectedFokus].filter(f => {
+              const matchMapel = f.mapel.toLowerCase() === mapel.toLowerCase();
+              const matchTelaah = selectedTelaah === '' || (f.statusTelaah || 'sebelum telaah').toLowerCase() === selectedTelaah;
+              return matchMapel && matchTelaah;
+          }).length;
+      }
       grid.innerHTML += `
         <div onclick="showChecklistModal('${selectedFokus}', '${selectedJenis}', '${mapel}')" class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 text-center border border-blue-100 shadow-sm transition hover:shadow-md hover:bg-blue-100 cursor-pointer hover:scale-105 transform duration-200 flex flex-col justify-center">
           <div class="text-[10px] font-extrabold text-indigo-950 leading-tight mb-1 truncate" title="${mapel}">${mapel}</div>
@@ -766,12 +783,25 @@ function updateStatsUI() {
   }
 }
 
+// PERBAIKAN: Fungsi Modal Detail dengan Filter Telaah
 function showChecklistModal(kelas, jenis, mapelFilter) {
-  document.getElementById('checklist-title').innerText = `Pantauan Detail - ${kelas} (${jenis})${mapelFilter === 'Semua Mapel' ? '' : ' - ' + mapelFilter}`;
+  const selectedTelaah = document.getElementById('stat-telaah-filter').value.toLowerCase().trim();
+  let titleExtra = mapelFilter === 'Semua Mapel' ? '' : ' - ' + mapelFilter;
+  if(selectedTelaah) {
+     titleExtra += ` (${selectedTelaah === 'sebelum telaah' ? 'Sebelum Telaah' : 'Setelah Telaah'})`;
+  }
+  
+  document.getElementById('checklist-title').innerText = `Pantauan Detail - ${kelas} (${jenis})${titleExtra}`;
   const content = document.getElementById('checklist-content');
   content.innerHTML = '';
   
   let filesList = (globalAllFileTitles && globalAllFileTitles[jenis] && globalAllFileTitles[jenis][kelas]) ? globalAllFileTitles[jenis][kelas] : [];
+  
+  // Saring dokumen berdasarkan pilihan status telaah di Dashboard
+  if (selectedTelaah !== '') {
+      filesList = filesList.filter(f => (f.statusTelaah || 'sebelum telaah').toLowerCase() === selectedTelaah);
+  }
+  
   const targetMapels = mapelFilter === 'Semua Mapel' ? ["SKI", "Akidah Akhlak", "Fikih", "Al-Quran Hadis", "Bahasa Arab", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Jawa", "Matematika", "IPAS", "PKn", "PJOK"] : [mapelFilter];
   
   let totalMissing = 0; let htmlContent = '';
