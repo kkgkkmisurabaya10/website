@@ -31,9 +31,31 @@
 <body>
     
     <script>
-        // MASUKKAN LINK DEPLOY GOOGLE APPS SCRIPT ANDA DI SINI
-        const API_URL = "https://script.google.com/macros/s/AKfycbwCromFGnFp3OulF5DLi6vpHRJmK_3DA86P4lBSr6ri29O8ARMaSImhBoG9qH1isbdiEg/exec"; 
-    </script>
+    // URL UTAMA: Cloudflare Worker + D1 (Super Cepat & Tahan Banting)
+    const API_URL = "https://website.kkgkkmi10surabaya.workers.dev/";
+    
+    // URL CADANGAN: Google Apps Script (Otomatis aktif jika Worker sedang gangguan)
+    const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbwCromFGnFp3OulF5DLi6vpHRJmK_3DA86P4lBSr6ri29O8ARMaSImhBoG9qH1isbdiEg/exec";
+
+    // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS tanpa error
+    const _originalFetch = window.fetch;
+    window.fetch = async function(resource, init) {
+        try {
+            const res = await _originalFetch(resource, init);
+            if (!res.ok && typeof resource === "string" && resource.startsWith(API_URL)) {
+                throw new Error("Worker HTTP " + res.status);
+            }
+            return res;
+        } catch (err) {
+            if (typeof resource === "string" && resource.startsWith(API_URL)) {
+                console.warn("Beralih ke Fallback GAS:", err.message);
+                const fallbackResource = resource.replace(API_URL, FALLBACK_GAS_URL);
+                return _originalFetch(fallbackResource, init);
+            }
+            throw err;
+        }
+    };
+</script>
 
     <div id="loading-screen" style="display: none;">
         <div class="spinner-border text-success" role="status" style="width: 3.5rem; height: 3.5rem;"></div>
