@@ -26,7 +26,7 @@
         
         /* Top Bar & Header */
         .top-bar { background: linear-gradient(90deg, #022c22 0%, #064e3b 100%); color: #cbd5e1; font-size: 12.5px; }
-        .header-main { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); position: sticky; top: 0; z-index: 50; transition: all 0.3s; }
+        .header-main { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); position: sticky; top: 0; z-index: 50; transition: all 0.3s; }
         
         .nav-menu ul { display: flex; list-style: none; margin: 0; padding: 0; gap: 22px; align-items: center; }
         .nav-menu a { color: #334155; font-weight: 700; font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase; text-decoration: none; transition: 0.25s; cursor: pointer; padding: 10px 0; position: relative; }
@@ -60,6 +60,16 @@
         
         .news-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #e2e8f0; border-radius: 16px; }
         .news-card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12); border-color: #a7f3d0; }
+
+        /* Rich Content (Tulisan, Foto & Video Summernote selalu rapi di HP & Desktop) */
+        .rich-content img { max-width: 100% !important; height: auto !important; border-radius: 12px; margin: 12px 0; }
+        .rich-content iframe, .rich-content video { max-width: 100% !important; width: 100%; min-height: 300px; border-radius: 12px; margin: 14px 0; }
+        .rich-content table { width: 100%; display: block; overflow-x: auto; border-collapse: collapse; margin: 12px 0; }
+        .rich-content ul, .rich-content ol { padding-left: 1.4rem; margin-bottom: 1rem; }
+        .rich-content ul { list-style-type: disc; }
+        .rich-content ol { list-style-type: decimal; }
+        .rich-content p { margin-bottom: 0.85rem; }
+        .rich-content a { color: #059669; font-weight: 600; text-decoration: underline; }
         
         main#site-content { flex: 1; }
         .site-section { display: none; animation: fadeIn 0.4s ease; }
@@ -92,13 +102,13 @@
 <body>
 
     <script>
-        // URL UTAMA: Cloudflare Worker + D1 (Super Cepat & Tahan Banting)
+        // URL UTAMA: Cloudflare Worker + D1
         const API_URL = "https://website.kkgkkmi10surabaya.workers.dev/";
         
-        // URL CADANGAN: Google Apps Script (Otomatis aktif jika Worker sedang gangguan)
+        // URL CADANGAN: Google Apps Script
         const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbwCromFGnFp3OulF5DLi6vpHRJmK_3DA86P4lBSr6ri29O8ARMaSImhBoG9qH1isbdiEg/exec";
 
-        // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS tanpa error
+        // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS
         const _originalFetch = window.fetch;
         window.fetch = async function(resource, init) {
             try {
@@ -202,7 +212,7 @@
                             <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Prakata Pimpinan</span>
                         </div>
                         <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-900 mb-4">Sambutan Ketua KKGMI</h2>
-                        <div id="kepsek-isi" class="text-slate-600 leading-relaxed text-justify text-sm md:text-base">Memuat sambutan...</div>
+                        <div id="kepsek-isi" class="rich-content text-slate-600 leading-relaxed text-justify text-sm md:text-base">Memuat sambutan...</div>
                     </div>
                 </div>
             </div>
@@ -260,7 +270,7 @@
                 <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-900 uppercase">Profil KKGMI</h2>
                 <div class="w-16 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
             </div>
-            <div id="profil-container" class="max-w-5xl mx-auto bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-slate-200 text-slate-600 leading-relaxed text-justify"></div>
+            <div id="profil-container" class="rich-content max-w-5xl mx-auto bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-slate-200 text-slate-600 leading-relaxed text-justify"></div>
         </section>
 
         <!-- GURU SECTION -->
@@ -426,8 +436,7 @@
         function createSlug(str) { return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); }
 
         /**
-         * OPTIMASI GAMBAR OTOMATIS AGAR TIDAK BERAT
-         * Menambahkan parameter lebar Google CDN (=w800, =w1200, dll)
+         * OPTIMASI GAMBAR & DETEKSI VIDEO (RINGAN & UNIVERSAL)
          */
         function optimizeImg(url, width = 800) {
             if (!url || typeof url !== 'string') return url;
@@ -437,32 +446,76 @@
             return url;
         }
 
+        function isVideoUrl(url) {
+            if (!url || typeof url !== 'string') return false;
+            return /\.(mp4|webm|ogg)$/i.test(url) || url.includes('#video') || url.includes('drive.google.com/file/d/');
+        }
+
+        function parseMediaList(raw) {
+            if (!raw) return [];
+            try {
+                let parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed.filter(Boolean) : [raw];
+            } catch(e) {
+                return [raw];
+            }
+        }
+
         function parseImage(imgStr, fallback, width = 800) {
             if (!imgStr) return fallback;
-            let finalUrl = imgStr;
-            try {
-                let parsed = JSON.parse(imgStr);
-                if (Array.isArray(parsed) && parsed.length > 0) finalUrl = parsed[0];
-            } catch(e) {}
-            return optimizeImg(finalUrl, width);
+            const list = parseMediaList(imgStr);
+            const firstImg = list.find(u => !isVideoUrl(u)) || list[0];
+            if (!firstImg || isVideoUrl(firstImg)) return fallback;
+            return optimizeImg(firstImg, width);
+        }
+
+        /**
+         * RENDERER MEDIA UNIVERSAL (FOTO, VIDEO DRIVE, VIDEO MP4)
+         */
+        function renderMediaElement(url, options = {}) {
+            const { heightClass = 'max-h-[460px]', width = 900, clickable = true, alt = '' } = options;
+            if (!url) return '';
+
+            if (isVideoUrl(url)) {
+                if (url.includes('drive.google.com/file/d/')) {
+                    const cleanSrc = url.replace('#video', '');
+                    return `<div class="w-full aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-sm"><iframe src="${cleanSrc}" class="w-full h-full border-0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>`;
+                }
+                return `<video src="${url}" class="w-full h-auto ${heightClass} object-cover rounded-2xl shadow-sm bg-black" controls preload="metadata" playsinline></video>`;
+            }
+
+            const optUrl = optimizeImg(url, width);
+            const safeAlt = String(alt || '').replace(/'/g, "\\'");
+            const clickAttr = clickable ? `onclick="openLightbox('${url}', '${safeAlt}')" style="cursor:pointer;"` : '';
+            return `<img src="${optUrl}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/800x450?text=KKGMI+Surabaya+10'" class="w-full h-auto ${heightClass} object-cover rounded-2xl shadow-sm hover:opacity-95 transition" alt="${safeAlt}" ${clickAttr}>`;
         }
 
         function openLightbox(src, title) {
             document.getElementById('lightbox-img').src = optimizeImg(src, 1280);
             document.getElementById('lightbox-caption').innerText = title || '';
-            new bootstrap.Modal(document.getElementById('lightboxModal')).show();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('lightboxModal')).show();
         }
 
         // ==================== SISTEM POPUP PENGUMUMAN ====================
         function renderAnnouncementSlide(index) {
             if (!activeAnnouncements.length) return;
             const item = activeAnnouncements[index];
-            const imgUrl = item.gambar ? parseImage(item.gambar, '', 850) : '';
+            const mediaList = parseMediaList(item.gambar);
             const total = activeAnnouncements.length;
 
             document.getElementById('popup-counter-label').innerText = total > 1
                 ? `Pengumuman ${index + 1} dari ${total} • KKGMI Surabaya 10`
                 : `KKGMI Surabaya 10`;
+
+            let mediaHtml = '';
+            if (mediaList.length > 0) {
+                const firstUrl = mediaList[0];
+                if (isVideoUrl(firstUrl)) {
+                    mediaHtml = `<div class="p-4 pb-0 bg-slate-100 border-b">${renderMediaElement(firstUrl, { heightClass: 'max-h-[340px]', width: 850, clickable: false, alt: item.judul })}</div>`;
+                } else {
+                    mediaHtml = `<div class="w-full bg-slate-100 overflow-hidden max-h-[360px] flex justify-center items-center border-b"><img src="${optimizeImg(firstUrl, 850)}" loading="eager" decoding="async" class="w-full max-h-[360px] object-contain" alt="${item.judul || 'Pengumuman'}"></div>`;
+                }
+            }
 
             let actionBtn = '';
             if (item.link_tombol && item.link_tombol.trim() !== '') {
@@ -470,16 +523,17 @@
                 if (item.link_tombol.startsWith('http')) {
                     actionBtn = `<div class="mt-5"><a href="${item.link_tombol}" target="_blank" class="inline-flex items-center bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md text-decoration-none transition">${btnText} <i class="fas fa-arrow-right ml-2"></i></a></div>`;
                 } else {
-                    actionBtn = `<div class="mt-5"><button onclick="bootstrap.Modal.getInstance(document.getElementById('popupPengumumanModal')).hide(); nav('${item.link_tombol}', '${item.judul}')" class="inline-flex items-center bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md transition">${btnText} <i class="fas fa-arrow-right ml-2"></i></button></div>`;
+                    const safeTitle = String(item.judul || '').replace(/'/g, "\\'");
+                    actionBtn = `<div class="mt-5"><button onclick="bootstrap.Modal.getInstance(document.getElementById('popupPengumumanModal')).hide(); nav('${item.link_tombol}', '${safeTitle}')" class="inline-flex items-center bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md transition">${btnText} <i class="fas fa-arrow-right ml-2"></i></button></div>`;
                 }
             }
 
             document.getElementById('popup-pengumuman-body').innerHTML = `
-                ${imgUrl ? `<div class="w-full bg-slate-100 overflow-hidden max-h-[360px] flex justify-center items-center border-b"><img src="${imgUrl}" loading="eager" decoding="async" class="w-full max-h-[360px] object-contain" alt="${item.judul}"></div>` : ''}
+                ${mediaHtml}
                 <div class="p-6">
                     ${item.tanggal ? `<span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full mb-3"><i class="far fa-calendar-alt mr-1.5"></i> ${item.tanggal}</span>` : ''}
                     <h4 class="text-xl md:text-2xl font-extrabold text-emerald-900 mb-3 leading-snug">${item.judul || 'Informasi Penting'}</h4>
-                    <div class="text-slate-600 text-sm md:text-base leading-relaxed text-justify">${item.isi || ''}</div>
+                    <div class="rich-content text-slate-600 text-sm md:text-base leading-relaxed text-justify">${item.isi || ''}</div>
                     ${actionBtn}
                 </div>
             `;
@@ -504,8 +558,7 @@
             if (!activeAnnouncements.length) return;
             renderAnnouncementSlide(currentAnnouncementIdx);
             const modalEl = document.getElementById('popupPengumumanModal');
-            const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modalInstance.show();
+            bootstrap.Modal.getOrCreateInstance(modalEl).show();
         }
 
         async function logGlobalView() {
@@ -529,7 +582,7 @@
                 }
                 const dataSheets = jsonRes.data;
 
-                // 1. CEK PENGUMUMAN AKTIF & LANGSUNG MUNCULKAN POPUP
+                // 1. CEK PENGUMUMAN AKTIF & MUNCULKAN POPUP OTOMATIS SAAT PERTAMA KALI DIBUKA
                 const pengumumanList = dataSheets['Pengumuman'] || [];
                 activeAnnouncements = [...pengumumanList]
                     .filter(p => String(p.status || '').toLowerCase() === 'aktif')
@@ -539,11 +592,10 @@
                     document.getElementById('badge-pengumuman-count').innerText = activeAnnouncements.length;
                     document.getElementById('btn-float-pengumuman').style.display = 'flex';
                     
-                    // Update Running Ticker dengan judul pengumuman aktif
                     const tickerItems = activeAnnouncements.map(a => `🔔 ${a.judul}`).join(' &nbsp;&nbsp;•&nbsp;&nbsp; ');
                     document.getElementById('ticker-text').innerHTML = `${tickerItems} &nbsp;&nbsp;•&nbsp;&nbsp; Selamat Datang di Website Resmi KKGMI Surabaya 10 — Madrasah Hebat Bermartabat.`;
 
-                    // Munculkan popup otomatis setelah halaman siap (jeda 500ms agar mulus)
+                    // Munculkan popup otomatis saat pertama kali website dibuka
                     setTimeout(() => { openAnnouncementPopup(); }, 500);
                 }
 
@@ -622,19 +674,26 @@
                     if(kepsek.foto) document.getElementById('kepsek-foto').src = parseImage(kepsek.foto, 'https://via.placeholder.com/300', 500);
                 }
 
-                // 6. BERITA
+                // 6. BERITA (MENDUKUNG THUMBNAIL FOTO & BADGE VIDEO)
                 const berita = dataSheets['Berita'] || [];
                 let bHtmlHome = '', bHtmlAll = '';
                 [...berita].reverse().forEach((b, index) => {
-                    let img = parseImage(b.gambar, 'https://via.placeholder.com/500x300', 600);
+                    const mediaList = parseMediaList(b.gambar);
+                    const hasVideo = mediaList.some(u => isVideoUrl(u));
+                    let img = parseImage(b.gambar, 'https://via.placeholder.com/500x300?text=KKGMI+Surabaya+10', 600);
                     let slug = createSlug(b.judul);
                     let cleanIsi = (b.isi || "").replace(/<[^>]*>?/gm, '').substring(0, 95) + '...';
                     let views = b.views || 0;
                     
+                    let mediaThumb = (mediaList.length > 0 && isVideoUrl(mediaList[0]) && !mediaList.some(u => !isVideoUrl(u)))
+                        ? `<div class="w-full h-full bg-gradient-to-br from-emerald-900 to-slate-900 flex flex-col items-center justify-center text-white"><i class="fas fa-play-circle text-5xl text-amber-400 mb-2"></i><span class="text-xs font-bold tracking-wider uppercase">Konten Video</span></div>`
+                        : `<img src="${img}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${b.judul}">`;
+
                     let card = `
                     <div class="news-card bg-white overflow-hidden flex flex-col cursor-pointer group" onclick="bukaBeritaSlug('${slug}')">
                         <div class="h-52 overflow-hidden relative bg-slate-100">
-                            <img src="${img}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${b.judul}">
+                            ${mediaThumb}
+                            ${hasVideo ? `<span class="absolute top-3 left-3 bg-amber-500 text-slate-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow"><i class="fas fa-video mr-1"></i> VIDEO</span>` : ''}
                             <span class="absolute top-3 right-3 bg-slate-900/70 backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-full"><i class="fas fa-eye text-amber-400 mr-1"></i> ${views}</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col">
@@ -673,31 +732,44 @@
                 });
                 document.getElementById('guru-container').innerHTML = gHtml;
 
-                // 9. GALERI (DENGAN LIGHTBOX)
+                // 9. GALERI (MENDUKUNG FOTO LIGHTBOX & VIDEO)
                 const galeri = dataSheets['Galeri'] || [];
                 let galHtml = '';
                 galeri.forEach(g => {
-                    let rawUrl = parseImage(g.foto, 'https://via.placeholder.com/400', 600);
+                    const mediaList = parseMediaList(g.foto);
+                    const firstUrl = mediaList[0] || '';
                     let safeTitle = String(g.judul || '').replace(/'/g, "\\'");
-                    galHtml += `<div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 cursor-pointer group overflow-hidden" onclick="openLightbox('${rawUrl}', '${safeTitle}')">
-                        <div class="overflow-hidden rounded-xl h-56 bg-slate-100 relative">
-                            <img src="${rawUrl}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${g.judul}">
-                            <div class="absolute inset-0 bg-emerald-950/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-2xl"><i class="fas fa-search-plus"></i></div>
-                        </div>
-                        <h3 class="font-bold text-center text-emerald-900 mt-3 mb-1 text-sm px-2">${g.judul}</h3>
-                    </div>`;
+
+                    if (isVideoUrl(firstUrl)) {
+                        galHtml += `<div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="overflow-hidden rounded-xl h-56 bg-black flex items-center justify-center">
+                                ${renderMediaElement(firstUrl, { heightClass: 'h-56', clickable: false, alt: g.judul })}
+                            </div>
+                            <h3 class="font-bold text-center text-emerald-900 mt-3 mb-1 text-sm px-2"><i class="fas fa-film text-amber-500 mr-1.5"></i>${g.judul}</h3>
+                        </div>`;
+                    } else {
+                        let rawUrl = optimizeImg(firstUrl || 'https://via.placeholder.com/400', 600);
+                        galHtml += `<div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 cursor-pointer group overflow-hidden" onclick="openLightbox('${firstUrl}', '${safeTitle}')">
+                            <div class="overflow-hidden rounded-xl h-56 bg-slate-100 relative">
+                                <img src="${rawUrl}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${g.judul}">
+                                <div class="absolute inset-0 bg-emerald-950/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-2xl"><i class="fas fa-search-plus"></i></div>
+                            </div>
+                            <h3 class="font-bold text-center text-emerald-900 mt-3 mb-1 text-sm px-2">${g.judul}</h3>
+                        </div>`;
+                    }
                 });
                 document.getElementById('galeri-container').innerHTML = galHtml;
 
-                // 10. INFO SPMB / KEGIATAN
+                // 10. INFO SPMB / KEGIATAN (MENDUKUNG FOTO & VIDEO)
                 const spmb = dataSheets['InfoSPMB'] || [];
                 let spmbHtml = '';
                 spmb.forEach(s => {
                     if (s.kode === 'Header') {
-                        let imgSpmb = parseImage(s.media, '', 900);
+                        const mediaList = parseMediaList(s.media);
+                        let mediaBlock = mediaList.map(u => `<div class="mt-4">${renderMediaElement(u, { heightClass: 'max-h-[520px]', width: 900, alt: s.judul })}</div>`).join('');
                         spmbHtml += `<h2 class='text-2xl font-extrabold text-emerald-900 mb-4'>${s.judul}</h2>
-                        <div class='text-slate-600 mb-6 leading-relaxed text-justify'>${s.isi}</div>
-                        ${imgSpmb ? `<img src='${imgSpmb}' loading="lazy" decoding="async" class='w-full rounded-2xl shadow-sm'>` : ''}`;
+                        <div class='rich-content text-slate-600 mb-6 leading-relaxed text-justify'>${s.isi}</div>
+                        ${mediaBlock}`;
                     }
                 });
                 document.getElementById('spmb-container').innerHTML = spmbHtml;
@@ -786,27 +858,17 @@
 
                 if (res.success) {
                     let d = res.data;
-                    let imgRaw = d.gambar || '';
-                    let mediaList = [];
-                    if (imgRaw) {
-                        try { mediaList = JSON.parse(imgRaw); } 
-                        catch(e) { mediaList = [imgRaw]; }
-                    }
-                    
+                    let mediaList = parseMediaList(d.gambar);
                     let imgHtml = '';
-                    if (mediaList.length > 0) {
-                        if (mediaList.length === 1) {
-                            let url = mediaList[0];
-                            if (url.match(/\.(mp4|webm|ogg)$/i)) imgHtml = `<div class="mb-8"><video src="${url}" class="w-full h-auto max-h-[500px] object-cover rounded-2xl" controls></video></div>`;
-                            else imgHtml = `<div class="mb-8"><img src="${optimizeImg(url, 1000)}" decoding="async" class="w-full h-auto max-h-[520px] object-cover rounded-2xl shadow-sm"></div>`;
-                        } else {
-                            imgHtml = '<div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">';
-                            mediaList.forEach(url => {
-                                if (url.match(/\.(mp4|webm|ogg)$/i)) imgHtml += `<video src="${url}" class="w-full h-auto max-h-[400px] object-cover rounded-2xl shadow-sm" controls></video>`;
-                                else imgHtml += `<img src="${optimizeImg(url, 800)}" loading="lazy" decoding="async" class="w-full h-auto max-h-[400px] object-cover rounded-2xl shadow-sm hover:scale-[1.02] transition-transform cursor-pointer" onclick="openLightbox('${url}', '')">`;
-                            });
-                            imgHtml += '</div>';
-                        }
+
+                    if (mediaList.length === 1) {
+                        imgHtml = `<div class="mb-8">${renderMediaElement(mediaList[0], { heightClass: 'max-h-[520px]', width: 1000, alt: d.judul })}</div>`;
+                    } else if (mediaList.length > 1) {
+                        imgHtml = '<div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">';
+                        mediaList.forEach(url => {
+                            imgHtml += renderMediaElement(url, { heightClass: 'max-h-[400px]', width: 800, alt: d.judul });
+                        });
+                        imgHtml += '</div>';
                     }
 
                     $('#section-baca').html(`
@@ -818,7 +880,7 @@
                                 <span><i class="fas fa-eye mr-1.5 text-emerald-500"></i> Dilihat ${d.views || 0} Kali</span>
                             </div>
                             ${imgHtml}
-                            <div class="text-slate-700 leading-relaxed text-justify text-sm md:text-base">${d.isi}</div>
+                            <div class="rich-content text-slate-700 leading-relaxed text-justify text-sm md:text-base">${d.isi}</div>
                         </div>`);
                 }
             } catch (err) {
