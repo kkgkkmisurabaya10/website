@@ -45,13 +45,13 @@
 <body>
     
     <script>
-        // URL UTAMA: Cloudflare Worker + D1 (Super Cepat & Tahan Banting)
+        // URL UTAMA: Cloudflare Worker + D1
         const API_URL = "https://website.kkgkkmi10surabaya.workers.dev/";
         
-        // URL CADANGAN: Google Apps Script (Otomatis aktif jika Worker sedang gangguan)
+        // URL CADANGAN: Google Apps Script
         const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbwCromFGnFp3OulF5DLi6vpHRJmK_3DA86P4lBSr6ri29O8ARMaSImhBoG9qH1isbdiEg/exec";
 
-        // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS tanpa error
+        // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS
         const _originalFetch = window.fetch;
         window.fetch = async function(resource, init) {
             try {
@@ -70,13 +70,26 @@
             }
         };
 
-        // Helper optimasi thumbnail gambar Drive di Admin Panel
         function optimizeImg(url, width = 300) {
             if (!url || typeof url !== 'string') return url;
             if (url.includes('lh3.googleusercontent.com/d/') && !url.includes('=')) {
                 return `${url}=w${width}`;
             }
             return url;
+        }
+
+        function isVideoUrl(url) {
+            if (!url || typeof url !== 'string') return false;
+            return /\.(mp4|webm|ogg)$/i.test(url) || url.includes('#video') || url.includes('drive.google.com/file/d/');
+        }
+
+        function escapeAttr(str) {
+            return String(str === undefined || str === null ? '' : str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
     </script>
 
@@ -155,7 +168,7 @@
                 <a onclick="loadAdminModule('Berita')" class="admin-nav" id="nav-Berita"><i class="fas fa-newspaper w-5 mr-3"></i> Berita</a>
                 <a onclick="loadAdminModule('Guru')" class="admin-nav" id="nav-Guru"><i class="fas fa-chalkboard-teacher w-5 mr-3"></i> Data Guru</a>
                 <a onclick="loadAdminModule('Profil')" class="admin-nav" id="nav-Profil"><i class="fas fa-school w-5 mr-3"></i> Profil Sekolah</a>
-                <a onclick="loadAdminModule('Galeri')" class="admin-nav" id="nav-Galeri"><i class="fas fa-photo-video w-5 mr-3"></i> Galeri Foto</a>
+                <a onclick="loadAdminModule('Galeri')" class="admin-nav" id="nav-Galeri"><i class="fas fa-photo-video w-5 mr-3"></i> Galeri Foto & Video</a>
                 <a onclick="loadAdminModule('InfoSPMB')" class="admin-nav" id="nav-InfoSPMB"><i class="fas fa-bullhorn w-5 mr-3"></i> Info SPMB</a>
                 <a onclick="loadAdminModule('LMS')" class="admin-nav" id="nav-LMS"><i class="fas fa-laptop-code w-5 mr-3"></i> Akses LMS</a>
                 
@@ -349,7 +362,7 @@
             document.getElementById('admin-table-view').classList.remove('hidden');
             document.getElementById('admin-title').innerText = sheet === 'Pengumuman' ? 'Kelola Pengumuman Popup' : ('Data ' + sheet);
             document.getElementById('admin-subtitle').innerText = sheet === 'Pengumuman'
-                ? 'Pengumuman berstatus "aktif" otomatis muncul sebagai popup saat website dibuka.'
+                ? 'Pengumuman berstatus "aktif" otomatis muncul sebagai popup saat website pertama kali dibuka.'
                 : 'Tambah, edit, atau hapus entri data secara real-time';
 
             document.querySelectorAll('.admin-nav').forEach(n => n.classList.remove('active'));
@@ -399,8 +412,11 @@
                             try { let parsed = JSON.parse(cell); if(Array.isArray(parsed) && parsed.length > 0) url = parsed[0]; } catch(e) {}
                         }
                         if(typeof url === 'string' && url.startsWith('http') && !hLower.includes('link')) {
-                            if(url.match(/\.(mp4|webm|ogg)$/i)) body += `<td class="p-3.5"><div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-white"><i class="fas fa-film"></i></div></td>`;
-                            else body += `<td class="p-3.5"><img src="${optimizeImg(url, 150)}" loading="lazy" class="w-12 h-12 object-cover rounded-lg shadow-sm border border-slate-200"></td>`;
+                            if(isVideoUrl(url)) {
+                                body += `<td class="p-3.5"><div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-amber-400 shadow-sm" title="Video"><i class="fas fa-film text-lg"></i></div></td>`;
+                            } else {
+                                body += `<td class="p-3.5"><img src="${optimizeImg(url, 150)}" loading="lazy" class="w-12 h-12 object-cover rounded-lg shadow-sm border border-slate-200"></td>`;
+                            }
                         } else {
                             let cleanText = typeof cell === 'string' ? cell.replace(/<[^>]*>?/gm, '').substring(0, 60) : cell;
                             body += `<td class="p-3.5 text-sm align-middle">${cleanText || ''}</td>`;
@@ -431,16 +447,15 @@
             } else {
                 renderAdminForm(null);
             }
-            new bootstrap.Modal(document.getElementById('adminModal')).show();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('adminModal')).show();
         }
 
         /**
          * KOMPRESI GAMBAR OTOMATIS DI BROWSER (CLIENT-SIDE)
-         * Mengubah gambar besar menjadi maksimal 1280px & kualitas 78% WebP/JPEG agar super ringan!
+         * Video & GIF langsung dikirim utuh, Gambar dikompresi max 1280px WebP/JPEG
          */
         function compressImageToBase64(file, maxWidth = 1280, quality = 0.78) {
             return new Promise((resolve, reject) => {
-                // Jika video atau GIF, langsung baca tanpa kompresi canvas
                 if (!file.type.startsWith('image/') || file.type === 'image/gif') {
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
@@ -467,7 +482,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Gunakan WebP jika browser mendukung (jauh lebih ringan), fallback JPEG
                         let outType = 'image/webp';
                         let dataUrl = canvas.toDataURL(outType, quality);
                         if (!dataUrl.startsWith('data:image/webp')) {
@@ -484,16 +498,29 @@
             });
         }
 
+        function clearMediaField(header) {
+            const hiddenInput = document.querySelector(`.admin-input[data-header="${header}"]`);
+            const previewBox = document.getElementById(`preview-${header}`);
+            if (hiddenInput) hiddenInput.value = '';
+            if (previewBox) previewBox.innerHTML = '<small class="text-red-500 italic">Media dihapus (simpan untuk menerapkan).</small>';
+        }
+
         function renderAdminForm(dataRow) {
+            // Bersihkan instance summernote sebelumnya agar tidak menumpuk
+            $('.rich-text').each(function() {
+                try { $(this).summernote('destroy'); } catch(e) {}
+            });
+
             let html = '';
             currentAdminHeaders.forEach((h, i) => {
                 if (h.toLowerCase() === 'id') return;
                 
                 let val = '';
                 if(dataRow) {
-                    val = Array.isArray(dataRow) ? dataRow[i] : (dataRow[h] || '');
+                    val = Array.isArray(dataRow) ? (dataRow[i] || '') : (dataRow[h] || '');
                 }
 
+                const safeVal = escapeAttr(val);
                 const hLower = h.toLowerCase();
                 const isMedia = (hLower.includes('gambar') || hLower.includes('foto') || hLower.includes('media') || hLower === 'url');
                 const isRichText = (hLower.includes('isi') || hLower.includes('deskripsi') || hLower.includes('konten'));
@@ -503,71 +530,90 @@
                     <div class="col-md-6 mb-2">
                         <label class="form-label font-bold text-slate-700 text-sm">${h}</label>
                         <select class="form-select admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}">
-                            <option value="aktif" ${val === 'aktif' || !val ? 'selected' : ''}>Aktif</option>
-                            <option value="nonaktif" ${val === 'nonaktif' ? 'selected' : ''}>Nonaktif</option>
+                            <option value="aktif" ${String(val).toLowerCase() === 'aktif' || !val ? 'selected' : ''}>Aktif</option>
+                            <option value="nonaktif" ${String(val).toLowerCase() === 'nonaktif' ? 'selected' : ''}>Nonaktif</option>
                         </select>
                     </div>`;
                 } else if (hLower === 'induk' || hLower === 'parent') {
                     html += `
                     <div class="col-md-6 mb-2">
                         <label class="form-label font-bold text-slate-700 text-sm">Induk Menu (Parent)</label>
-                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Kosongkan jika ini menu utama">
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${safeVal}" placeholder="Kosongkan jika ini menu utama">
                         <small class="text-slate-500">Tulis Label menu utamanya persis (misal: PROGRAM KERJA) jika ingin menjadi sub-menu.</small>
                     </div>`;
                 } else if (hLower === 'views') {
-                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-sm">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100 py-2.5 rounded-xl" data-header="${h}" value="${val || 0}" readonly></div>`;
+                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-sm">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100 py-2.5 rounded-xl" data-header="${h}" value="${safeVal || 0}" readonly></div>`;
                 } else if (hLower === 'kecerahan') {
                     html += `
                     <div class="col-md-6 mb-2">
                         <label class="form-label font-bold text-slate-700 text-sm">${h} (Opacity Latar Slider)</label>
-                        <input type="range" class="form-range admin-input" data-header="${h}" min="0" max="100" value="${val || 80}">
+                        <input type="range" class="form-range admin-input" data-header="${h}" min="0" max="100" value="${safeVal || 80}">
                     </div>`;
                 } else if (hLower === 'link_tombol') {
                     html += `
                     <div class="col-md-6 mb-2">
                         <label class="form-label font-bold text-slate-700 text-sm">Link Tombol Aksi (Opsional)</label>
-                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Contoh: https://... atau berita">
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${safeVal}" placeholder="Contoh: https://... atau berita">
                         <small class="text-slate-500">Kosongkan jika popup tidak butuh tombol tautan.</small>
                     </div>`;
                 } else if (hLower === 'teks_tombol') {
                     html += `
                     <div class="col-md-6 mb-2">
                         <label class="form-label font-bold text-slate-700 text-sm">Teks Tombol Aksi (Opsional)</label>
-                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Contoh: Daftar Sekarang / Lihat Detail">
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${safeVal}" placeholder="Contoh: Daftar Sekarang / Lihat Detail">
                     </div>`;
                 } else if (isMedia) {
                     let preview = '';
                     let mediaArr = [];
-                    try { mediaArr = JSON.parse(val); } catch(e) { if(val) mediaArr = [val]; }
+                    try { mediaArr = JSON.parse(val); if(!Array.isArray(mediaArr)) mediaArr = [val]; } catch(e) { if(val) mediaArr = [val]; }
 
-                    if (mediaArr.length > 0) {
-                        preview = '<div class="mt-3 grid grid-cols-3 gap-2">';
+                    if (mediaArr.length > 0 && mediaArr[0]) {
+                        preview = `<div id="preview-${h}" class="mt-3">`;
+                        preview += '<div class="grid grid-cols-3 gap-2 mb-2">';
                         mediaArr.forEach(url => {
-                            if(url.match(/\.(mp4|webm|ogg)$/i)) preview += `<video src="${url}" class="h-20 w-full object-cover rounded-lg shadow-sm" controls></video>`;
-                            else preview += `<img src="${optimizeImg(url, 300)}" class="h-20 w-full object-cover rounded-lg shadow-sm border">`;
+                            if (isVideoUrl(url)) {
+                                if (url.includes('drive.google.com/file/d/')) {
+                                    const cleanSrc = url.replace('#video', '');
+                                    preview += `<iframe src="${cleanSrc}" class="h-24 w-full rounded-lg border" allow="autoplay"></iframe>`;
+                                } else {
+                                    preview += `<video src="${url}" class="h-24 w-full object-cover rounded-lg shadow-sm" controls preload="metadata"></video>`;
+                                }
+                            } else {
+                                preview += `<img src="${optimizeImg(url, 300)}" class="h-24 w-full object-cover rounded-lg shadow-sm border">`;
+                            }
                         });
-                        preview += '</div>';
+                        preview += `</div><button type="button" onclick="clearMediaField('${h}')" class="btn btn-sm btn-outline-danger rounded-lg text-xs"><i class="fas fa-trash mr-1"></i> Hapus Media Lama</button></div>`;
                     }
                     
                     html += `<div class="col-md-6 mb-2">
-                        <label class="form-label font-bold text-slate-700 text-sm">${h} <span class="text-emerald-600 font-normal">(Auto-Kompres Ringan)</span></label>
+                        <label class="form-label font-bold text-slate-700 text-sm">${h} <span class="text-emerald-600 font-normal">(Foto Auto-Kompres / Video)</span></label>
                         <input type="file" class="form-control admin-file py-2 rounded-xl border-slate-300 mb-2" data-header="${h}" accept="image/*,video/*" multiple>
-                        <input type="hidden" class="admin-input" data-header="${h}" value='${val}'>
+                        <input type="hidden" class="admin-input" data-header="${h}" value="${safeVal}">
                         ${preview}
-                        <small class="text-slate-500 block mt-1">Gambar otomatis dikompresi agar loading website tetap cepat.</small>
+                        <small class="text-slate-500 block mt-1">Bisa upload foto (otomatis dikompres ringan) atau video (MP4/WebM).</small>
                     </div>`;
                 } else if (isRichText) {
                     html += `<div class="col-12 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><textarea class="form-control admin-input rich-text" data-header="${h}">${val}</textarea></div>`;
                 } else if (hLower.includes('tanggal')) {
-                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><input type="date" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
+                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><input type="date" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${safeVal}"></div>`;
                 } else {
-                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
+                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${safeVal}"></div>`;
                 }
             });
             document.getElementById('adminForm').innerHTML = html;
             
             $('.rich-text').each(function() {
-                $(this).summernote({ height: 220, toolbar: [ ['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'picture']], ['view', ['fullscreen', 'codeview']] ]});
+                $(this).summernote({
+                    height: 220,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview']]
+                    ]
+                });
             });
         }
 
@@ -605,7 +651,7 @@
                             } else { 
                                 Swal.fire('Gagal Upload', uploadRes.message, 'error'); hideLoading(); resetBtn(); return; 
                             }
-                        } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error'); hideLoading(); resetBtn(); return; }
+                        } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload media.', 'error'); hideLoading(); resetBtn(); return; }
                     }
                     obj[header] = uploadedUrls.length === 1 ? uploadedUrls[0] : JSON.stringify(uploadedUrls);
                 }
