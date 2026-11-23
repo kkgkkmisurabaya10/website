@@ -7,152 +7,217 @@
     <title>Admin Panel - KKGMI Surabaya 10</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     
     <style>
-        body { background-color: #f8fafc; font-family: 'Open Sans', sans-serif; display: flex; height: 100vh; overflow: hidden; }
-        #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.4s; }
-        .view-section { display: none; opacity: 0; transition: opacity 0.4s; flex: 1; }
+        body { background-color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s; }
+        .view-section { display: none; opacity: 0; transition: opacity 0.3s; flex: 1; width: 100%; }
         .view-section.active { display: flex; opacity: 1; }
-        .sidebar { width: 260px; background: #064e3b; color: white; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 4px 0 10px rgba(0,0,0,0.05); }
+        
+        .sidebar { width: 270px; background: linear-gradient(180deg, #064e3b 0%, #022c22 100%); color: white; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 4px 0 20px rgba(0,0,0,0.08); z-index: 1030; transition: transform 0.3s ease; flex-shrink: 0; }
         .sidebar::-webkit-scrollbar { width: 5px; }
         .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px; }
-        .sidebar a { display: block; padding: 12px 25px; color: #cbd5e1; text-decoration: none; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 14px; border-left: 4px solid transparent; }
-        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.1); color: white; border-left-color: #d97706; }
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .sidebar a { display: flex; align-items: center; padding: 11px 22px; color: #cbd5e1; text-decoration: none; cursor: pointer; transition: all 0.25s; font-weight: 600; font-size: 13.5px; border-left: 4px solid transparent; margin: 2px 0; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.1); color: #ffffff; border-left-color: #f59e0b; }
+        
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; }
+        .mobile-topbar { display: none; background: #ffffff; padding: 12px 18px; border-bottom: 1px solid #e2e8f0; align-items: center; justify-content: space-between; z-index: 1020; }
+        .main-content { flex: 1; padding: 32px; overflow-y: auto; }
+        .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); z-index: 1025; backdrop-filter: blur(2px); }
+        
         .note-modal-backdrop { z-index: 1040 !important; } 
         .note-modal { z-index: 1050 !important; }
+
+        @media (max-width: 991px) {
+            .mobile-topbar { display: flex; }
+            .sidebar { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop.open { display: block; }
+            .main-content { padding: 18px; }
+        }
     </style>
 </head>
 <body>
     
     <script>
-    // URL UTAMA: Cloudflare Worker + D1 (Super Cepat & Tahan Banting)
-    const API_URL = "https://website.kkgkkmi10surabaya.workers.dev/";
-    
-    // URL CADANGAN: Google Apps Script (Otomatis aktif jika Worker sedang gangguan)
-    const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbwCromFGnFp3OulF5DLi6vpHRJmK_3DA86P4lBSr6ri29O8ARMaSImhBoG9qH1isbdiEg/exec";
+        // URL UTAMA: Cloudflare Worker + D1 (Super Cepat & Tahan Banting)
+        const API_URL = "https://website.kkgkkmi10surabaya.workers.dev/";
+        
+        // URL CADANGAN: Google Apps Script (Otomatis aktif jika Worker sedang gangguan)
+        const FALLBACK_GAS_URL = "https://script.google.com/macros/s/AKfycbwCromFGnFp3OulF5DLi6vpHRJmK_3DA86P4lBSr6ri29O8ARMaSImhBoG9qH1isbdiEg/exec";
 
-    // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS tanpa error
-    const _originalFetch = window.fetch;
-    window.fetch = async function(resource, init) {
-        try {
-            const res = await _originalFetch(resource, init);
-            if (!res.ok && typeof resource === "string" && resource.startsWith(API_URL)) {
-                throw new Error("Worker HTTP " + res.status);
+        // Interceptor fetch otomatis: jika Worker gagal, otomatis dialihkan ke GAS tanpa error
+        const _originalFetch = window.fetch;
+        window.fetch = async function(resource, init) {
+            try {
+                const res = await _originalFetch(resource, init);
+                if (!res.ok && typeof resource === "string" && resource.startsWith(API_URL)) {
+                    throw new Error("Worker HTTP " + res.status);
+                }
+                return res;
+            } catch (err) {
+                if (typeof resource === "string" && resource.startsWith(API_URL)) {
+                    console.warn("Beralih ke Fallback GAS:", err.message);
+                    const fallbackResource = resource.replace(API_URL, FALLBACK_GAS_URL);
+                    return _originalFetch(fallbackResource, init);
+                }
+                throw err;
             }
-            return res;
-        } catch (err) {
-            if (typeof resource === "string" && resource.startsWith(API_URL)) {
-                console.warn("Beralih ke Fallback GAS:", err.message);
-                const fallbackResource = resource.replace(API_URL, FALLBACK_GAS_URL);
-                return _originalFetch(fallbackResource, init);
+        };
+
+        // Helper optimasi thumbnail gambar Drive di Admin Panel
+        function optimizeImg(url, width = 300) {
+            if (!url || typeof url !== 'string') return url;
+            if (url.includes('lh3.googleusercontent.com/d/') && !url.includes('=')) {
+                return `${url}=w${width}`;
             }
-            throw err;
+            return url;
         }
-    };
-</script>
+    </script>
 
     <div id="loading-screen" style="display: none;">
-        <div class="spinner-border text-success" role="status" style="width: 3.5rem; height: 3.5rem;"></div>
-        <p class="mt-4 text-secondary fw-bold" id="loading-text">Memproses Data...</p>
+        <div class="spinner-border text-success" role="status" style="width: 3.2rem; height: 3.2rem;"></div>
+        <p class="mt-4 text-slate-600 fw-bold text-sm" id="loading-text">Memproses Data...</p>
     </div>
 
-    <div id="view-login" class="view-section relative bg-slate-100 justify-center align-items-center h-full">
-        <div class="absolute inset-0 bg-green-900 opacity-90"></div>
-        <div class="relative z-10 w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl animate__animated animate__zoomIn">
+    <!-- LOGIN VIEW -->
+    <div id="view-login" class="view-section relative bg-slate-100 justify-center align-items-center h-full px-4">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900 opacity-95"></div>
+        <div class="relative z-10 w-full max-w-md bg-white p-8 md:p-10 rounded-3xl shadow-2xl animate__animated animate__zoomIn border border-slate-100">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-slate-800" style="font-family: 'Quicksand';">KKGMI Admin</h2>
-                <p class="text-slate-500 text-sm mt-2">Masuk untuk mengelola data website KKGMI Surabaya 10</p>
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-family: 'Quicksand';">KKGMI Admin</h2>
+                <p class="text-slate-500 text-sm mt-1">Panel Pengelolaan Website KKGMI Surabaya 10</p>
             </div>
             <form onsubmit="handleLogin(event)">
-                <div class="mb-5">
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Username</label>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Username</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-slate-50 border-r-0"><i class="fas fa-user text-slate-400"></i></span>
-                        <input type="text" id="login-user" class="form-control border-l-0 focus:ring-0 shadow-none py-3" placeholder="Masukkan username" required>
+                        <span class="input-group-text bg-slate-50 border-r-0 rounded-l-xl"><i class="fas fa-user text-slate-400"></i></span>
+                        <input type="text" id="login-user" class="form-control border-l-0 focus:ring-0 shadow-none py-3 rounded-r-xl" placeholder="Masukkan username" required>
                     </div>
                 </div>
-                <div class="mb-8">
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
+                <div class="mb-7">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Password</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-slate-50 border-r-0"><i class="fas fa-lock text-slate-400"></i></span>
-                        <input type="password" id="login-pass" class="form-control border-l-0 focus:ring-0 shadow-none py-3" placeholder="Masukkan password" required>
+                        <span class="input-group-text bg-slate-50 border-r-0 rounded-l-xl"><i class="fas fa-lock text-slate-400"></i></span>
+                        <input type="password" id="login-pass" class="form-control border-l-0 focus:ring-0 shadow-none py-3 rounded-r-xl" placeholder="Masukkan password" required>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition text-lg">LOGIN</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition text-base">
+                    <i class="fas fa-sign-in-alt mr-2"></i> MASUK PANEL
+                </button>
             </form>
             <div class="mt-6 text-center">
-                <a href="index.html" class="text-sm text-slate-500 hover:text-green-600 font-semibold text-decoration-none"><i class="fas fa-arrow-left mr-1"></i> Kembali ke Website Publik</a>
+                <a href="index.html" class="text-sm text-slate-500 hover:text-emerald-700 font-semibold text-decoration-none">
+                    <i class="fas fa-arrow-left mr-1"></i> Kembali ke Website Publik
+                </a>
             </div>
         </div>
     </div>
 
+    <!-- ADMIN VIEW -->
     <div id="view-admin" class="view-section h-full">
+        <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleAdminSidebar()"></div>
+
         <aside class="sidebar" id="sidebar-admin">
-            <div class="p-6 text-center border-b border-green-800 mb-4">
-                <h4 class="font-bold tracking-wider text-xl m-0" style="font-family: 'Quicksand';">KKGMI ADMIN</h4>
-                <p class="text-xs text-green-300 mt-1">Content Management System</p>
+            <div class="p-6 text-center border-b border-emerald-800/70 mb-3 flex items-center justify-between lg:justify-center">
+                <div>
+                    <h4 class="font-bold tracking-wider text-xl m-0 text-white" style="font-family: 'Quicksand';">KKGMI ADMIN</h4>
+                    <p class="text-[11px] text-emerald-300 mt-1 mb-0">Hybrid D1 Edge CMS</p>
+                </div>
+                <button class="lg:hidden text-emerald-200 hover:text-white text-xl" onclick="toggleAdminSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="flex-1">
-                <a onclick="loadAdminDashboard()" class="admin-nav" id="nav-Dashboard"><i class="fas fa-tachometer-alt w-5 mr-2"></i> Dashboard</a>
+            <div class="flex-1 pb-4">
+                <a onclick="loadAdminDashboard()" class="admin-nav" id="nav-Dashboard"><i class="fas fa-tachometer-alt w-5 mr-3"></i> Dashboard</a>
                 
-                <p class="px-6 text-xs font-bold text-slate-400 mt-6 mb-2 uppercase">Tampilan Depan</p>
-                <a onclick="loadAdminModule('Slider')" class="admin-nav" id="nav-Slider"><i class="fas fa-images w-5 mr-2"></i> Kelola Slider</a>
-                <a onclick="loadAdminModule('QuickLinks')" class="admin-nav" id="nav-QuickLinks"><i class="fas fa-th-large w-5 mr-2"></i> Menu Kotak Akses</a>
-                <a onclick="loadAdminModule('LandingPage')" class="admin-nav" id="nav-LandingPage"><i class="fas fa-desktop w-5 mr-2"></i> Halaman Utama</a>
+                <p class="px-6 text-[11px] font-bold text-emerald-400/80 mt-5 mb-2 uppercase tracking-wider">Tampilan Depan</p>
+                <a onclick="loadAdminModule('Pengumuman')" class="admin-nav" id="nav-Pengumuman">
+                    <i class="fas fa-bell w-5 mr-3 text-amber-400"></i> 
+                    <span>Pengumuman Popup</span>
+                    <span class="ml-auto bg-amber-500 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full">BARU</span>
+                </a>
+                <a onclick="loadAdminModule('Slider')" class="admin-nav" id="nav-Slider"><i class="fas fa-images w-5 mr-3"></i> Kelola Slider</a>
+                <a onclick="loadAdminModule('QuickLinks')" class="admin-nav" id="nav-QuickLinks"><i class="fas fa-th-large w-5 mr-3"></i> Menu Kotak Akses</a>
+                <a onclick="loadAdminModule('LandingPage')" class="admin-nav" id="nav-LandingPage"><i class="fas fa-desktop w-5 mr-3"></i> Halaman Utama</a>
                 
-                <p class="px-6 text-xs font-bold text-slate-400 mt-6 mb-2 uppercase">Konten Utama</p>
-                <a onclick="loadAdminModule('menus')" class="admin-nav" id="nav-menus"><i class="fas fa-bars w-5 mr-2"></i> Menu Navigasi</a>
-                <a onclick="loadAdminModule('Berita')" class="admin-nav" id="nav-Berita"><i class="fas fa-newspaper w-5 mr-2"></i> Berita</a>
-                <a onclick="loadAdminModule('Guru')" class="admin-nav" id="nav-Guru"><i class="fas fa-chalkboard-teacher w-5 mr-2"></i> Data Guru</a>
-                <a onclick="loadAdminModule('Profil')" class="admin-nav" id="nav-Profil"><i class="fas fa-school w-5 mr-2"></i> Profil Sekolah</a>
-                <a onclick="loadAdminModule('Galeri')" class="admin-nav" id="nav-Galeri"><i class="fas fa-images w-5 mr-2"></i> Galeri Foto</a>
-                <a onclick="loadAdminModule('InfoSPMB')" class="admin-nav" id="nav-InfoSPMB"><i class="fas fa-bullhorn w-5 mr-2"></i> Info SPMB</a>
-                <a onclick="loadAdminModule('LMS')" class="admin-nav" id="nav-LMS"><i class="fas fa-laptop-code w-5 mr-2"></i> Akses LMS</a>
+                <p class="px-6 text-[11px] font-bold text-emerald-400/80 mt-5 mb-2 uppercase tracking-wider">Konten Utama</p>
+                <a onclick="loadAdminModule('menus')" class="admin-nav" id="nav-menus"><i class="fas fa-bars w-5 mr-3"></i> Menu Navigasi</a>
+                <a onclick="loadAdminModule('Berita')" class="admin-nav" id="nav-Berita"><i class="fas fa-newspaper w-5 mr-3"></i> Berita</a>
+                <a onclick="loadAdminModule('Guru')" class="admin-nav" id="nav-Guru"><i class="fas fa-chalkboard-teacher w-5 mr-3"></i> Data Guru</a>
+                <a onclick="loadAdminModule('Profil')" class="admin-nav" id="nav-Profil"><i class="fas fa-school w-5 mr-3"></i> Profil Sekolah</a>
+                <a onclick="loadAdminModule('Galeri')" class="admin-nav" id="nav-Galeri"><i class="fas fa-photo-video w-5 mr-3"></i> Galeri Foto</a>
+                <a onclick="loadAdminModule('InfoSPMB')" class="admin-nav" id="nav-InfoSPMB"><i class="fas fa-bullhorn w-5 mr-3"></i> Info SPMB</a>
+                <a onclick="loadAdminModule('LMS')" class="admin-nav" id="nav-LMS"><i class="fas fa-laptop-code w-5 mr-3"></i> Akses LMS</a>
                 
-                <p class="px-6 text-xs font-bold text-slate-400 mt-6 mb-2 uppercase">Pengaturan Web</p>
-                <a onclick="loadAdminModule('AsetGambar')" class="admin-nav" id="nav-AsetGambar"><i class="fas fa-image w-5 mr-2"></i> Aset Gambar</a>
-                <a onclick="loadAdminModule('MediaSosial')" class="admin-nav" id="nav-MediaSosial"><i class="fas fa-share-alt w-5 mr-2"></i> Media Sosial</a>
+                <p class="px-6 text-[11px] font-bold text-emerald-400/80 mt-5 mb-2 uppercase tracking-wider">Pengaturan Web</p>
+                <a onclick="loadAdminModule('AsetGambar')" class="admin-nav" id="nav-AsetGambar"><i class="fas fa-image w-5 mr-3"></i> Aset Gambar</a>
+                <a onclick="loadAdminModule('MediaSosial')" class="admin-nav" id="nav-MediaSosial"><i class="fas fa-share-alt w-5 mr-3"></i> Media Sosial</a>
                 
-                <a href="index.html" target="_blank" class="admin-nav mt-6 border-t border-green-800 pt-4" style="color:#f59e0b;"><i class="fas fa-external-link-alt w-5 mr-2"></i> Buka Website Publik</a>
+                <a href="index.html" target="_blank" class="admin-nav mt-5 border-t border-emerald-800/70 pt-4 text-amber-400 hover:text-amber-300">
+                    <i class="fas fa-external-link-alt w-5 mr-3"></i> Buka Website Publik
+                </a>
             </div>
-            <div class="p-4 mt-auto border-t border-green-800">
-                <a onclick="handleLogout()" class="text-red-400 hover:text-red-300 hover:bg-red-900/30 rounded-lg text-center p-2"><i class="fas fa-sign-out-alt w-5 mr-1"></i> Keluar Sistem</a>
+            <div class="p-4 mt-auto border-t border-emerald-800/70">
+                <a onclick="handleLogout()" class="text-red-300 hover:text-white hover:bg-red-600/30 rounded-xl justify-center p-2.5 border-0">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Keluar Sistem
+                </a>
             </div>
         </aside>
 
-        <main class="main-content" id="main-admin">
-            <div id="admin-dashboard-view" class="hidden animate__animated animate__fadeIn">
-                <h2 class="text-3xl font-bold text-slate-800 mb-2" style="font-family: 'Quicksand';">Monitoring Viewers</h2>
-                <p class="text-slate-500 mb-8">Statistik kinerja konten pada website KKGMI Surabaya 10</p>
-                <div class="row g-4" id="dashboard-stats-container"></div>
-            </div>
-            
-            <div id="admin-table-view" class="hidden animate__animated animate__fadeIn">
-                <div class="flex justify-between items-center mb-8 bg-white p-6 rounded-2xl shadow-sm">
-                    <div>
-                        <h2 id="admin-title" class="text-2xl font-bold text-slate-800" style="font-family: 'Quicksand';">Kelola Data</h2>
-                        <p class="text-sm text-slate-500 mt-1">Tambah, edit, atau hapus entri data</p>
-                    </div>
-                    <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md transition-all flex items-center" onclick="openAdminModal('add')">
-                        <i class="fas fa-plus mr-2"></i> Tambah Baru
+        <div class="main-wrapper">
+            <div class="mobile-topbar shadow-sm">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleAdminSidebar()" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center text-lg">
+                        <i class="fas fa-bars"></i>
                     </button>
+                    <span class="font-extrabold text-emerald-900 text-base" style="font-family: 'Quicksand';">KKGMI ADMIN</span>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm overflow-x-auto border border-slate-100">
-                    <table class="w-full text-left border-collapse">
-                        <thead id="admin-table-head" class="bg-slate-50 text-slate-600 border-b-2 border-slate-200"></thead>
-                        <tbody id="admin-table-body" class="text-slate-700"></tbody>
-                    </table>
-                </div>
+                <a href="index.html" target="_blank" class="text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1.5 rounded-lg text-decoration-none">
+                    <i class="fas fa-globe mr-1"></i> Web Publik
+                </a>
             </div>
-        </main>
+
+            <main class="main-content" id="main-admin">
+                <div id="admin-dashboard-view" class="hidden animate__animated animate__fadeIn">
+                    <div class="mb-7">
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-1" style="font-family: 'Quicksand';">Monitoring Viewers</h2>
+                        <p class="text-slate-500 text-sm">Statistik kinerja konten pada website KKGMI Surabaya 10</p>
+                    </div>
+                    <div class="row g-4" id="dashboard-stats-container"></div>
+                </div>
+                
+                <div id="admin-table-view" class="hidden animate__animated animate__fadeIn">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div>
+                            <h2 id="admin-title" class="text-xl md:text-2xl font-extrabold text-slate-800 m-0" style="font-family: 'Quicksand';">Kelola Data</h2>
+                            <p id="admin-subtitle" class="text-xs md:text-sm text-slate-500 mt-1 mb-0">Tambah, edit, atau hapus entri data secara real-time</p>
+                        </div>
+                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition-all flex items-center text-sm whitespace-nowrap" onclick="openAdminModal('add')">
+                            <i class="fas fa-plus mr-2"></i> Tambah Baru
+                        </button>
+                    </div>
+                    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm overflow-x-auto border border-slate-100">
+                        <table class="w-full text-left border-collapse">
+                            <thead id="admin-table-head" class="bg-slate-50 text-slate-600 border-b-2 border-slate-200 text-xs uppercase tracking-wider"></thead>
+                            <tbody id="admin-table-body" class="text-slate-700 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 
+    <!-- MODAL FORM -->
     <div class="modal fade" id="adminModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content border-0 shadow-2xl rounded-3xl">
@@ -161,7 +226,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body px-6 py-5">
-                    <form id="adminForm" class="row g-4"></form>
+                    <form id="adminForm" class="row g-3"></form>
                 </div>
                 <div class="modal-footer border-t bg-slate-50 px-6 py-4 rounded-b-3xl">
                     <button type="button" class="btn btn-light px-5 py-2.5 font-bold rounded-xl" data-bs-dismiss="modal">Batal</button>
@@ -191,6 +256,18 @@
             }
         });
 
+        function toggleAdminSidebar() {
+            document.getElementById('sidebar-admin').classList.toggle('open');
+            document.getElementById('sidebarBackdrop').classList.toggle('open');
+        }
+
+        function closeSidebarMobile() {
+            if (window.innerWidth < 992) {
+                document.getElementById('sidebar-admin').classList.remove('open');
+                document.getElementById('sidebarBackdrop').classList.remove('open');
+            }
+        }
+
         function showLoading(msg = "Memproses...") {
             document.getElementById('loading-text').innerText = msg;
             document.getElementById('loading-screen').style.display = 'flex';
@@ -200,7 +277,7 @@
         function hideLoading() {
             const loader = document.getElementById('loading-screen');
             loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 400);
+            setTimeout(() => loader.style.display = 'none', 300);
         }
 
         async function handleLogin(e) {
@@ -228,6 +305,7 @@
         }
 
         async function loadAdminDashboard() {
+            closeSidebarMobile();
             document.getElementById('admin-table-view').classList.add('hidden');
             document.getElementById('admin-dashboard-view').classList.remove('hidden');
             document.querySelectorAll('.admin-nav').forEach(n => n.classList.remove('active'));
@@ -239,24 +317,24 @@
                 let topBeritaHtml = '';
                 if(detail.topBerita && detail.topBerita.length > 0){
                     topBeritaHtml = detail.topBerita.map(b => `
-                        <div class="flex justify-between items-center py-3 border-b border-slate-100 last:border-0">
-                            <span class="text-slate-700 font-semibold">${b.judul.substring(0, 50)}...</span>
-                            <span class="bg-green-100 text-green-700 py-1 px-3 rounded-full text-xs font-bold"><i class="fas fa-eye mr-1"></i> ${b.views} x dilihat</span>
+                        <div class="flex justify-between items-center py-3 border-b border-slate-100 last:border-0 gap-3">
+                            <span class="text-slate-700 font-semibold text-sm">${(b.judul || '').substring(0, 55)}...</span>
+                            <span class="bg-emerald-100 text-emerald-700 py-1 px-3 rounded-full text-xs font-bold whitespace-nowrap"><i class="fas fa-eye mr-1"></i> ${b.views} x</span>
                         </div>`).join('');
                 } else {
-                    topBeritaHtml = '<p class="text-slate-400 italic">Belum ada data berita atau views.</p>';
+                    topBeritaHtml = '<p class="text-slate-400 italic text-sm">Belum ada data berita atau views.</p>';
                 }
                 document.getElementById('dashboard-stats-container').innerHTML = `
                     <div class="col-md-4">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 border-green-500 h-100 flex flex-col justify-center items-center text-center">
-                            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-2xl mb-4"><i class="fas fa-chart-line"></i></div>
-                            <h3 class="text-slate-500 text-sm font-bold uppercase mb-1">Total Viewers Website</h3>
-                            <p class="text-5xl font-extrabold text-slate-800">${detail.totalViews || 0}</p>
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border-l-4 border-emerald-500 h-100 flex flex-col justify-center items-center text-center">
+                            <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-4"><i class="fas fa-chart-line"></i></div>
+                            <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Viewers Website</h3>
+                            <p class="text-5xl font-extrabold text-slate-800 m-0">${detail.totalViews || 0}</p>
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="bg-white p-6 rounded-3xl shadow-sm h-100 border border-slate-100">
-                            <h5 class="font-bold text-slate-800 mb-4 border-b pb-3"><i class="fas fa-trophy text-amber-500 mr-2"></i> Top 5 Berita Terpopuler</h5>
+                            <h5 class="font-bold text-slate-800 mb-4 border-b pb-3 text-base"><i class="fas fa-trophy text-amber-500 mr-2"></i> Top 5 Berita Terpopuler</h5>
                             ${topBeritaHtml}
                         </div>
                     </div>`;
@@ -265,10 +343,15 @@
         }
 
         async function loadAdminModule(sheet) {
+            closeSidebarMobile();
             currentAdminSheet = sheet;
             document.getElementById('admin-dashboard-view').classList.add('hidden');
             document.getElementById('admin-table-view').classList.remove('hidden');
-            document.getElementById('admin-title').innerText = 'Data ' + sheet;
+            document.getElementById('admin-title').innerText = sheet === 'Pengumuman' ? 'Kelola Pengumuman Popup' : ('Data ' + sheet);
+            document.getElementById('admin-subtitle').innerText = sheet === 'Pengumuman'
+                ? 'Pengumuman berstatus "aktif" otomatis muncul sebagai popup saat website dibuka.'
+                : 'Tambah, edit, atau hapus entri data secara real-time';
+
             document.querySelectorAll('.admin-nav').forEach(n => n.classList.remove('active'));
             const activeNav = document.getElementById('nav-' + sheet);
             if(activeNav) activeNav.classList.add('active');
@@ -287,37 +370,45 @@
         function renderAdminTable(data) {
             let head = '<tr>';
             currentAdminHeaders.forEach((h, i) => {
-                if(i === 0) head += `<th class="p-4 font-bold w-16">ID</th>`;
-                else head += `<th class="p-4 font-bold">${h}</th>`;
+                if(i === 0) head += `<th class="p-3.5 font-bold w-16">ID</th>`;
+                else head += `<th class="p-3.5 font-bold">${h}</th>`;
             });
-            head += '<th class="p-4 font-bold text-center w-32">Aksi</th></tr>';
+            head += '<th class="p-3.5 font-bold text-center w-28">Aksi</th></tr>';
             document.getElementById('admin-table-head').innerHTML = head;
             
             let body = '';
             if(!data || data.length === 0) {
-                body = `<tr><td colspan="${currentAdminHeaders.length + 1}" class="text-center p-6 text-slate-500">Belum ada data di menu ini.</td></tr>`;
+                body = `<tr><td colspan="${currentAdminHeaders.length + 1}" class="text-center p-8 text-slate-400">Belum ada data di menu ini.</td></tr>`;
             } else {
                 data.forEach(rowObj => {
                     let rowId = rowObj[currentAdminHeaders[0].toLowerCase()] || rowObj[currentAdminHeaders[0]];
-                    body += '<tr class="border-b border-slate-100 hover:bg-slate-50 transition">';
+                    body += '<tr class="border-b border-slate-100 hover:bg-slate-50/80 transition">';
                     
                     currentAdminHeaders.forEach(h => {
                         let cell = rowObj[h];
+                        let hLower = h.toLowerCase();
+                        if (hLower === 'status') {
+                            let badge = String(cell).toLowerCase() === 'aktif'
+                                ? '<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold">Aktif</span>'
+                                : '<span class="bg-slate-200 text-slate-600 px-2.5 py-1 rounded-full text-xs font-bold">Nonaktif</span>';
+                            body += `<td class="p-3.5 align-middle">${badge}</td>`;
+                            return;
+                        }
                         let url = cell;
                         if(typeof cell === 'string' && (cell.startsWith('http') || cell.startsWith('['))) {
                             try { let parsed = JSON.parse(cell); if(Array.isArray(parsed) && parsed.length > 0) url = parsed[0]; } catch(e) {}
                         }
-                        if(typeof url === 'string' && url.startsWith('http')) {
-                            if(url.match(/\.(mp4|webm|ogg)$/i)) body += `<td class="p-4"><div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-white"><i class="fas fa-film"></i></div></td>`;
-                            else body += `<td class="p-4"><img src="${url}" class="w-12 h-12 object-cover rounded-lg shadow-sm"></td>`;
+                        if(typeof url === 'string' && url.startsWith('http') && !hLower.includes('link')) {
+                            if(url.match(/\.(mp4|webm|ogg)$/i)) body += `<td class="p-3.5"><div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-white"><i class="fas fa-film"></i></div></td>`;
+                            else body += `<td class="p-3.5"><img src="${optimizeImg(url, 150)}" loading="lazy" class="w-12 h-12 object-cover rounded-lg shadow-sm border border-slate-200"></td>`;
                         } else {
                             let cleanText = typeof cell === 'string' ? cell.replace(/<[^>]*>?/gm, '').substring(0, 60) : cell;
-                            body += `<td class="p-4 text-sm align-middle">${cleanText || ''}</td>`;
+                            body += `<td class="p-3.5 text-sm align-middle">${cleanText || ''}</td>`;
                         }
                     });
 
-                    body += `<td class="p-4 text-center align-middle whitespace-nowrap">
-                        <button class="bg-amber-100 text-amber-600 hover:bg-amber-200 p-2 rounded-lg mr-2 transition" onclick="openAdminModal('edit', '${rowId}')" title="Edit"><i class="fas fa-edit"></i></button>
+                    body += `<td class="p-3.5 text-center align-middle whitespace-nowrap">
+                        <button class="bg-amber-100 text-amber-700 hover:bg-amber-200 p-2 rounded-lg mr-1.5 transition" onclick="openAdminModal('edit', '${rowId}')" title="Edit"><i class="fas fa-edit"></i></button>
                         <button class="bg-red-100 text-red-600 hover:bg-red-200 p-2 rounded-lg transition" onclick="deleteAdminData('${rowId}')" title="Hapus"><i class="fas fa-trash-alt"></i></button>
                     </td></tr>`;
                 });
@@ -327,7 +418,7 @@
 
         async function openAdminModal(mode, id = null) {
             currentEditId = id;
-            document.getElementById('modal-title').innerText = mode === 'add' ? 'Tambah Data Baru' : 'Edit Data';
+            document.getElementById('modal-title').innerText = mode === 'add' ? `Tambah ${currentAdminSheet} Baru` : `Edit Data ${currentAdminSheet}`;
             if (mode === 'edit') {
                 showLoading("Mengambil Data...");
                 try {
@@ -343,10 +434,55 @@
             new bootstrap.Modal(document.getElementById('adminModal')).show();
         }
 
-        const getBase64 = (file) => new Promise((resolve, reject) => {
-            const reader = new FileReader(); reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
-        });
+        /**
+         * KOMPRESI GAMBAR OTOMATIS DI BROWSER (CLIENT-SIDE)
+         * Mengubah gambar besar menjadi maksimal 1280px & kualitas 78% WebP/JPEG agar super ringan!
+         */
+        function compressImageToBase64(file, maxWidth = 1280, quality = 0.78) {
+            return new Promise((resolve, reject) => {
+                // Jika video atau GIF, langsung baca tanpa kompresi canvas
+                if (!file.type.startsWith('image/') || file.type === 'image/gif') {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve({ base64: reader.result, fileName: file.name });
+                    reader.onerror = error => reject(error);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Gunakan WebP jika browser mendukung (jauh lebih ringan), fallback JPEG
+                        let outType = 'image/webp';
+                        let dataUrl = canvas.toDataURL(outType, quality);
+                        if (!dataUrl.startsWith('data:image/webp')) {
+                            outType = 'image/jpeg';
+                            dataUrl = canvas.toDataURL(outType, quality);
+                        }
+                        const ext = outType === 'image/webp' ? '.webp' : '.jpg';
+                        const cleanName = file.name.replace(/\.[^/.]+$/, "") + ext;
+                        resolve({ base64: dataUrl, fileName: cleanName });
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
+        }
 
         function renderAdminForm(dataRow) {
             let html = '';
@@ -359,32 +495,45 @@
                 }
 
                 const hLower = h.toLowerCase();
-                const isMedia = (hLower.includes('gambar') || hLower.includes('foto') || hLower.includes('media') || hLower.includes('url'));
+                const isMedia = (hLower.includes('gambar') || hLower.includes('foto') || hLower.includes('media') || hLower === 'url');
                 const isRichText = (hLower.includes('isi') || hLower.includes('deskripsi') || hLower.includes('konten'));
 
                 if (hLower === 'status') {
                     html += `
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label font-bold text-slate-700">${h}</label>
-                        <select class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}">
-                            <option value="aktif" ${val === 'aktif' ? 'selected' : ''}>Aktif</option>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label font-bold text-slate-700 text-sm">${h}</label>
+                        <select class="form-select admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}">
+                            <option value="aktif" ${val === 'aktif' || !val ? 'selected' : ''}>Aktif</option>
                             <option value="nonaktif" ${val === 'nonaktif' ? 'selected' : ''}>Nonaktif</option>
                         </select>
                     </div>`;
                 } else if (hLower === 'induk' || hLower === 'parent') {
                     html += `
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label font-bold text-slate-700">Induk Menu (Parent)</label>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label font-bold text-slate-700 text-sm">Induk Menu (Parent)</label>
                         <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Kosongkan jika ini menu utama">
-                        <small class="text-slate-500">Tulis Label menu utamanya persis (misal: PROGRAM KERJA) jika ingin menu ini menjadi sub-menu.</small>
+                        <small class="text-slate-500">Tulis Label menu utamanya persis (misal: PROGRAM KERJA) jika ingin menjadi sub-menu.</small>
                     </div>`;
                 } else if (hLower === 'views') {
-                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100 py-2.5" data-header="${h}" value="${val || 0}" readonly></div>`;
+                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-sm">${h} (Otomatis)</label><input type="number" class="form-control admin-input bg-slate-100 py-2.5 rounded-xl" data-header="${h}" value="${val || 0}" readonly></div>`;
                 } else if (hLower === 'kecerahan') {
                     html += `
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label font-bold text-slate-700">${h} (Opacity Latar Slider)</label>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label font-bold text-slate-700 text-sm">${h} (Opacity Latar Slider)</label>
                         <input type="range" class="form-range admin-input" data-header="${h}" min="0" max="100" value="${val || 80}">
+                    </div>`;
+                } else if (hLower === 'link_tombol') {
+                    html += `
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label font-bold text-slate-700 text-sm">Link Tombol Aksi (Opsional)</label>
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Contoh: https://... atau berita">
+                        <small class="text-slate-500">Kosongkan jika popup tidak butuh tombol tautan.</small>
+                    </div>`;
+                } else if (hLower === 'teks_tombol') {
+                    html += `
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label font-bold text-slate-700 text-sm">Teks Tombol Aksi (Opsional)</label>
+                        <input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}" placeholder="Contoh: Daftar Sekarang / Lihat Detail">
                     </div>`;
                 } else if (isMedia) {
                     let preview = '';
@@ -394,31 +543,31 @@
                     if (mediaArr.length > 0) {
                         preview = '<div class="mt-3 grid grid-cols-3 gap-2">';
                         mediaArr.forEach(url => {
-                            if(url.match(/\.(mp4|webm|ogg)$/i)) preview += `<video src="${url}" class="h-20 w-full object-cover rounded shadow-sm" controls></video>`;
-                            else preview += `<img src="${url}" class="h-20 w-full object-cover rounded shadow-sm">`;
+                            if(url.match(/\.(mp4|webm|ogg)$/i)) preview += `<video src="${url}" class="h-20 w-full object-cover rounded-lg shadow-sm" controls></video>`;
+                            else preview += `<img src="${optimizeImg(url, 300)}" class="h-20 w-full object-cover rounded-lg shadow-sm border">`;
                         });
                         preview += '</div>';
                     }
                     
-                    html += `<div class="col-md-6 mb-3">
-                        <label class="form-label font-bold text-slate-700">${h} (Pilih Banyak File / Isi Teks URL)</label>
+                    html += `<div class="col-md-6 mb-2">
+                        <label class="form-label font-bold text-slate-700 text-sm">${h} <span class="text-emerald-600 font-normal">(Auto-Kompres Ringan)</span></label>
                         <input type="file" class="form-control admin-file py-2 rounded-xl border-slate-300 mb-2" data-header="${h}" accept="image/*,video/*" multiple>
                         <input type="hidden" class="admin-input" data-header="${h}" value='${val}'>
                         ${preview}
-                        <small class="text-slate-500 block mt-1">CTRL (Windows) / Command (Mac) untuk pilih banyak.</small>
+                        <small class="text-slate-500 block mt-1">Gambar otomatis dikompresi agar loading website tetap cepat.</small>
                     </div>`;
                 } else if (isRichText) {
-                    html += `<div class="col-12 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><textarea class="form-control admin-input rich-text" data-header="${h}">${val}</textarea></div>`;
+                    html += `<div class="col-12 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><textarea class="form-control admin-input rich-text" data-header="${h}">${val}</textarea></div>`;
                 } else if (hLower.includes('tanggal')) {
-                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><input type="date" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
+                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><input type="date" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
                 } else {
-                    html += `<div class="col-md-6 mb-3"><label class="form-label font-bold text-slate-700">${h}</label><input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
+                    html += `<div class="col-md-6 mb-2"><label class="form-label font-bold text-slate-700 text-sm">${h}</label><input type="text" class="form-control admin-input py-2.5 rounded-xl border-slate-300" data-header="${h}" value="${val}"></div>`;
                 }
             });
             document.getElementById('adminForm').innerHTML = html;
             
             $('.rich-text').each(function() {
-                $(this).summernote({ height: 250, toolbar: [ ['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'picture']], ['view', ['fullscreen', 'codeview']] ]});
+                $(this).summernote({ height: 220, toolbar: [ ['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'picture']], ['view', ['fullscreen', 'codeview']] ]});
             });
         }
 
@@ -441,14 +590,14 @@
             for (let fileInput of fileInputs) {
                 const header = fileInput.dataset.header;
                 if (fileInput.files && fileInput.files.length > 0) {
-                    showLoading("Mengunggah File ke Google Drive...");
+                    showLoading("Mengompresi & Mengunggah Media...");
                     let uploadedUrls = [];
                     for(let i=0; i<fileInput.files.length; i++) {
                         try {
-                            let base64Str = await getBase64(fileInput.files[i]);
-                            const fileName = new Date().getTime() + "_" + fileInput.files[i].name;
+                            const compressed = await compressImageToBase64(fileInput.files[i], 1280, 0.78);
+                            const fileName = new Date().getTime() + "_" + compressed.fileName;
                             const response = await fetch(API_URL, {
-                                method: 'POST', body: JSON.stringify({ action: 'uploadMedia', base64Data: base64Str, fileName: fileName })
+                                method: 'POST', body: JSON.stringify({ action: 'uploadMedia', base64Data: compressed.base64, fileName: fileName })
                             });
                             const uploadRes = await response.json();
                             if (uploadRes.success) {
@@ -458,14 +607,11 @@
                             }
                         } catch (e) { Swal.fire('Error', 'Terjadi kesalahan saat upload', 'error'); hideLoading(); resetBtn(); return; }
                     }
-                    
-                    // PERBAIKAN: Jika hanya ada 1 gambar, simpan sebagai teks URL biasa, BUKAN ["URL"]. 
-                    // Jika lebih dari 1 (misal berita dengan beberapa gambar), baru simpan array-nya.
                     obj[header] = uploadedUrls.length === 1 ? uploadedUrls[0] : JSON.stringify(uploadedUrls);
                 }
             }
 
-            showLoading("Memperbarui Database...");
+            showLoading("Memperbarui Database D1...");
             try {
                 const payload = { action: currentEditId ? 'updateData' : 'insertData', sheetName: currentAdminSheet, dataObj: obj };
                 if (currentEditId) payload.id = currentEditId;
@@ -485,7 +631,7 @@
         function resetBtn() { document.getElementById('btnSave').innerText = "Simpan Data"; document.getElementById('btnSave').disabled = false; }
 
         function deleteAdminData(id) {
-            Swal.fire({ title: 'Yakin hapus data?', text: "Data di spreadsheet akan dihapus permanen!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Hapus!'
+            Swal.fire({ title: 'Yakin hapus data?', text: "Data akan dihapus dari D1 & Spreadsheet!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Hapus!'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     showLoading("Menghapus...");
